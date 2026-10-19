@@ -1,0 +1,466 @@
+{
+  "_readme": "Single source of homepage copy. status: APPROVED (client signed) | PROPOSED (draft, dev/staging only) | BLOCKED (never rendered). tools/brand_envizon.py renders this into index.html; js/data/site.js reads it at runtime.",
+  "meta": {
+    "status": "PROPOSED",
+    "title": "Envizon EV Solutions | EV Charging Solutions, End to End",
+    "description": "DC fast chargers, site planning, installation and support for businesses, residential communities and fleets.",
+    "siteName": "Envizon EV Solutions"
+  },
+  "nav": {
+    "status": "PROPOSED",
+    "items": [
+      {
+        "label": "Chargers",
+        "href": "#chargers",
+        "children": [
+          {
+            "label": "60 kW DC Charger",
+            "href": "#charger-60"
+          },
+          {
+            "label": "120 kW DC Charger",
+            "href": "#charger-120"
+          },
+          {
+            "label": "240 kW DC Charger",
+            "href": "#charger-240"
+          }
+        ]
+      },
+      {
+        "label": "Solutions",
+        "href": "#solutions",
+        "children": [
+          {
+            "label": "Commercial Charging",
+            "href": "#solutions"
+          },
+          {
+            "label": "Residential Communities",
+            "href": "#solutions"
+          },
+          {
+            "label": "Fleet Charging",
+            "href": "#solutions"
+          },
+          {
+            "label": "Charging Infrastructure",
+            "href": "#solutions"
+          }
+        ]
+      },
+      {
+        "label": "How it Works",
+        "href": "#process"
+      },
+      {
+        "label": "Partners",
+        "href": "#partners"
+      },
+      {
+        "label": "FAQ",
+        "href": "#faq"
+      }
+    ],
+    "cta": {
+      "label": "Get a Quote",
+      "type": "GENERAL"
+    }
+  },
+  "hero": {
+    "status": "PROPOSED",
+    "titleLeft": "From Site to Charge.",
+    "titleRight": "EV Charging Solutions,\nEnd to End.",
+    "descriptionLeft": "Charge Forward",
+    "descriptionCenter": "DC fast chargers, site planning, installation and support for businesses, communities and fleets.",
+    "descriptionRight": "Built for sites that need dependable, professionally installed EV charging.",
+    "ctaPrimary": {
+      "label": "Explore Chargers",
+      "href": "#chargers"
+    },
+    "ctaSecondary": {
+      "label": "Talk to an Expert",
+      "type": "GENERAL"
+    },
+    "media": {
+      "status": "TEMPLATE_VIDEO",
+      "note": "Original template background video kept at client request (assets/video/hero-*.mp4). Third-party footage: confirm usage rights or swap for Envizon footage before public launch."
+    }
+  },
+  "applications": {
+    "status": "PROPOSED",
+    "title": "EV charging, planned for the places people park.",
+    "items": [
+      {
+        "label": "Apartments & Societies",
+        "icon": "apartment"
+      },
+      {
+        "label": "Hotels & Resorts",
+        "icon": "hotel"
+      },
+      {
+        "label": "Malls & Retail",
+        "icon": "mall"
+      },
+      {
+        "label": "Offices & Campuses",
+        "icon": "office"
+      },
+      {
+        "label": "Highway Stops",
+        "icon": "highway"
+      },
+      {
+        "label": "Fleet Depots",
+        "icon": "depot"
+      }
+    ]
+  },
+  "solutions": {
+    "status": "PROPOSED",
+    "title": "One partner from site survey to switch-on.",
+    "items": [
+      {
+        "title": "Commercial Charging",
+        "subtitle": "Fast charging for malls, hotels, offices and retail destinations.",
+        "icon": "commercial",
+        "color": "#16B14C",
+        "type": "SITE_ASSESSMENT"
+      },
+      {
+        "title": "Residential Communities",
+        "subtitle": "Shared charging planned around your society's power and parking.",
+        "icon": "residential",
+        "color": "#71BF45",
+        "type": "SITE_ASSESSMENT"
+      },
+      {
+        "title": "Fleet Charging",
+        "subtitle": "Depot charging sized for high-utilisation vehicles.",
+        "icon": "fleet",
+        "color": "#59A986",
+        "type": "FLEET"
+      },
+      {
+        "title": "Charging Infrastructure",
+        "subtitle": "Site feasibility, electrical planning, installation and commissioning.",
+        "icon": "infrastructure",
+        "color": "#D6F1DB",
+        "type": "SITE_ASSESSMENT"
+      }
+    ],
+    "cardCta": "Enquire"
+  },
+  "chargers": {
+    "status": "PROPOSED",
+    "title": "The Envizon DC Charger Range",
+    "note": "Power classes come from the Envizon deck. Model names, specs and prices are BLOCKED until signed datasheets (blueprint §1.2, §8.6).",
+    "items": [
+      {
+        "id": "charger-60",
+        "power": "60 kW",
+        "name": "DC Fast Charger",
+        "idealFor": [
+          "Commercial",
+          "Fleet"
+        ],
+        "description": "A compact DC fast charger for destinations and fleet bays where vehicles dwell for an hour or more.",
+        "specLine": "Specifications on request",
+        "image": "assets/img/charger-60.webp"
+      },
+      {
+        "id": "charger-120",
+        "power": "120 kW",
+        "name": "DC Fast Charger",
+        "idealFor": [
+          "Highway",
+          "Commercial",
+          "Fleet"
+        ],
+        "description": "Higher-power DC charging for busy commercial sites and highway stops with shorter dwell times.",
+        "specLine": "Specifications on request",
+        "image": "assets/img/charger-120.webp"
+      },
+      {
+        "id": "charger-240",
+        "power": "240 kW",
+        "name": "DC Fast Charger",
+        "idealFor": [
+          "Highway",
+          "Fleet Depots"
+        ],
+        "description": "High-capacity DC charging for high-throughput corridors and fleet depots.",
+        "specLine": "Specifications on request",
+        "image": "assets/img/charger-240.webp"
+      }
+    ],
+    "cta": {
+      "label": "Request a Quote",
+      "type": "PRODUCT_QUOTE"
+    },
+    "blocked": [
+      "model names (Atom DC)",
+      "prices",
+      "currents/efficiency/IP/IK/warranty",
+      "360 kW",
+      "480 kW"
+    ]
+  },
+  "process": {
+    "status": "PROPOSED",
+    "title": "From first call to first charge.",
+    "cta": {
+      "label": "Book a Site Assessment",
+      "type": "SITE_ASSESSMENT"
+    },
+    "steps": [
+      {
+        "key": "consult",
+        "title": "Consult",
+        "description": "Tell us about your site, your vehicles and what you want charging to achieve."
+      },
+      {
+        "key": "feasibility",
+        "title": "Site Feasibility",
+        "description": "We assess power availability, parking layout and expected charging load."
+      },
+      {
+        "key": "selection",
+        "title": "Charger Selection",
+        "description": "We match charger power and connectors to how your site will actually be used."
+      },
+      {
+        "key": "installation",
+        "title": "Installation & Commissioning",
+        "description": "Professional installation, testing and a documented handover."
+      },
+      {
+        "key": "monitoring",
+        "title": "Monitoring & Support",
+        "description": "Ongoing monitoring and service support once your chargers are live.",
+        "status": "PROPOSED_NEEDS_SCOPE"
+      }
+    ]
+  },
+  "why": {
+    "status": "PROPOSED",
+    "eyebrow": "Why Envizon",
+    "title": "Built to be the only call you need.",
+    "items": [
+      {
+        "title": "End-to-end delivery",
+        "body": "One team from feasibility and design to installation and commissioning.",
+        "icon": "flow"
+      },
+      {
+        "title": "DC fast-charging focus",
+        "body": "Hardware chosen for commercial and fleet duty cycles.",
+        "icon": "bolt"
+      },
+      {
+        "title": "Standards-based hardware",
+        "body": "Open charging protocols so your site isn't locked in.",
+        "icon": "protocol",
+        "status": "VERIFY_OCPP"
+      },
+      {
+        "title": "Local installation & support",
+        "body": "On-ground teams for setup, maintenance and service.",
+        "icon": "support",
+        "status": "VERIFY_COVERAGE"
+      }
+    ],
+    "cta": {
+      "label": "Talk to an Expert",
+      "type": "GENERAL"
+    }
+  },
+  "partners": {
+    "status": "PROPOSED",
+    "title": "Host, operate or partner in EV charging with Envizon.",
+    "subtitle": "Explore site-host and business partnership options with our team.",
+    "ctaPrimary": {
+      "label": "Become a Partner",
+      "type": "PARTNERSHIP"
+    },
+    "ctaBrochure": {
+      "label": "Download Brochure",
+      "status": "BLOCKED",
+      "note": "Only after brochure rights/currency are verified (blueprint §1.2, §5.5)."
+    }
+  },
+  "faq": {
+    "status": "PROPOSED",
+    "title": "Questions, answered.",
+    "subtitle": "Can't find what you need?",
+    "cta": {
+      "label": "Talk to an Expert",
+      "type": "GENERAL"
+    },
+    "items": [
+      {
+        "q": "What does Envizon EV offer?",
+        "a": "We help businesses, residential communities and fleets plan, supply, install and commission EV charging, from the first site assessment to a working charger."
+      },
+      {
+        "q": "Which charger power is right for my site?",
+        "a": "It depends on how long vehicles stay, how many charge at once and the power available at your site. We recommend a configuration after a site assessment."
+      },
+      {
+        "q": "Do you handle site assessment and installation?",
+        "a": "Yes. We assess power availability and parking layout, then plan, install and commission the chargers with a documented handover.",
+        "status": "VERIFY_SCOPE"
+      },
+      {
+        "q": "Which vehicles and connectors are supported?",
+        "a": "Our DC fast chargers are specified for the CCS2 connector used by most new electric cars in India. Exact compatibility is confirmed per model.",
+        "status": "VERIFY_DATASHEET"
+      },
+      {
+        "q": "How long does a typical project take?",
+        "a": "Timelines depend on site readiness, electrical approvals and charger availability. We share a project plan after the site assessment.",
+        "status": "VERIFY_OPS"
+      },
+      {
+        "q": "Do you offer partnership programmes?",
+        "a": "Yes. We work with site hosts and business partners. Share your details and our team will walk you through the available options."
+      }
+    ]
+  },
+  "footer": {
+    "status": "PROPOSED",
+    "menuTitle": "Discover Envizon",
+    "menu": [
+      {
+        "label": "Home",
+        "href": "#top"
+      },
+      {
+        "label": "Chargers",
+        "href": "#chargers"
+      },
+      {
+        "label": "Solutions",
+        "href": "#solutions"
+      },
+      {
+        "label": "How it Works",
+        "href": "#process"
+      },
+      {
+        "label": "Why Envizon",
+        "href": "#why"
+      },
+      {
+        "label": "Partners",
+        "href": "#partners"
+      },
+      {
+        "label": "FAQ",
+        "href": "#faq"
+      }
+    ],
+    "connectTitle": "Get in Touch",
+    "connect": [
+      {
+        "label": "Request a Quote",
+        "type": "PRODUCT_QUOTE"
+      },
+      {
+        "label": "Book a Site Assessment",
+        "type": "SITE_ASSESSMENT"
+      },
+      {
+        "label": "Fleet Charging",
+        "type": "FLEET"
+      },
+      {
+        "label": "Partner with Us",
+        "type": "PARTNERSHIP"
+      }
+    ],
+    "connectPending": "Phone, WhatsApp, email and social links are BLOCKED until verified by the client (blueprint §1.2).",
+    "solutionsLabel": "Our Solutions",
+    "bannerTexts": [
+      "Charge forward.",
+      "Plan your site.",
+      "Power your fleet.",
+      "Charge your community.",
+      "From survey to switch-on."
+    ],
+    "ctaLabel": "Get Started with Us",
+    "ctaTitle": "Let's plan your EV \ncharging site together.",
+    "ctaButton": {
+      "label": "Get a Quote",
+      "type": "GENERAL"
+    },
+    "legal": [
+      {
+        "label": "Privacy Policy",
+        "href": "#",
+        "status": "PAGE_PENDING"
+      },
+      {
+        "label": "Terms of Use",
+        "href": "#",
+        "status": "PAGE_PENDING"
+      }
+    ],
+    "copyright": "© 2026 Envizon EV Solutions. All rights reserved."
+  },
+  "contact": {
+    "status": "PROPOSED",
+    "title": "Talk to an Expert",
+    "description": "Tell us about your site and we'll recommend the right charging setup.",
+    "note": "No upfront commitment. A specialist will review your requirement and get back to you.",
+    "types": [
+      {
+        "value": "PRODUCT_QUOTE",
+        "label": "Charger quote"
+      },
+      {
+        "value": "SITE_ASSESSMENT",
+        "label": "Site assessment"
+      },
+      {
+        "value": "FLEET",
+        "label": "Fleet charging"
+      },
+      {
+        "value": "PARTNERSHIP",
+        "label": "Partnership"
+      },
+      {
+        "value": "GENERAL",
+        "label": "General enquiry"
+      }
+    ],
+    "chargerInterest": [
+      "60 kW",
+      "120 kW",
+      "240 kW",
+      "Not sure yet"
+    ],
+    "consent": "I agree to be contacted by Envizon EV Solutions about this enquiry. See our Privacy Policy.",
+    "marketing": "Send me occasional product and service updates.",
+    "success": "Thank you. Your enquiry has been received and our team will contact you shortly.",
+    "endpoint": {
+      "status": "BLOCKED",
+      "note": "Submissions are mocked until a durable lead endpoint is configured (blueprint §9.4)."
+    }
+  },
+  "locator": {
+    "status": "DEMO",
+    "note": "Station locator preview with MOCK Hyderabad data (js/data/stations.js) and a self-hosted OSM map. Blueprint §2 Pillar B: replace with a licensed, verified station feed before public launch.",
+    "title": "EV Charging Stations",
+    "listTitle": "EV Charging Stations in Hyderabad",
+    "breadcrumb": [
+      "Home",
+      "EV Charging Stations",
+      "Hyderabad"
+    ],
+    "searchPlaceholder": "Search area, station or ID",
+    "attribution": "© OpenStreetMap contributors"
+  }
+}

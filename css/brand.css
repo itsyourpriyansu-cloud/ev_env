@@ -1,0 +1,106 @@
+/*
+  Envizon EV brand layer — loaded after template.css (the compiled template CSS).
+  Only token values and a few brand surfaces change; layout, type scale and motion stay as-is.
+  Colours sampled from Envizon_EV_Logo_Final.jpg:
+    pill gradient  #00A650 -> #16B14C -> #71BF45,  "o" dot #19AA4B,  wordmark #000
+*/
+:root {
+  --color-brand: #00a650;
+  --color-brand-mid: #16b14c;
+  --color-lime: #71bf45;
+  --gradient-brand: linear-gradient(110deg, #00a650 0%, #16b14c 45%, #71bf45 100%);
+  --gradient-brand-deep: linear-gradient(135deg, #052e1c 0%, #07683a 60%, #0c7a3d 100%);
+
+  /* template tokens -> Envizon values (unlayered, so they win over @layer theme) */
+  --color-green-3: #16b14c;   /* primary buttons, progress bars, curtain fill (dark text ≥ 4.9:1) */
+  --color-blue: #063d25;      /* old blue brand panels -> deep forest */
+  --color-orange: #71bf45;    /* diagram highlight -> lime */
+  --color-accent: var(--color-lime);
+}
+
+/* brand surfaces that used the flat blue */
+#preloader-clip > div:first-child,
+[data-footer-banner] {
+  background-color: #063d25;
+  background-image: var(--gradient-brand-deep);
+}
+
+/* logo images keep their aspect ratio and never blur */
+img.brand-logo {
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* review mode (?review in the URL): outline copy that is still PROPOSED, i.e. not client-approved */
+html[data-review] [data-status='proposed'] {
+  outline: 1px dashed rgb(113 191 69 / 0.55);
+  outline-offset: 2px;
+}
+
+/* ---------- small brand utilities (not present in the compiled template CSS) ---------- */
+.ev-link { transition: opacity 0.3s ease-out; }
+.ev-link:hover { opacity: 0.75; }
+.ev-link svg { transition: transform 0.3s ease-out; }
+.ev-link:hover svg { transform: translateX(3px); }
+
+/* hero media placeholder until rights-cleared Envizon footage is supplied */
+.ev-hero-placeholder {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background-color: #063d25;
+  background-image:
+    radial-gradient(120% 90% at 85% 15%, rgb(113 191 69 / 0.18) 0%, transparent 55%),
+    radial-gradient(90% 80% at 10% 100%, rgb(0 166 80 / 0.22) 0%, transparent 60%),
+    var(--gradient-brand-deep);
+}
+.ev-hero-art {
+  position: absolute;
+  right: -6%;
+  top: 50%;
+  width: min(78vw, 1200px);
+  transform: translateY(-50%);
+  color: rgb(214 241 219 / 0.16);
+  pointer-events: none;
+}
+@media (max-width: 767px) {
+  .ev-hero-art { right: -40%; width: 150vw; top: 38%; }
+}
+
+/* ---------- new sections built from template primitives (P7) ---------- */
+/* Why Envizon */
+.ev-why-head { display: flex; flex-direction: column; gap: 24px; margin-bottom: 36px; }
+.ev-why-grid { display: grid; grid-template-columns: 1fr; gap: var(--s-contain); }
+.ev-why-card { display: flex; flex-direction: column; justify-content: space-between; gap: 24px; }
+@media (min-width: 40rem) { .ev-why-card { gap: 40px; min-height: 220px; } }
+@media (min-width: 40rem) { .ev-why-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 48rem) {
+  .ev-why-head { flex-direction: row; align-items: flex-end; justify-content: space-between; margin-bottom: 60px; }
+}
+@media (min-width: 64rem) { .ev-why-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+/* FAQ */
+.ev-faq-grid { display: grid; grid-template-columns: 1fr; gap: 40px; }
+.ev-faq-q { padding-block: 20px; }
+@media (min-width: 48rem) {
+  .ev-faq-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .ev-faq-intro { grid-column: span 4 / span 4; }
+  .ev-faq-list { grid-column: 6 / -1; }
+}
+
+/* quote dialog consent (P8) */
+.ev-consent { display: flex; flex-direction: column; gap: 10px; font-size: 11px; line-height: 1.4; }
+.ev-check { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+.ev-check input { flex: none; width: 16px; height: 16px; margin-top: 1px; accent-color: var(--color-green-3); cursor: pointer; }
+.ev-check[data-invalid='true'] { color: var(--color-error, #f87171); }
+.ev-consent .ev-check { text-transform: none; letter-spacing: normal; }
+
+/* header logo: compact wordmark, shrinking to the "ev" mark on very narrow phones */
+.ev-logo-full { display: block; height: 18px; }
+.ev-logo-mark { display: none; height: 20px; }
+@media (max-width: 400px) { .ev-logo-full, .ev-logo-full img { height: 15px !important; } }
+@media (max-width: 359px) { .ev-logo-full { display: none; } .ev-logo-mark { display: block; } }

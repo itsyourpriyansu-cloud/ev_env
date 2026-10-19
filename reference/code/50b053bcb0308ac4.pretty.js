@@ -1,0 +1,6771 @@
+(globalThis.TURBOPACK || (globalThis.TURBOPACK = [])).push(["object" == typeof document ? document.currentScript : void 0, 661327, e => {
+ "use strict";
+ let t, r;
+ var a = e.i(889026),
+  i = e.i(749652);
+ let s = new WeakMap,
+  l = (e, t, r) => (i, s) => s && s[0] ? s[0][e + "Size"] : (0, a.isSVGElement)(i) && "getBBox" in i ? i.getBBox()[t] : i[r],
+  n = l("inline", "width", "offsetWidth"),
+  o = l("block", "height", "offsetHeight");
+
+ function c({
+  target: e,
+  borderBoxSize: t
+ }) {
+  s.get(e)?.forEach(r => {
+   r(e, {
+    get width() {
+     return n(e, t)
+    },
+    get height() {
+     return o(e, t)
+    }
+   })
+  })
+ }
+
+ function d(e) {
+  e.forEach(c)
+ }
+ let u = new Set;
+
+ function f(e, a) {
+  let l;
+  return "function" == typeof e ? (u.add(e), r || (r = () => {
+   let e = {
+    get width() {
+     return window.innerWidth
+    },
+    get height() {
+     return window.innerHeight
+    }
+   };
+   u.forEach(t => t(e))
+  }, window.addEventListener("resize", r)), () => {
+   u.delete(e), u.size || "function" != typeof r || (window.removeEventListener("resize", r), r = void 0)
+  }) : (!t && "u" > typeof ResizeObserver && (t = new ResizeObserver(d)), (l = (0, i.resolveElements)(e)).forEach(e => {
+   let r = s.get(e);
+   r || (r = new Set, s.set(e, r)), r.add(a), t?.observe(e)
+  }), () => {
+   l.forEach(e => {
+    let r = s.get(e);
+    r?.delete(a), r?.size || t?.unobserve(e)
+   })
+  })
+ }
+ e.s(["resize", () => f], 661327)
+}, 13417, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(271645),
+  a = e.i(380064),
+  i = e.i(813098),
+  s = e.i(54513),
+  l = e.i(836236),
+  n = e.i(88653),
+  o = e.i(824511);
+ let c = ({
+   data: e = {},
+   poster: c,
+   isActive: d = !0,
+   isBackgroundVideo: u = !1,
+   className: f = "",
+   videoClassName: h = "",
+   priority: m = !1,
+   ...x
+  }) => {
+   let {
+    file: p,
+    autoPlay: g,
+    playButton: v,
+    muteButton: y
+   } = e || {}, j = (0, r.useRef)(null), b = (0, r.useRef)(null), w = (0, r.useRef)(null), [k, N] = (0, r.useState)(!1), [C, M] = (0, r.useState)(!1), [S, A] = (0, r.useState)(!1), [E, O] = (0, r.useState)(!1), [V, R] = (0, r.useState)(!1), [T, L] = (0, r.useState)(!0), [q, I] = (0, r.useState)(!1), [_, z] = (0, r.useState)(!1), P = (0, r.useRef)(!1);
+   (0, r.useEffect)(() => () => clearTimeout(w.current), []);
+   let B = () => {
+    (!S || v || y) && (clearTimeout(w.current), w.current = setTimeout(() => {
+     z(!1)
+    }, 1e3))
+   };
+   (0, r.useEffect)(() => {
+    I(!1)
+   }, [p]);
+   let H = c?.asset ? (0, a.buildImageSrc)(c, {
+    quality: 80
+   }) : null;
+   (0, r.useEffect)(() => {
+    let e = j.current;
+    if (!e || !g && !u) return;
+    let t = async () => {
+     P.current = !0;
+     try {
+      e.muted = !0, e.playsInline = !0, await e.play(), A(!0), E ? I(!0) : e.pause()
+     } catch {
+      A(!1)
+     } finally {
+      P.current = !1
+     }
+    };
+    return e.readyState >= 1 ? t() : e.addEventListener("loadedmetadata", t, {
+     once: !0
+    }), () => e.removeEventListener("loadedmetadata", t)
+   }, [p, E, g, u]), (0, r.useEffect)(() => {
+    if (!S && (g || u)) {
+     O(!1), z(!0);
+     return
+    }
+    k ? u || g ? O(d) : d || O(!1) : O(!1)
+   }, [d, u, k, S]);
+   let W = async () => {
+    let e = j.current;
+    if (e) {
+     if (!e.paused) return void R(!0);
+     try {
+      let t = e.play();
+      b.current = t, R(!0), B(), t && await t
+     } catch (e) {
+      console.warn("Video Playback Failed:", e), R(!1), b.current = null, (g || u) && A(!1)
+     }
+    }
+   }, D = async () => {
+    let e = j.current;
+    if (e && !e.paused) try {
+     b.current && await b.current, e.pause(), R(!1)
+    } catch (e) {
+     console.warn("Video Pause Failed:", e)
+    } finally {
+     b.current = null
+    }
+   };
+   return ((0, r.useEffect)(() => {
+    j.current && (E ? W() : D())
+   }, [E]), (0, r.useEffect)(() => {
+    let e = j.current;
+    if (!e) return;
+    if (e.readyState >= 3) return void M(!0);
+    let t = () => M(!0);
+    return e.addEventListener("loadeddata", t), e.addEventListener("canplay", t), () => {
+     e.removeEventListener("loadeddata", t), e.removeEventListener("canplay", t)
+    }
+   }, []), p) ? (0, t.jsxs)(s.InView, {
+    as: "div",
+    className: (0, a.cn)("relative", f),
+    onChange: N,
+    threshold: .1,
+    rootMargin: "-50px 0px",
+    onClick: () => {
+     g && !v && S || (B(), j.current?.paused ? (W(), O(!0)) : (D(), O(!1)))
+    },
+    onMouseEnter: () => {
+     z(!0)
+    },
+    onMouseMove: () => {
+     z(!0), B()
+    },
+    onMouseLeave: () => {
+     clearTimeout(w.current), z(!1)
+    },
+    onTouchStart: () => {
+     z(!0), B()
+    },
+    "data-can-autoplay": S,
+    ...x,
+    children: [(0, t.jsx)("video", {
+     ...H ? {
+      poster: H
+     } : {},
+     ref: j,
+     loop: !0,
+     playsInline: !0,
+     preload: m ? "auto" : "metadata",
+     controls: !1,
+     muted: T,
+     onPlaying: () => {
+      P.current || I(!0)
+     },
+     className: (0, a.cn)("size-full object-cover", C && "is-loaded", h),
+     children: (0, a.hasArrayValue)(p) ? p.map((e, r) => {
+      let {
+       type: a,
+       content: i
+      } = e || {};
+      return i ? (0, t.jsx)("source", {
+       src: i.url,
+       type: `video/${i.extension}`,
+       media: "mobile" === a ? "(max-width:640px)" : ""
+      }, r) : null
+     }) : (0, t.jsx)("source", {
+      src: p.content.url,
+      type: `video/${p.content.extension}`
+     })
+    }), (!u || !S) && (0, t.jsxs)("div", {
+     className: (0, a.cn)("absolute inset-0 z-10 flex cursor-pointer items-center justify-center gap-3 opacity-0 transition-opacity duration-400", g && !v && S ? "pointer-events-none" : "pointer-events-auto", _ && "opacity-100"),
+     children: [(!S || v) && (0, t.jsxs)("button", {
+      className: "relative size-10 cursor-pointer",
+      tabIndex: -1,
+      "aria-label": V ? "Pause video" : "Play video",
+      children: [(0, t.jsx)(l.default, {
+       type: "video-play",
+       className: (0, a.cn)("absolute inset-0 transition-opacity", V && "opacity-0")
+      }), (0, t.jsx)(l.default, {
+       type: "video-pause",
+       className: (0, a.cn)("absolute inset-0 transition-opacity", !V && "opacity-0")
+      })]
+     }), y && (0, t.jsxs)("button", {
+      className: "pointer-events-auto relative size-10 cursor-pointer",
+      onClick: e => {
+       e.stopPropagation(), L(!T)
+      },
+      tabIndex: -1,
+      children: [(0, t.jsx)(l.default, {
+       type: "video-mute",
+       className: (0, a.cn)("absolute inset-0 transition-opacity", T && "opacity-0")
+      }), (0, t.jsx)(l.default, {
+       type: "video-unmute",
+       className: (0, a.cn)("absolute inset-0 transition-opacity", !T && "opacity-0")
+      })]
+     })]
+    }), c && (0, t.jsx)(n.AnimatePresence, {
+     children: !q && (0, t.jsx)(o.m.div, {
+      exit: {
+       opacity: 0
+      },
+      className: "img-object-cover pointer-events-none z-20",
+      children: (0, t.jsx)(i.default, {
+       image: c,
+       alt: c?.alt,
+       className: "bg-concrete size-full object-cover"
+      })
+     })
+    })]
+   }) : null
+  },
+  d = (0, r.forwardRef)(({
+   data: e,
+   imgSizes: r,
+   imgQuality: s,
+   isVideoActive: l = !0,
+   isBackgroundVideo: n = !1,
+   className: o,
+   imageClassName: d,
+   videoClassName: u,
+   priority: f = !1,
+   ...h
+  }, m) => {
+   let {
+    image: x,
+    imageMobile: p,
+    imageLayout: g,
+    video: v
+   } = e || {}, y = v?.file && (Array.isArray(v.file) ? v.file.length > 0 : v.file);
+   return e ? (0, t.jsx)("div", {
+    ref: m,
+    className: (0, a.cn)("relative", o),
+    ...h,
+    children: y ? (0, t.jsx)(c, {
+     data: v,
+     poster: x,
+     isActive: l,
+     isBackgroundVideo: n,
+     className: u,
+     priority: f
+    }) : (0, t.jsx)(i.default, {
+     image: x,
+     responsiveImage: p,
+     alt: x?.alt,
+     sizes: r,
+     quality: s,
+     className: (0, a.cn)(g, d),
+     priority: f
+    })
+   }) : null
+  });
+ d.displayName = "Media", e.s(["default", 0, d], 13417)
+}, 382657, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(271645),
+  a = e.i(380064),
+  i = e.i(824511);
+ let s = {
+   hide: {
+    scaleX: .5
+   },
+   show: {
+    scaleX: 1
+   }
+  },
+  l = {
+   hide: {
+    scaleY: .8,
+    opacity: 0
+   },
+   show: {
+    scaleY: 1,
+    opacity: 1
+   }
+  },
+  n = {
+   hide: e => ({
+    scale: 1 - .1875 * e
+   }),
+   show: {
+    scale: 1
+   }
+  },
+  o = {
+   hide: {
+    rotate: 30
+   },
+   show: {
+    rotate: 0
+   }
+  },
+  c = [{
+   d: "M725.26.5H349.2c-22.62 0-42.85 8.33-58.32 25L25.49 290.87C10.02 306.35.5 327.78.5 349.2v374.87c0 22.61 8.33 42.84 25 58.31l265.38 265.39c15.47 15.47 36.9 25 58.32 25h374.87c22.61 0 42.84-8.34 58.31-25l266.58-264.2c15.48-15.47 25-36.89 25-58.3V349.2c0-22.62-8.33-42.85-25-58.32L783.58 25.49C768.1 10.02 746.68.5 725.26.5Z",
+   strokeMiterlimit: "10"
+  }, {
+   d: "M699.12 73.74h-323.7c-19.04 0-36.9 7.14-51.18 21.42l-228.5 228.5c-13.08 13.1-21.41 32.13-21.41 51.17v323.7c0 19.05 7.14 36.9 21.42 51.18l228.5 228.5c13.08 13.09 32.13 21.42 51.17 21.42h323.7c19.04 0 36.9-7.14 51.17-21.42l228.5-228.5c13.09-13.1 21.42-32.13 21.42-51.17v-323.7c0-19.05-7.14-36.9-21.42-51.18l-228.5-228.5c-13.09-13.09-32.13-21.42-51.17-21.42Z",
+   className: "fill-green-7/60",
+   strokeMiterlimit: "10"
+  }, {
+   d: "M673.59 146.98H401.06a60.4 60.4 0 0 0-42.85 17.86l-192.8 192.79q-17.84 17.85-17.84 42.84V673a60.4 60.4 0 0 0 17.85 42.84l192.8 192.8q17.84 17.85 42.84 17.85h272.53a60.4 60.4 0 0 0 42.84-17.85l192.8-192.8Q927.06 698 927.06 673V400.47a60.4 60.4 0 0 0-17.85-42.84l-192.8-192.8a60.4 60.4 0 0 0-42.83-17.85Z",
+   className: "fill-green-6/20",
+   strokeMiterlimit: "10"
+  }, {
+   d: "M647.95 220.81h-221a49 49 0 0 0-34.74 14.48L235.87 391.63q-14.47 14.48-14.47 34.74v221c0 12.54 4.82 25.09 14.47 34.74l156.34 156.33q14.47 14.48 34.74 14.48h221c12.54 0 25.09-4.83 34.74-14.48L839.03 682.1q14.47-14.47 14.47-34.74v-221c0-12.54-4.82-25.08-14.47-34.73L682.69 235.29a49 49 0 0 0-34.74-14.48",
+   className: "fill-green-6/20"
+  }],
+  d = "m39.38 85.38 6 6a1 1 0 0 0 1.41 0l6-6a1 1 0 0 0 .3-.7v-21.6l15.2 15.21a1 1 0 0 0 .71.3h8.59a1 1 0 0 0 1-1V69a1 1 0 0 0-.3-.7L63.1 53.08h21.58a1 1 0 0 0 .7-.3l6-6a1 1 0 0 0 0-1.41l-6-6a1 1 0 0 0-.7-.3H63.1l15.2-15.2a1 1 0 0 0 .3-.7v-8.6a1 1 0 0 0-1-1H69a1 1 0 0 0-.7.3l-15.21 15.2V7.5a1 1 0 0 0-.3-.7l-6-6a1 1 0 0 0-1.41 0l-6 6a1 1 0 0 0-.3.7v21.59l-15.2-15.21a1 1 0 0 0-.7-.3h-8.6a1 1 0 0 0-1 1v8.6q0 .4.3.7l15.2 15.2H7.5a1 1 0 0 0-.7.3l-6 6a1 1 0 0 0 0 1.41l6 6a1 1 0 0 0 .7.3h21.59l-15.21 15.2a1 1 0 0 0-.3.71v8.59a1 1 0 0 0 1 1h8.6a1 1 0 0 0 .7-.3l15.2-15.2v21.58q0 .42.3.7Z",
+  u = ["M866.6 449.81H324.56c-23.1 0-46.2-7.7-62.87-20.52L1.2 226.63c-1.28-.64-1.28-2.56 0-3.84L261.7 20.77C278.37 7.3 300.82.25 324.56.25H866.6", "M866.6 385.68H323.92c-23.1 0-46.2-5.13-62.88-14.75L1.21 226.63c-1.28-.64-1.28-2.56 0-3.2L261.7 79.13c16.68-9.62 39.13-14.75 62.87-14.75H866.6", "M866.6 318.99H324.56c-23.1 0-46.2-2.57-62.87-8.34L2.49 225.99c-1.28-.64-1.28-1.92 0-2.56l259.2-84.65c16.68-5.13 39.13-8.34 62.87-8.34H866.6", "M449.7.25h542.05c23.1 0 46.19 7.7 62.87 20.52l260.48 202.66c1.28.64 1.28 2.56 0 3.85l-260.48 202.01c-16.68 13.47-39.13 20.52-62.87 20.52H449.7", "M449.7 64.38h542.7c23.09 0 46.18 5.13 62.86 14.75l259.84 144.3c1.28.64 1.28 2.56 0 3.2l-260.48 144.3c-16.68 9.62-39.13 14.75-62.87 14.75H449.7", "M449.7 130.42h542.05c23.1 0 46.19 2.57 62.87 8.34l259.19 84.65c1.29.64 1.29 1.93 0 2.57l-259.19 84.65c-16.68 5.13-39.13 8.34-62.87 8.34H449.7"];
+
+ function f({
+  type: e,
+  className: f,
+  disableEnterAnimation: h = !1,
+  isBeamAnimation: m = !1,
+  strokeWidth: x = 1,
+  ...p
+ }) {
+  let g = (0, r.useId)().replace(/:/g, ""),
+   [v, y] = (0, r.useState)(h);
+  switch (e) {
+   case "octagon":
+    return (0, t.jsxs)(i.m.svg, {
+     xmlns: "http://www.w3.org/2000/svg",
+     fill: "none",
+     viewBox: "0 0 95 95",
+     className: (0, a.cn)("svg-animated-octagon", f),
+     initial: "hide",
+     animate: "show",
+     children: [(0, t.jsx)(i.m.path, {
+      stroke: "currentColor",
+      strokeWidth: x,
+      d: "M30.78.5h33.2c1.75 0 3.52.78 4.8 2.06l23.43 23.46.01.01a6.4 6.4 0 0 1 2.05 4.79v33.24c0 1.75-.78 3.51-2.06 4.8L68.68 92.2h-.01v.01a6.3 6.3 0 0 1-4.79 2.05h-33.1A7 7 0 0 1 26 92.21L2.56 68.75l-.01-.01-.25-.24a6.4 6.4 0 0 1-1.8-4.55V30.82c0-1.75.78-3.52 2.06-4.8L26 2.56l.01-.01A6.3 6.3 0 0 1 30.44.5z",
+      variants: n,
+      custom: 2
+     }), (0, t.jsx)(i.m.path, {
+      stroke: "currentColor",
+      strokeWidth: x,
+      d: "M61.46 7.35H33.42c-1.64 0-3.19.62-4.43 1.86L9.21 28.99a6.4 6.4 0 0 0-1.86 4.43v28.04c0 1.65.62 3.2 1.86 4.43l19.78 19.79a6.4 6.4 0 0 0 4.43 1.85h28.04c1.65 0 3.2-.62 4.43-1.85l19.79-19.8a6.4 6.4 0 0 0 1.85-4.42V33.42c0-1.64-.62-3.19-1.85-4.43L65.88 9.21a6.4 6.4 0 0 0-4.42-1.86Z",
+      variants: n,
+      custom: 1
+     }), (0, t.jsx)("path", {
+      stroke: "currentColor",
+      strokeWidth: x,
+      d: "M58.8 14.96H36.07c-1.28 0-2.57.5-3.57 1.5L16.45 32.51q-1.5 1.49-1.49 3.57v22.7c0 1.3.5 2.58 1.49 3.57l16.06 16.07q1.5 1.49 3.57 1.49H58.8c1.3 0 2.58-.5 3.57-1.5l16.07-16.06q1.48-1.48 1.48-3.57V36.1c0-1.3-.5-2.58-1.48-3.57L62.36 16.45c-.99-.99-2.28-1.49-3.57-1.49Z"
+     })]
+    });
+   case "octagon-large":
+    return (0, t.jsxs)(i.m.svg, {
+     xmlns: "http://www.w3.org/2000/svg",
+     fill: "none",
+     viewBox: "0 0 1075 1074",
+     className: (0, a.cn)("svg-animated-octagon-large", f),
+     ...p,
+     children: [(0, t.jsx)("defs", {
+      children: (0, t.jsxs)(i.m.linearGradient, {
+       id: `octagon-beam-grad-${g}`,
+       gradientUnits: "userSpaceOnUse",
+       initial: {
+        x1: -300,
+        y1: -300,
+        x2: 0,
+        y2: 0
+       },
+       animate: {
+        x1: [-300, 1200],
+        y1: [-300, 1200],
+        x2: [0, 1500],
+        y2: [0, 1500]
+       },
+       transition: {
+        duration: 4,
+        repeat: 1 / 0,
+        ease: "linear"
+       },
+       children: [(0, t.jsx)("stop", {
+        offset: "0%",
+        stopColor: "var(--color-green-2)",
+        stopOpacity: "0"
+       }), (0, t.jsx)("stop", {
+        offset: "50%",
+        stopColor: "var(--color-green-2)",
+        stopOpacity: "1"
+       }), (0, t.jsx)("stop", {
+        offset: "100%",
+        stopColor: "var(--color-green-2)",
+        stopOpacity: "0"
+       })]
+      })
+     }), (0, t.jsx)("g", {
+      className: "octagon-static-group",
+      children: c.map((e, r) => (0, t.jsx)(i.m.path, {
+       d: e.d,
+       className: e.className,
+       stroke: "currentColor",
+       strokeMiterlimit: e.strokeMiterlimit
+      }, `bg-${r}`))
+     }), (0, t.jsx)("g", {
+      children: c.map((e, r) => (0, t.jsx)("path", {
+       d: e.d,
+       stroke: `url(#octagon-beam-grad-${g})`,
+       fill: "none",
+       strokeMiterlimit: e.strokeMiterlimit,
+       strokeWidth: "0.5"
+      }, `beam-${r}`))
+     })]
+    });
+   case "prism":
+    return (0, t.jsxs)(i.m.svg, {
+     xmlns: "http://www.w3.org/2000/svg",
+     fill: "none",
+     viewBox: "0 0 80 96",
+     className: (0, a.cn)("svg-animated-prism", f),
+     initial: "hide",
+     animate: "show",
+     ...p,
+     children: [(0, t.jsx)(i.m.path, {
+      stroke: "currentColor",
+      strokeMiterlimit: "10",
+      strokeWidth: x,
+      d: "M.5 25.27v45.76a6.2 6.2 0 0 0 3.23 5.44l33.79 18.47c1.24.67 2.73.67 3.97 0l33.79-18.47a6.2 6.2 0 0 0 3.23-5.44V25.27a6.2 6.2 0 0 0-3.18-5.43L41.51 1.02a4.1 4.1 0 0 0-4.02 0L3.68 19.86A6.2 6.2 0 0 0 .5 25.27Z",
+      variants: s
+     }), (0, t.jsx)(i.m.path, {
+      stroke: "currentColor",
+      strokeMiterlimit: "10",
+      strokeWidth: x,
+      d: "M11.92 24.64v47.03c0 1.91.89 3.72 2.41 4.9l22.64 17.5a4.14 4.14 0 0 0 5.06 0l22.64-17.5a6.2 6.2 0 0 0 2.41-4.9V24.64c0-1.9-.87-3.7-2.36-4.87L42.06 1.93a4.15 4.15 0 0 0-5.12 0L14.29 19.77a6.2 6.2 0 0 0-2.36 4.87z",
+      variants: s
+     })]
+    });
+   case "spark":
+    return (0, t.jsxs)(i.m.svg, {
+     xmlns: "http://www.w3.org/2000/svg",
+     fill: "none",
+     viewBox: "0 0 93 93",
+     className: (0, a.cn)("svg-animated-spark", f),
+     initial: "hide",
+     animate: "show",
+     ...p,
+     children: [(0, t.jsx)("defs", {
+      children: (0, t.jsxs)(i.m.linearGradient, {
+       id: `spark-beam-grad-${g}`,
+       gradientUnits: "userSpaceOnUse",
+       initial: {
+        x1: -30,
+        y1: -30,
+        x2: 0,
+        y2: 0
+       },
+       animate: v && m ? {
+        x1: [-30, 120],
+        y1: [-30, 120],
+        x2: [0, 150],
+        y2: [0, 150]
+       } : {
+        x1: -30,
+        y1: -30,
+        x2: 0,
+        y2: 0
+       },
+       transition: {
+        duration: 4,
+        repeat: 1 / 0,
+        ease: "linear"
+       },
+       children: [(0, t.jsx)("stop", {
+        offset: "0%",
+        stopColor: "var(--color-green-2)",
+        stopOpacity: "0"
+       }), (0, t.jsx)("stop", {
+        offset: "50%",
+        stopColor: "var(--color-green-2)",
+        stopOpacity: "1"
+       }), (0, t.jsx)("stop", {
+        offset: "100%",
+        stopColor: "var(--color-green-2)",
+        stopOpacity: "0"
+       })]
+      })
+     }), (0, t.jsx)("g", {
+      className: "spark-static-group",
+      children: (0, t.jsx)(i.m.path, {
+       stroke: "currentColor",
+       strokeWidth: x,
+       d: d,
+       variants: h ? {} : o,
+       ...!h ? {
+        onAnimationComplete: () => y(!0)
+       } : {}
+      })
+     }), (0, t.jsx)("g", {
+      children: (0, t.jsx)("path", {
+       d: d,
+       stroke: `url(#spark-beam-grad-${g})`,
+       fill: "none",
+       strokeWidth: "0.1"
+      })
+     })]
+    });
+   case "prism-large-horizontal":
+    return (0, t.jsxs)(i.m.svg, {
+     xmlns: "http://www.w3.org/2000/svg",
+     fill: "none",
+     viewBox: "0 0 1317 451",
+     className: (0, a.cn)("svg-animated-prism-large-horizontal", f),
+     ...p,
+     children: [(0, t.jsx)("defs", {
+      children: (0, t.jsxs)(i.m.linearGradient, {
+       id: `prism-beam-grad-${g}`,
+       gradientUnits: "userSpaceOnUse",
+       y1: "0",
+       y2: "0",
+       initial: {
+        x1: -300,
+        x2: -100
+       },
+       animate: v ? {
+        x1: [-300, 1600],
+        x2: [-100, 1800]
+       } : {
+        x1: -300,
+        x2: -100
+       },
+       transition: {
+        duration: 4,
+        repeat: 1 / 0,
+        ease: "linear"
+       },
+       children: [(0, t.jsx)("stop", {
+        offset: "0%",
+        stopColor: "var(--color-green-2)",
+        stopOpacity: "0"
+       }), (0, t.jsx)("stop", {
+        offset: "50%",
+        stopColor: "var(--color-green-2)",
+        stopOpacity: "1"
+       }), (0, t.jsx)("stop", {
+        offset: "100%",
+        stopColor: "var(--color-green-2)",
+        stopOpacity: "0"
+       })]
+      })
+     }), (0, t.jsx)("g", {
+      className: "prism-static-group",
+      children: u.map((e, r) => (0, t.jsx)(i.m.path, {
+       d: e,
+       stroke: "currentColor",
+       strokeMiterlimit: "10",
+       strokeWidth: x || .5,
+       variants: h ? {} : l,
+       transition: {
+        duration: 1,
+        type: "spring"
+       },
+       ...r === u.length - 1 ? {
+        onAnimationComplete: () => y(!0)
+       } : {}
+      }, `bg-${r}`))
+     }), (0, t.jsx)("g", {
+      children: u.map((e, r) => (0, t.jsx)("path", {
+       d: e,
+       stroke: `url(#prism-beam-grad-${g})`,
+       strokeMiterlimit: "10",
+       strokeWidth: "0.5",
+       fill: "none"
+      }, `beam-${r}`))
+     })]
+    })
+  }
+ }
+ e.s(["default", () => f])
+}, 357247, e => {
+ "use strict";
+ var t, r = e.i(271645);
+ e.i(247167);
+ var a = ["br", "col", "colgroup", "dl", "hr", "iframe", "img", "input", "link", "menuitem", "meta", "ol", "param", "select", "table", "tbody", "tfoot", "thead", "tr", "ul", "wbr"],
+  i = {
+   "accept-charset": "acceptCharset",
+   acceptcharset: "acceptCharset",
+   accesskey: "accessKey",
+   allowfullscreen: "allowFullScreen",
+   autocapitalize: "autoCapitalize",
+   autocomplete: "autoComplete",
+   autocorrect: "autoCorrect",
+   autofocus: "autoFocus",
+   autoplay: "autoPlay",
+   autosave: "autoSave",
+   cellpadding: "cellPadding",
+   cellspacing: "cellSpacing",
+   charset: "charSet",
+   class: "className",
+   classid: "classID",
+   classname: "className",
+   colspan: "colSpan",
+   contenteditable: "contentEditable",
+   contextmenu: "contextMenu",
+   controlslist: "controlsList",
+   crossorigin: "crossOrigin",
+   dangerouslysetinnerhtml: "dangerouslySetInnerHTML",
+   datetime: "dateTime",
+   defaultchecked: "defaultChecked",
+   defaultvalue: "defaultValue",
+   enctype: "encType",
+   for: "htmlFor",
+   formmethod: "formMethod",
+   formaction: "formAction",
+   formenctype: "formEncType",
+   formnovalidate: "formNoValidate",
+   formtarget: "formTarget",
+   frameborder: "frameBorder",
+   hreflang: "hrefLang",
+   htmlfor: "htmlFor",
+   httpequiv: "httpEquiv",
+   "http-equiv": "httpEquiv",
+   icon: "icon",
+   innerhtml: "innerHTML",
+   inputmode: "inputMode",
+   itemid: "itemID",
+   itemprop: "itemProp",
+   itemref: "itemRef",
+   itemscope: "itemScope",
+   itemtype: "itemType",
+   keyparams: "keyParams",
+   keytype: "keyType",
+   marginwidth: "marginWidth",
+   marginheight: "marginHeight",
+   maxlength: "maxLength",
+   mediagroup: "mediaGroup",
+   minlength: "minLength",
+   nomodule: "noModule",
+   novalidate: "noValidate",
+   playsinline: "playsInline",
+   radiogroup: "radioGroup",
+   readonly: "readOnly",
+   referrerpolicy: "referrerPolicy",
+   rowspan: "rowSpan",
+   spellcheck: "spellCheck",
+   srcdoc: "srcDoc",
+   srclang: "srcLang",
+   srcset: "srcSet",
+   tabindex: "tabIndex",
+   typemustmatch: "typeMustMatch",
+   usemap: "useMap",
+   accentheight: "accentHeight",
+   "accent-height": "accentHeight",
+   alignmentbaseline: "alignmentBaseline",
+   "alignment-baseline": "alignmentBaseline",
+   allowreorder: "allowReorder",
+   arabicform: "arabicForm",
+   "arabic-form": "arabicForm",
+   attributename: "attributeName",
+   attributetype: "attributeType",
+   autoreverse: "autoReverse",
+   basefrequency: "baseFrequency",
+   baselineshift: "baselineShift",
+   "baseline-shift": "baselineShift",
+   baseprofile: "baseProfile",
+   calcmode: "calcMode",
+   capheight: "capHeight",
+   "cap-height": "capHeight",
+   clippath: "clipPath",
+   "clip-path": "clipPath",
+   clippathunits: "clipPathUnits",
+   cliprule: "clipRule",
+   "clip-rule": "clipRule",
+   colorinterpolation: "colorInterpolation",
+   "color-interpolation": "colorInterpolation",
+   colorinterpolationfilters: "colorInterpolationFilters",
+   "color-interpolation-filters": "colorInterpolationFilters",
+   colorprofile: "colorProfile",
+   "color-profile": "colorProfile",
+   colorrendering: "colorRendering",
+   "color-rendering": "colorRendering",
+   contentscripttype: "contentScriptType",
+   contentstyletype: "contentStyleType",
+   diffuseconstant: "diffuseConstant",
+   dominantbaseline: "dominantBaseline",
+   "dominant-baseline": "dominantBaseline",
+   edgemode: "edgeMode",
+   enablebackground: "enableBackground",
+   "enable-background": "enableBackground",
+   externalresourcesrequired: "externalResourcesRequired",
+   fillopacity: "fillOpacity",
+   "fill-opacity": "fillOpacity",
+   fillrule: "fillRule",
+   "fill-rule": "fillRule",
+   filterres: "filterRes",
+   filterunits: "filterUnits",
+   floodopacity: "floodOpacity",
+   "flood-opacity": "floodOpacity",
+   floodcolor: "floodColor",
+   "flood-color": "floodColor",
+   fontfamily: "fontFamily",
+   "font-family": "fontFamily",
+   fontsize: "fontSize",
+   "font-size": "fontSize",
+   fontsizeadjust: "fontSizeAdjust",
+   "font-size-adjust": "fontSizeAdjust",
+   fontstretch: "fontStretch",
+   "font-stretch": "fontStretch",
+   fontstyle: "fontStyle",
+   "font-style": "fontStyle",
+   fontvariant: "fontVariant",
+   "font-variant": "fontVariant",
+   fontweight: "fontWeight",
+   "font-weight": "fontWeight",
+   glyphname: "glyphName",
+   "glyph-name": "glyphName",
+   glyphorientationhorizontal: "glyphOrientationHorizontal",
+   "glyph-orientation-horizontal": "glyphOrientationHorizontal",
+   glyphorientationvertical: "glyphOrientationVertical",
+   "glyph-orientation-vertical": "glyphOrientationVertical",
+   glyphref: "glyphRef",
+   gradienttransform: "gradientTransform",
+   gradientunits: "gradientUnits",
+   horizadvx: "horizAdvX",
+   "horiz-adv-x": "horizAdvX",
+   horizoriginx: "horizOriginX",
+   "horiz-origin-x": "horizOriginX",
+   imagerendering: "imageRendering",
+   "image-rendering": "imageRendering",
+   kernelmatrix: "kernelMatrix",
+   kernelunitlength: "kernelUnitLength",
+   keypoints: "keyPoints",
+   keysplines: "keySplines",
+   keytimes: "keyTimes",
+   lengthadjust: "lengthAdjust",
+   letterspacing: "letterSpacing",
+   "letter-spacing": "letterSpacing",
+   lightingcolor: "lightingColor",
+   "lighting-color": "lightingColor",
+   limitingconeangle: "limitingConeAngle",
+   markerend: "markerEnd",
+   "marker-end": "markerEnd",
+   markerheight: "markerHeight",
+   markermid: "markerMid",
+   "marker-mid": "markerMid",
+   markerstart: "markerStart",
+   "marker-start": "markerStart",
+   markerunits: "markerUnits",
+   markerwidth: "markerWidth",
+   maskcontentunits: "maskContentUnits",
+   maskunits: "maskUnits",
+   numoctaves: "numOctaves",
+   overlineposition: "overlinePosition",
+   "overline-position": "overlinePosition",
+   overlinethickness: "overlineThickness",
+   "overline-thickness": "overlineThickness",
+   paintorder: "paintOrder",
+   "paint-order": "paintOrder",
+   "panose-1": "panose1",
+   pathlength: "pathLength",
+   patterncontentunits: "patternContentUnits",
+   patterntransform: "patternTransform",
+   patternunits: "patternUnits",
+   pointerevents: "pointerEvents",
+   "pointer-events": "pointerEvents",
+   pointsatx: "pointsAtX",
+   pointsaty: "pointsAtY",
+   pointsatz: "pointsAtZ",
+   preservealpha: "preserveAlpha",
+   preserveaspectratio: "preserveAspectRatio",
+   primitiveunits: "primitiveUnits",
+   refx: "refX",
+   refy: "refY",
+   renderingintent: "renderingIntent",
+   "rendering-intent": "renderingIntent",
+   repeatcount: "repeatCount",
+   repeatdur: "repeatDur",
+   requiredextensions: "requiredExtensions",
+   requiredfeatures: "requiredFeatures",
+   shaperendering: "shapeRendering",
+   "shape-rendering": "shapeRendering",
+   specularconstant: "specularConstant",
+   specularexponent: "specularExponent",
+   spreadmethod: "spreadMethod",
+   startoffset: "startOffset",
+   stddeviation: "stdDeviation",
+   stitchtiles: "stitchTiles",
+   stopcolor: "stopColor",
+   "stop-color": "stopColor",
+   stopopacity: "stopOpacity",
+   "stop-opacity": "stopOpacity",
+   strikethroughposition: "strikethroughPosition",
+   "strikethrough-position": "strikethroughPosition",
+   strikethroughthickness: "strikethroughThickness",
+   "strikethrough-thickness": "strikethroughThickness",
+   strokedasharray: "strokeDasharray",
+   "stroke-dasharray": "strokeDasharray",
+   strokedashoffset: "strokeDashoffset",
+   "stroke-dashoffset": "strokeDashoffset",
+   strokelinecap: "strokeLinecap",
+   "stroke-linecap": "strokeLinecap",
+   strokelinejoin: "strokeLinejoin",
+   "stroke-linejoin": "strokeLinejoin",
+   strokemiterlimit: "strokeMiterlimit",
+   "stroke-miterlimit": "strokeMiterlimit",
+   strokewidth: "strokeWidth",
+   "stroke-width": "strokeWidth",
+   strokeopacity: "strokeOpacity",
+   "stroke-opacity": "strokeOpacity",
+   suppresscontenteditablewarning: "suppressContentEditableWarning",
+   suppresshydrationwarning: "suppressHydrationWarning",
+   surfacescale: "surfaceScale",
+   systemlanguage: "systemLanguage",
+   tablevalues: "tableValues",
+   targetx: "targetX",
+   targety: "targetY",
+   textanchor: "textAnchor",
+   "text-anchor": "textAnchor",
+   textdecoration: "textDecoration",
+   "text-decoration": "textDecoration",
+   textlength: "textLength",
+   textrendering: "textRendering",
+   "text-rendering": "textRendering",
+   underlineposition: "underlinePosition",
+   "underline-position": "underlinePosition",
+   underlinethickness: "underlineThickness",
+   "underline-thickness": "underlineThickness",
+   unicodebidi: "unicodeBidi",
+   "unicode-bidi": "unicodeBidi",
+   unicoderange: "unicodeRange",
+   "unicode-range": "unicodeRange",
+   unitsperem: "unitsPerEm",
+   "units-per-em": "unitsPerEm",
+   unselectable: "unselectable",
+   valphabetic: "vAlphabetic",
+   "v-alphabetic": "vAlphabetic",
+   vectoreffect: "vectorEffect",
+   "vector-effect": "vectorEffect",
+   vertadvy: "vertAdvY",
+   "vert-adv-y": "vertAdvY",
+   vertoriginx: "vertOriginX",
+   "vert-origin-x": "vertOriginX",
+   vertoriginy: "vertOriginY",
+   "vert-origin-y": "vertOriginY",
+   vhanging: "vHanging",
+   "v-hanging": "vHanging",
+   videographic: "vIdeographic",
+   "v-ideographic": "vIdeographic",
+   viewbox: "viewBox",
+   viewtarget: "viewTarget",
+   vmathematical: "vMathematical",
+   "v-mathematical": "vMathematical",
+   wordspacing: "wordSpacing",
+   "word-spacing": "wordSpacing",
+   writingmode: "writingMode",
+   "writing-mode": "writingMode",
+   xchannelselector: "xChannelSelector",
+   xheight: "xHeight",
+   "x-height": "xHeight",
+   xlinkactuate: "xlinkActuate",
+   "xlink:actuate": "xlinkActuate",
+   xlinkarcrole: "xlinkArcrole",
+   "xlink:arcrole": "xlinkArcrole",
+   xlinkhref: "xlinkHref",
+   "xlink:href": "xlinkHref",
+   xlinkrole: "xlinkRole",
+   "xlink:role": "xlinkRole",
+   xlinkshow: "xlinkShow",
+   "xlink:show": "xlinkShow",
+   xlinktitle: "xlinkTitle",
+   "xlink:title": "xlinkTitle",
+   xlinktype: "xlinkType",
+   "xlink:type": "xlinkType",
+   xmlbase: "xmlBase",
+   "xml:base": "xmlBase",
+   xmllang: "xmlLang",
+   "xml:lang": "xmlLang",
+   "xml:space": "xmlSpace",
+   xmlnsxlink: "xmlnsXlink",
+   "xmlns:xlink": "xmlnsXlink",
+   xmlspace: "xmlSpace",
+   ychannelselector: "yChannelSelector",
+   zoomandpan: "zoomAndPan",
+   onblur: "onBlur",
+   onchange: "onChange",
+   onclick: "onClick",
+   oncontextmenu: "onContextMenu",
+   ondoubleclick: "onDoubleClick",
+   ondrag: "onDrag",
+   ondragend: "onDragEnd",
+   ondragenter: "onDragEnter",
+   ondragexit: "onDragExit",
+   ondragleave: "onDragLeave",
+   ondragover: "onDragOver",
+   ondragstart: "onDragStart",
+   ondrop: "onDrop",
+   onerror: "onError",
+   onfocus: "onFocus",
+   oninput: "onInput",
+   oninvalid: "onInvalid",
+   onkeydown: "onKeyDown",
+   onkeypress: "onKeyPress",
+   onkeyup: "onKeyUp",
+   onload: "onLoad",
+   onmousedown: "onMouseDown",
+   onmouseenter: "onMouseEnter",
+   onmouseleave: "onMouseLeave",
+   onmousemove: "onMouseMove",
+   onmouseout: "onMouseOut",
+   onmouseover: "onMouseOver",
+   onmouseup: "onMouseUp",
+   onscroll: "onScroll",
+   onsubmit: "onSubmit",
+   ontouchcancel: "onTouchCancel",
+   ontouchend: "onTouchEnd",
+   ontouchmove: "onTouchMove",
+   ontouchstart: "onTouchStart",
+   onwheel: "onWheel"
+  };
+
+ function s(e, t, r) {
+  let a = [...e].map((e, a) => n(e, {
+   ...r,
+   index: a,
+   level: t + 1
+  })).filter(Boolean);
+  return a.length ? a : null
+ }
+
+ function l(e, t = {}) {
+  return "string" == typeof e ? function(e, t = {}) {
+   if (!e || "string" != typeof e) return null;
+   let {
+    includeAllNodes: r = !1,
+    nodeOnly: a = !1,
+    selector: i = "body > *",
+    type: s = "text/html"
+   } = t;
+   try {
+    let l = new DOMParser().parseFromString(e, s);
+    if (r) {
+     let {
+      childNodes: e
+     } = l.body;
+     if (a) return e;
+     return [...e].map(e => n(e, t))
+    }
+    let o = l.querySelector(i) || l.body.childNodes[0];
+    if (!(o instanceof Node)) throw TypeError("Error parsing input");
+    if (a) return o;
+    return n(o, t)
+   } catch (e) {}
+   return null
+  }(e, t) : e instanceof Node ? n(e, t) : null
+ }
+
+ function n(e, t = {}) {
+  if (!e || !(e instanceof Node)) return null;
+  let {
+   actions: l = [],
+   index: o = 0,
+   level: c = 0,
+   randomKey: d
+  } = t, u = e, f = `${c}-${o}`, h = [];
+  return (d && 0 === c && (f = `${function(e=6){let t="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",r="";for(let a=e;a>0;--a)r+=t[Math.round(Math.random()*(t.length-1))];return r}()}-${f}`), Array.isArray(l) && l.forEach(t => {
+   t.condition(u, f, c) && ("function" == typeof t.pre && ((u = t.pre(u, f, c)) instanceof Node || (u = e)), "function" == typeof t.post && h.push(t.post(u, f, c)))
+  }), h.length) ? h : function(e, t) {
+   let {
+    key: l,
+    level: n,
+    ...o
+   } = t;
+   switch (e.nodeType) {
+    case 1:
+     var c;
+     return r.createElement((c = e.nodeName, /[a-z]+[A-Z]+[a-z]+/.test(c) ? c : c.toLowerCase()), function(e, t) {
+      let r = {
+       key: t
+      };
+      if (e instanceof Element) {
+       let t = e.getAttribute("class");
+       t && (r.className = t), [...e.attributes].forEach(e => {
+        switch (e.name) {
+         case "class":
+          break;
+         case "style":
+          var t;
+          r[e.name] = "string" != typeof(t = e.value) ? {} : t.split(/ ?; ?/).reduce((e, t) => {
+           let [r, a] = t.split(/ ?: ?/).map((e, t) => 0 === t ? e.replace(/\s+/g, "") : e.trim());
+           if (r && a) {
+            let t = r.replace(/(\w)-(\w)/g, (e, t, r) => `${t}${r.toUpperCase()}`),
+             i = a.trim();
+            Number.isNaN(Number(a)) || (i = Number(a)), e[r.startsWith("-") ? r : t] = i
+           }
+           return e
+          }, {});
+          break;
+         case "allowfullscreen":
+         case "allowpaymentrequest":
+         case "async":
+         case "autofocus":
+         case "autoplay":
+         case "checked":
+         case "controls":
+         case "default":
+         case "defer":
+         case "disabled":
+         case "formnovalidate":
+         case "hidden":
+         case "ismap":
+         case "itemscope":
+         case "loop":
+         case "multiple":
+         case "muted":
+         case "nomodule":
+         case "novalidate":
+         case "open":
+         case "readonly":
+         case "required":
+         case "reversed":
+         case "selected":
+         case "typemustmatch":
+          r[i[e.name] || e.name] = !0;
+          break;
+         default:
+          r[i[e.name] || e.name] = e.value
+        }
+       })
+      }
+      return r
+     }(e, l), s(e.childNodes, n, o));
+    case 3: {
+     let t = e.nodeValue?.toString() ?? "";
+     if (!o.allowWhiteSpaces && /^\s+$/.test(t) && !/[\u00A0\u202F]/.test(t)) return null;
+     if (!e.parentNode) return t;
+     let r = e.parentNode.nodeName.toLowerCase();
+     if (a.includes(r)) return /\S/.test(t) && console.warn(`A textNode is not allowed inside '${r}'. Your text "${t}" will be ignored`), null;
+     return t
+    }
+    case 8:
+    default:
+     return null;
+    case 11:
+     return s(e.childNodes, n, t)
+   }
+  }(u, {
+   key: f,
+   level: c,
+   ...t
+  })
+ }
+ var o = Object.defineProperty,
+  c = (e, t, r) => {
+   let a;
+   return (a = "symbol" != typeof t ? t + "" : t) in e ? o(e, a, {
+    enumerable: !0,
+    configurable: !0,
+    writable: !0,
+    value: r
+   }) : e[a] = r
+  },
+  d = "react-inlinesvg",
+  u = "idle",
+  f = "loading",
+  h = "loaded",
+  m = "failed",
+  x = "ready",
+  p = "unsupported";
+
+ function g() {
+  return !!("u" > typeof window && window.document?.createElement)
+ }
+ async function v(e, t) {
+  let r = await fetch(e, t),
+   [a] = (r.headers.get("content-type") ?? "").split(/ ?; ?/);
+  if (r.status > 299) throw Error("Not found");
+  if (!["image/svg+xml", "text/plain"].some(e => a.includes(e))) throw Error(`Content type isn't valid: ${a}`);
+  return r.text()
+ }
+ var y = class {
+  constructor() {
+   c(this, "cacheApi"), c(this, "cacheStore"), c(this, "subscribers", []), c(this, "isReady", !1), this.cacheStore = new Map;
+   let e = d,
+    t = !1;
+   g() && (e = window.REACT_INLINESVG_CACHE_NAME ?? d, t = !!window.REACT_INLINESVG_PERSISTENT_CACHE && "caches" in window), t ? caches.open(e).then(e => {
+    this.cacheApi = e
+   }).catch(e => {
+    console.error(`Failed to open cache: ${e.message}`), this.cacheApi = void 0
+   }).finally(() => {
+    this.isReady = !0;
+    let e = [...this.subscribers];
+    this.subscribers.length = 0, e.forEach(e => {
+     try {
+      e()
+     } catch (e) {
+      console.error(`Error in CacheStore subscriber callback: ${e.message}`)
+     }
+    })
+   }) : this.isReady = !0
+  }
+  onReady(e) {
+   this.isReady ? e() : this.subscribers.push(e)
+  }
+  async get(e, t) {
+   return await (this.cacheApi ? this.fetchAndAddToPersistentCache(e, t) : this.fetchAndAddToInternalCache(e, t)), this.cacheStore.get(e)?.content ?? ""
+  }
+  set(e, t) {
+   this.cacheStore.set(e, t)
+  }
+  isCached(e) {
+   return this.cacheStore.get(e)?.status === h
+  }
+  async fetchAndAddToInternalCache(e, t) {
+   let r = this.cacheStore.get(e);
+   if (r?.status === f) return void await this.handleLoading(e, async () => {
+    this.cacheStore.set(e, {
+     content: "",
+     status: u
+    }), await this.fetchAndAddToInternalCache(e, t)
+   });
+   if (!r?.content) {
+    this.cacheStore.set(e, {
+     content: "",
+     status: f
+    });
+    try {
+     let r = await v(e, t);
+     this.cacheStore.set(e, {
+      content: r,
+      status: h
+     })
+    } catch (t) {
+     throw this.cacheStore.set(e, {
+      content: "",
+      status: m
+     }), t
+    }
+   }
+  }
+  async fetchAndAddToPersistentCache(e, t) {
+   let r = this.cacheStore.get(e);
+   if (r?.status === h) return;
+   if (r?.status === f) return void await this.handleLoading(e, async () => {
+    this.cacheStore.set(e, {
+     content: "",
+     status: u
+    }), await this.fetchAndAddToPersistentCache(e, t)
+   });
+   this.cacheStore.set(e, {
+    content: "",
+    status: f
+   });
+   let a = await this.cacheApi?.match(e);
+   if (a) {
+    let t = await a.text();
+    this.cacheStore.set(e, {
+     content: t,
+     status: h
+    });
+    return
+   }
+   try {
+    await this.cacheApi?.add(new Request(e, t));
+    let r = await this.cacheApi?.match(e),
+     a = await r?.text() ?? "";
+    this.cacheStore.set(e, {
+     content: a,
+     status: h
+    })
+   } catch (t) {
+    throw this.cacheStore.set(e, {
+     content: "",
+     status: m
+    }), t
+   }
+  }
+  async handleLoading(e, t) {
+   for (let t = 0; t < 10; t++) {
+    if (this.cacheStore.get(e)?.status !== f) return;
+    await
+    function(e = 1) {
+     return new Promise(t => {
+      setTimeout(t, 1e3 * e)
+     })
+    }(.1)
+   }
+   await t()
+  }
+  keys() {
+   return [...this.cacheStore.keys()]
+  }
+  data() {
+   return [...this.cacheStore.entries()].map(([e, t]) => ({
+    [e]: t
+   }))
+  }
+  async delete(e) {
+   this.cacheApi && await this.cacheApi.delete(e), this.cacheStore.delete(e)
+  }
+  async clear() {
+   if (this.cacheApi) {
+    let e = await this.cacheApi.keys();
+    await Promise.allSettled(e.map(e => this.cacheApi.delete(e)))
+   }
+   this.cacheStore.clear()
+  }
+ };
+
+ function j(e) {
+  let t = (0, r.useRef)(void 0);
+  return (0, r.useEffect)(() => {
+   t.current = e
+  }), t.current
+ }
+
+ function b(e) {
+  let {
+   cacheRequests: a = !0,
+   children: i = null,
+   description: s,
+   fetchOptions: n,
+   innerRef: o,
+   loader: c = null,
+   onError: d,
+   onLoad: y,
+   src: b,
+   title: w,
+   uniqueHash: k
+  } = e, [N, C] = (0, r.useReducer)((e, t) => ({
+   ...e,
+   ...t
+  }), {
+   content: "",
+   element: null,
+   isCached: a && t.isCached(e.src),
+   status: u
+  }), {
+   content: M,
+   element: S,
+   isCached: A,
+   status: E
+  } = N, O = j(e), V = j(N), R = (0, r.useRef)(k ?? function(e) {
+   let t = "abcdefghijklmnopqrstuvwxyz",
+    r = `${t}${t.toUpperCase()}1234567890`,
+    a = "";
+   for (let e = 0; e < 8; e++) a += r[Math.floor(Math.random() * r.length)];
+   return a
+  }(0)), T = (0, r.useRef)(!1), L = (0, r.useRef)(!1), q = (0, r.useCallback)(e => {
+   T.current && (C({
+    status: "Browser does not support SVG" === e.message ? p : m
+   }), d?.(e))
+  }, [d]), I = (0, r.useCallback)((e, t = !1) => {
+   T.current && C({
+    content: e,
+    isCached: t,
+    status: h
+   })
+  }, []), _ = (0, r.useCallback)(async () => {
+   I(await v(b, n))
+  }, [n, I, b]), z = (0, r.useCallback)(() => {
+   try {
+    let t = function(e) {
+      let {
+       baseURL: t,
+       content: r,
+       description: a,
+       handleError: i,
+       hash: s,
+       preProcessor: n,
+       title: o,
+       uniquifyIDs: c = !1
+      } = e;
+      try {
+       var d, u;
+       let e = (d = r, (u = n) ? u(d) : d),
+        i = l(e, {
+         nodeOnly: !0
+        });
+       if (!i || !(i instanceof SVGSVGElement)) throw Error("Could not convert the src to a DOM Node");
+       let f = function e(t, r) {
+        let {
+         baseURL: a = "",
+         hash: i,
+         uniquifyIDs: s
+        } = r, l = ["id", "href", "xlink:href", "xlink:role", "xlink:arcrole"], n = ["href", "xlink:href"];
+        return s && [...t.children].forEach(t => {
+         if (t.attributes?.length) {
+          let e = Object.values(t.attributes).map(e => {
+           let t = /url\((.*?)\)/.exec(e.value);
+           return t?.[1] && (e.value = e.value.replace(t[0], `url(${a}${t[1]}__${i})`)), e
+          });
+          l.forEach(t => {
+           let r, a = e.find(e => e.name === t);
+           a && (r = a.value, !n.includes(t) || !r || r.includes("#")) && (a.value = `${a.value}__${i}`)
+          })
+         }
+         return t.children.length ? e(t, r) : t
+        }), t
+       }(i, {
+        baseURL: t,
+        hash: s,
+        uniquifyIDs: c
+       });
+       if (a) {
+        let e = f.querySelector("desc");
+        e?.parentNode && e.parentNode.removeChild(e);
+        let t = document.createElementNS("http://www.w3.org/2000/svg", "desc");
+        t.innerHTML = a, f.prepend(t)
+       }
+       if (void 0 !== o) {
+        let e = f.querySelector("title");
+        if (e?.parentNode && e.parentNode.removeChild(e), o) {
+         let e = document.createElementNS("http://www.w3.org/2000/svg", "title");
+         e.innerHTML = o, f.prepend(e)
+        }
+       }
+       return f
+      } catch (e) {
+       return i(e)
+      }
+     }({
+      ...e,
+      handleError: q,
+      hash: R.current,
+      content: M
+     }),
+     a = l(t);
+    if (!a || !(0, r.isValidElement)(a)) throw Error("Could not convert the src to a React element");
+    C({
+     element: a,
+     status: x
+    })
+   } catch (e) {
+    q(e)
+   }
+  }, [M, q, e]), P = (0, r.useCallback)(async () => {
+   let e, r = /^data:image\/svg[^,]*?(;base64)?,(.*)/u.exec(b);
+   if (r ? e = r[1] ? window.atob(r[2]) : decodeURIComponent(r[2]) : b.includes("<svg") && (e = b), e) return void I(e);
+   try {
+    if (a) {
+     let e = await t.get(b, n);
+     I(e, !0)
+    } else await _()
+   } catch (e) {
+    q(e)
+   }
+  }, [a, _, n, q, I, b]), B = (0, r.useCallback)(async () => {
+   T.current && C({
+    content: "",
+    element: null,
+    isCached: !1,
+    status: f
+   })
+  }, []);
+  (0, r.useEffect)(() => {
+   if (T.current = !0, g() && !L.current) {
+    try {
+     if (E === u) {
+      if (!(function() {
+        if (!document) return !1;
+        let e = document.createElement("div");
+        e.innerHTML = "<svg />";
+        let t = e.firstChild;
+        return !!t && "http://www.w3.org/2000/svg" === t.namespaceURI
+       }() && "u" > typeof window && null !== window)) throw Error("Browser does not support SVG");
+      if (!b) throw Error("Missing src");
+      B()
+     }
+    } catch (e) {
+     q(e)
+    }
+    return L.current = !0, () => {
+     T.current = !1
+    }
+   }
+  }, []), (0, r.useEffect)(() => {
+   if (g() && O && O.src !== b) {
+    if (!b) return void q(Error("Missing src"));
+    B()
+   }
+  }, [q, B, O, b]), (0, r.useEffect)(() => {
+   E === h && z()
+  }, [E, z]), (0, r.useEffect)(() => {
+   g() && O && O.src === b && (O.title !== w || O.description !== s) && z()
+  }, [s, z, O, b, w]), (0, r.useEffect)(() => {
+   if (V) switch (E) {
+    case f:
+     V.status !== f && P();
+     break;
+    case h:
+     V.status !== h && z();
+     break;
+    case x:
+     V.status !== x && y?.(b, A)
+   }
+  }, [P, z, A, y, V, b, E]);
+  let H = function(e, ...t) {
+   let r = {};
+   for (let a in e)({}).hasOwnProperty.call(e, a) && !t.includes(a) && (r[a] = e[a]);
+   return r
+  }(e, "baseURL", "cacheRequests", "children", "description", "fetchOptions", "innerRef", "loader", "onError", "onLoad", "preProcessor", "src", "title", "uniqueHash", "uniquifyIDs");
+  return g() ? S ? (0, r.cloneElement)(S, {
+   ref: o,
+   ...H
+  }) : [p, m].includes(E) ? i : c : c
+ }
+
+ function w(e) {
+  t || (t = new y);
+  let {
+   loader: a
+  } = e, [i, s] = (0, r.useState)(t.isReady);
+  return ((0, r.useEffect)(() => {
+   i || t.onReady(() => {
+    s(!0)
+   })
+  }, [i]), i) ? r.default.createElement(b, {
+   ...e
+  }) : a
+ }
+ e.s(["default", () => w], 357247)
+}, 922998, (e, t, r) => {
+ Object.defineProperty(r, "__esModule", {
+  value: !0
+ });
+ var a = e.r(271645),
+  i = a && "object" == typeof a && "default" in a ? a : {
+   default: a
+  };
+ ! function(e) {
+  if (!e || "u" < typeof window) return;
+  let t = document.createElement("style");
+  t.setAttribute("type", "text/css"), t.innerHTML = e, document.head.appendChild(t)
+ }('.rfm-marquee-container {\n  overflow-x: hidden;\n  display: flex;\n  flex-direction: row;\n  position: relative;\n  width: var(--width);\n  transform: var(--transform);\n}\n.rfm-marquee-container:hover div {\n  animation-play-state: var(--pause-on-hover);\n}\n.rfm-marquee-container:active div {\n  animation-play-state: var(--pause-on-click);\n}\n\n.rfm-overlay {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n}\n.rfm-overlay::before, .rfm-overlay::after {\n  background: linear-gradient(to right, var(--gradient-color), rgba(255, 255, 255, 0));\n  content: "";\n  height: 100%;\n  position: absolute;\n  width: var(--gradient-width);\n  z-index: 2;\n  pointer-events: none;\n  touch-action: none;\n}\n.rfm-overlay::after {\n  right: 0;\n  top: 0;\n  transform: rotateZ(180deg);\n}\n.rfm-overlay::before {\n  left: 0;\n  top: 0;\n}\n\n.rfm-marquee {\n  flex: 0 0 auto;\n  min-width: var(--min-width);\n  z-index: 1;\n  display: flex;\n  flex-direction: row;\n  align-items: center;\n  animation: scroll var(--duration) linear var(--delay) var(--iteration-count);\n  animation-play-state: var(--play);\n  animation-delay: var(--delay);\n  animation-direction: var(--direction);\n}\n@keyframes scroll {\n  0% {\n    transform: translateX(0%);\n  }\n  100% {\n    transform: translateX(-100%);\n  }\n}\n\n.rfm-initial-child-container {\n  flex: 0 0 auto;\n  display: flex;\n  min-width: auto;\n  flex-direction: row;\n  align-items: center;\n}\n\n.rfm-child {\n  transform: var(--transform);\n}'), r.default = a.forwardRef(function({
+  style: e = {},
+  className: t = "",
+  autoFill: r = !1,
+  play: s = !0,
+  pauseOnHover: l = !1,
+  pauseOnClick: n = !1,
+  direction: o = "left",
+  speed: c = 50,
+  delay: d = 0,
+  loop: u = 0,
+  gradient: f = !1,
+  gradientColor: h = "white",
+  gradientWidth: m = 200,
+  onFinish: x,
+  onCycleComplete: p,
+  onMount: g,
+  children: v
+ }, y) {
+  let [j, b] = a.useState(0), [w, k] = a.useState(0), [N, C] = a.useState(1), [M, S] = a.useState(!1), A = a.useRef(null), E = y || A, O = a.useRef(null), V = a.useCallback(() => {
+   if (O.current && E.current) {
+    let e = E.current.getBoundingClientRect(),
+     t = O.current.getBoundingClientRect(),
+     a = e.width,
+     i = t.width;
+    ("up" === o || "down" === o) && (a = e.height, i = t.height), r && a && i ? C(i < a ? Math.ceil(a / i) : 1) : C(1), b(a), k(i)
+   }
+  }, [r, E, o]);
+  a.useEffect(() => {
+   if (M && (V(), O.current && E.current)) {
+    let e = new ResizeObserver(() => V());
+    return e.observe(E.current), e.observe(O.current), () => {
+     e && e.disconnect()
+    }
+   }
+  }, [V, E, M]), a.useEffect(() => {
+   V()
+  }, [V, v]), a.useEffect(() => {
+   S(!0)
+  }, []), a.useEffect(() => {
+   "function" == typeof g && g()
+  }, []);
+  let R = a.useMemo(() => r ? w * N / c : w < j ? j / c : w / c, [r, j, w, N, c]),
+   T = a.useMemo(() => Object.assign(Object.assign({}, e), {
+    "--pause-on-hover": !s || l ? "paused" : "running",
+    "--pause-on-click": !s || l && !n || n ? "paused" : "running",
+    "--width": "up" === o || "down" === o ? "100vh" : "100%",
+    "--transform": "up" === o ? "rotate(-90deg)" : "down" === o ? "rotate(90deg)" : "none"
+   }), [e, s, l, n, o]),
+   L = a.useMemo(() => ({
+    "--gradient-color": h,
+    "--gradient-width": "number" == typeof m ? `${m}px` : m
+   }), [h, m]),
+   q = a.useMemo(() => ({
+    "--play": s ? "running" : "paused",
+    "--direction": "left" === o ? "normal" : "reverse",
+    "--duration": `${R}s`,
+    "--delay": `${d}s`,
+    "--iteration-count": u ? `${u}` : "infinite",
+    "--min-width": r ? "auto" : "100%"
+   }), [s, o, R, d, u, r]),
+   I = a.useMemo(() => ({
+    "--transform": "up" === o ? "rotate(90deg)" : "down" === o ? "rotate(-90deg)" : "none"
+   }), [o]),
+   _ = a.useCallback(e => [...Array(Number.isFinite(e) && e >= 0 ? e : 0)].map((e, t) => i.default.createElement(a.Fragment, {
+    key: t
+   }, a.Children.map(v, e => i.default.createElement("div", {
+    style: I,
+    className: "rfm-child"
+   }, e)))), [I, v]);
+  return M ? i.default.createElement("div", {
+   ref: E,
+   style: T,
+   className: "rfm-marquee-container " + t
+  }, f && i.default.createElement("div", {
+   style: L,
+   className: "rfm-overlay"
+  }), i.default.createElement("div", {
+   className: "rfm-marquee",
+   style: q,
+   onAnimationIteration: p,
+   onAnimationEnd: x
+  }, i.default.createElement("div", {
+   className: "rfm-initial-child-container",
+   ref: O
+  }, a.Children.map(v, e => i.default.createElement("div", {
+   style: I,
+   className: "rfm-child"
+  }, e))), _(N - 1)), i.default.createElement("div", {
+   className: "rfm-marquee",
+   style: q
+  }, _(N))) : null
+ })
+}, 986025, e => {
+ "use strict";
+ var t = e.i(843476);
+ e.i(271645);
+ var r = e.i(922998),
+  a = e.i(357247),
+  i = e.i(380064),
+  s = e.i(813098),
+  l = e.i(824511);
+
+ function n({
+  data: e = {},
+  play: n = !0,
+  children: o,
+  className: c,
+  ...d
+ }) {
+  if (!((0, i.hasArrayValue)(e?.items) || o)) return null;
+  let {
+   items: u,
+   speed: f,
+   reverse: h,
+   pausable: m,
+   showGradient: x
+  } = e, p = (0, i.cn)("px-6 md:px-15");
+  return (0, t.jsx)(l.m.div, {
+   className: (0, i.cn)("py-section-half relative", c),
+   ...d,
+   children: (0, t.jsx)(r.default, {
+    autoFill: !0,
+    pauseOnHover: m,
+    speed: f,
+    direction: h ? "right" : "left",
+    play: n,
+    className: (0, i.cn)(x && "mask-[linear-gradient(to_right,transparent_0%,black_15%,black_85%,transparent_100%)]"),
+    children: o || u?.map(e => {
+     let {
+      _key: r,
+      _type: l
+     } = e;
+     switch (l) {
+      case "simple":
+       return (0, t.jsx)("div", {
+        className: "marquee-text px-2 lg:px-4",
+        children: e.text
+       }, r);
+      case "image":
+       return (0, t.jsx)("div", {
+        className: p,
+        children: (0, t.jsx)(s.default, {
+         image: e.image,
+         alt: e.image?.alt,
+         className: "marquee-image h-10 w-auto max-w-[250px] object-contain md:h-12"
+        })
+       }, r);
+      case "svg":
+       return (0, t.jsx)("div", {
+        className: (0, i.cn)("marquee-svg [&_svg]:h-10 [&_svg]:max-w-[250px] md:[&_svg]:h-12", p),
+        children: (0, t.jsx)(a.default, {
+         src: e.svgMedia,
+         title: e.title
+        })
+       }, r)
+     }
+    })
+   })
+  })
+ }
+ e.s(["default", () => n])
+}, 772328, e => {
+ "use strict";
+ var t = e.i(571164),
+  r = e.i(138544),
+  a = e.i(271645);
+
+ function i() {
+  t.hasReducedMotionListener.current || (0, r.initPrefersReducedMotion)();
+  let [e] = (0, a.useState)(t.prefersReducedMotion.current);
+  return e
+ }
+ e.s(["useReducedMotion", () => i])
+}, 142999, 625076, e => {
+ "use strict";
+ var t = e.i(681083),
+  r = e.i(887652);
+ e.i(486427);
+ var a = e.i(83352),
+  i = e.i(83411),
+  s = e.i(287022);
+
+ function l(e) {
+  return "number" == typeof e ? e : parseFloat(e)
+ }
+ var n = e.i(271645),
+  o = e.i(737806),
+  c = e.i(895420);
+
+ function d(e, t = {}) {
+  return function(e, t = {}) {
+   let {
+    isStatic: d
+   } = (0, n.useContext)(o.MotionConfigContext), u = () => (0, i.isMotionValue)(e) ? e.get() : e;
+   if (d) return (0, c.useTransform)(u);
+   let f = (0, r.useMotionValue)(u());
+   return (0, n.useInsertionEffect)(() => (function(e, t, r = {}) {
+    let n, o = e.get(),
+     c = null,
+     d = o,
+     u = "string" == typeof o ? o.replace(/[\d.-]/g, "") : void 0,
+     f = () => {
+      c && (c.stop(), c = null)
+     };
+    if (e.attach((t, i) => {
+      d = t, n = e => {
+       var t, r;
+       return i((t = e, (r = u) ? t + r : t))
+      }, s.frame.postRender(() => {
+       let t, i;
+       f(), t = l(e.get()), t !== (i = l(d)) && (c = new a.JSAnimation({
+        keyframes: [t, i],
+        velocity: e.getVelocity(),
+        type: "spring",
+        restDelta: .001,
+        restSpeed: .01,
+        ...r,
+        onUpdate: n
+       })), e.events.animationStart?.notify(), c?.then(() => {
+        e.events.animationComplete?.notify()
+       })
+      })
+     }, f), (0, i.isMotionValue)(t)) {
+     let r = t.on("change", t => {
+       var r, a;
+       return e.set((r = t, (a = u) ? r + a : r))
+      }),
+      a = e.on("destroy", r);
+     return () => {
+      r(), a()
+     }
+    }
+    return f
+   })(f, e, t), [f, JSON.stringify(t)]), f
+  }(e, {
+   type: "spring",
+   ...t
+  })
+ }
+
+ function u(e = {
+  stiffness: 200,
+  damping: 30,
+  mass: 1
+ }) {
+  let {
+   isTouchDevice: a
+  } = (0, t.default)(), i = (0, r.useMotionValue)(-1e4), s = (0, r.useMotionValue)(-1e4), l = d(i, e);
+  return {
+   mouseX: l,
+   mouseY: d(s, e),
+   handleMouseMove: ({
+    clientX: e,
+    clientY: t
+   }) => {
+    a || (i.set(e + window.scrollX), s.set(t + window.scrollY))
+   }
+  }
+ }
+ e.s(["useSmoothMouse", () => u], 142999);
+ var f = e.i(843476),
+  h = e.i(113182),
+  m = e.i(380064);
+
+ function x({
+  borderWidth: e = 1,
+  duration: t = 14,
+  shineColor: r = "#000000",
+  className: a,
+  style: i,
+  ...s
+ }) {
+  return (0, f.jsx)("div", {
+   style: {
+    "--border-width": `${e}px`,
+    "--duration": `${t}s`,
+    backgroundImage: `radial-gradient(transparent,transparent, ${Array.isArray(r)?r.join(","):r},transparent,transparent)`,
+    backgroundSize: "300% 300%",
+    mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+    WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+    WebkitMaskComposite: "xor",
+    maskComposite: "exclude",
+    padding: "var(--border-width)",
+    ...i
+   },
+   className: (0, m.cn)("motion-safe:animate-shine pointer-events-none absolute inset-0 size-full rounded-[inherit] will-change-[background-position]", a),
+   ...s
+  })
+ }
+ var p = e.i(824511),
+  g = e.i(387652),
+  v = e.i(212381);
+
+ function y(e, ...t) {
+  let r = e.length;
+  return (0, v.useCombineMotionValues)(t.filter(i.isMotionValue), function() {
+   let a = "";
+   for (let s = 0; s < r; s++) {
+    a += e[s];
+    let r = t[s];
+    r && (a += (0, i.isMotionValue)(r) ? r.get() : r)
+   }
+   return a
+  })
+ }
+ let j = (0, n.createContext)(null);
+
+ function b({
+  children: e,
+  className: r,
+  mouseX: a,
+  mouseY: i
+ }) {
+  let s = (0, n.useRef)(null),
+   l = (0, g.useInView)(s, h.IN_VIEW_CONFIG),
+   {
+    isTouchDevice: o
+   } = (0, t.default)(),
+   [d, u] = (0, n.useState)({
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0
+   });
+  (0, n.useEffect)(() => {
+   if (o || !l) return;
+   let e = () => {
+    if (s.current) {
+     let e = s.current.getBoundingClientRect();
+     u({
+      top: e.top + window.scrollY,
+      bottom: e.bottom + window.scrollY,
+      left: e.left + window.scrollX,
+      right: e.right + window.scrollX
+     })
+    }
+   };
+   e();
+   let t = (0, m.throttle)(e, 100),
+    r = new ResizeObserver(e);
+   return r.observe(document.body), window.addEventListener("scroll", t, {
+    passive: !0
+   }), () => {
+    r.disconnect(), window.removeEventListener("scroll", t)
+   }
+  }, [o, l]);
+  let x = (0, c.useTransform)([a, i], ([e, t]) => {
+    if (!l || e < 0 || t < 0) return 250;
+    let {
+     top: r,
+     bottom: a,
+     left: i,
+     right: s
+    } = d, n = Math.max(i - e, 0, e - s), o = Math.max(r - t, 0, t - a);
+    return Math.min(100 + 2 * Math.sqrt(n * n + o * o), 2e3) / .4
+   }),
+   p = (0, n.useMemo)(() => ({
+    radius: x,
+    mouseX: a,
+    mouseY: i,
+    isTouchDevice: o,
+    isInView: l,
+    THRESHOLD_TRANSPARENT: .4
+   }), [x, a, i, o, l]);
+  return (0, f.jsx)("div", {
+   ref: s,
+   className: r,
+   children: (0, f.jsx)(j.Provider, {
+    value: p,
+    children: e
+   })
+  })
+ }
+
+ function w({
+  children: e,
+  className: t,
+  rounded: r = "all",
+  ...a
+ }) {
+  let i = (0, n.useRef)(null),
+   {
+    radius: s,
+    mouseX: l,
+    mouseY: o,
+    isTouchDevice: d,
+    isInView: u,
+    THRESHOLD_TRANSPARENT: h
+   } = (() => {
+    let e = (0, n.useContext)(j);
+    if (!e) throw Error("useSpotlightCard must be used within a SpotlightGroup");
+    return e
+   })(),
+   [g, v] = (0, n.useState)({
+    x: 0,
+    y: 0
+   });
+  (0, n.useEffect)(() => {
+   if (d || !u) return;
+   let e = () => {
+    if (i.current) {
+     let e = i.current.getBoundingClientRect();
+     v({
+      x: e.left + window.scrollX,
+      y: e.top + window.scrollY
+     })
+    }
+   };
+   e();
+   let t = (0, m.throttle)(e, 100),
+    r = new ResizeObserver(e);
+   return r.observe(document.body), window.addEventListener("scroll", t, {
+    passive: !0
+   }), () => {
+    r.disconnect(), window.removeEventListener("scroll", t)
+   }
+  }, [d, u]);
+  let b = (0, c.useTransform)(l, e => e - g.x),
+   w = (0, c.useTransform)(o, e => e - g.y),
+   k = y`radial-gradient(${s}px circle at ${b}px ${w}px, white, transparent ${100*h}%)`,
+   N = {
+    all: "rounded-[calc(var(--l-card-rounded)+var(--l-border-width))]",
+    top: "rounded-t-[calc(var(--l-card-rounded)+var(--l-border-width))]",
+    bottom: "rounded-b-[calc(var(--l-card-rounded)+var(--l-border-width))] ",
+    left: "rounded-l-[calc(var(--l-card-rounded)+var(--l-border-width))]",
+    right: "rounded-r-[calc(var(--l-card-rounded)+var(--l-border-width))]",
+    none: "rounded-none"
+   },
+   C = N[r] || N.all;
+  return (0, f.jsxs)(p.m.div, {
+   ref: i,
+   className: (0, m.cn)("[--l-border-width:1px]", "border-green-5 relative [border-width:var(--l-border-width)]", C, t),
+   ...a,
+   children: [e, d ? (0, f.jsx)(x, {
+    className: (0, m.cn)("-inset-(--l-border-width) size-[unset]", C),
+    shineColor: ["transparent", "var(--color-green-2)", "transparent"],
+    duration: 20,
+    style: {
+     "--border-width": "var(--l-border-width)"
+    }
+   }) : (0, f.jsx)(p.m.div, {
+    className: (0, m.cn)("border-green-2 pointer-events-none absolute -inset-(--l-border-width) [border-width:var(--l-border-width)] opacity-0 transition-opacity duration-300 group-hover/spotlight-group-container:opacity-100", C),
+    style: {
+     maskImage: k,
+     WebkitMaskImage: k
+    }
+   })]
+  })
+ }
+ e.s(["SpotlightCard", () => w, "SpotlightGroup", () => b], 625076)
+}, 146192, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(113182),
+  a = e.i(380064),
+  i = e.i(60919),
+  s = e.i(142999),
+  l = e.i(625076),
+  n = e.i(627230),
+  o = e.i(824511);
+
+ function c({
+  data: e,
+  className: l
+ }) {
+  let {
+   title: n,
+   statsItems: c,
+   theme: f = "dark"
+  } = e || {}, {
+   mouseX: h,
+   mouseY: m,
+   handleMouseMove: x
+  } = (0, s.useSmoothMouse)(), p = (0, i.useInViewAnimation)(r.STAGGER_CONTAINER_CONFIG);
+  if (!(0, a.hasArrayValue)(c)) return null;
+  let g = "dark" === f;
+  return (0, t.jsx)("section", {
+   className: (0, a.cn)("[--l-article-border-color:var(--color-green-5)] [--l-article-content-offset-y:16px] [--l-article-title-height:48px]", "py-[(var(--s-section)]", g && "bg-green-7 text-green-1", l),
+   style: {
+    "--l-article-border-color": g ? "var(--color-green-5)" : "var(--color-white-3)"
+   },
+   onMouseMove: x,
+   children: (0, t.jsxs)(o.m.div, {
+    ...p,
+    children: [n && (0, t.jsx)(o.m.div, {
+     variants: r.fadeMoveAnim,
+     className: "p-x-2xl mb-6",
+     children: (0, t.jsx)(d, {
+      title: n
+     })
+    }), (0, t.jsx)(o.m.div, {
+     variants: r.fadeMoveAnim,
+     children: (0, t.jsx)(u, {
+      statsItems: c,
+      mouseX: h,
+      mouseY: m,
+      theme: f
+     })
+    })]
+   })
+  })
+ }
+
+ function d({
+  title: e,
+  className: r
+ }) {
+  return (0, t.jsx)("div", {
+   className: (0, a.cn)("relative", "before:absolute before:bottom-0 before:h-px before:w-full before:bg-(--l-article-border-color)", "after:absolute after:bottom-0 after:h-px after:w-32 after:bg-current", r),
+   children: (0, t.jsx)("h2", {
+    className: "t-l-1 h-(--l-article-title-height) py-(--l-article-content-offset-y) text-balance",
+    children: e
+   })
+  })
+ }
+
+ function u({
+  statsItems: e,
+  mouseX: r,
+  mouseY: i,
+  onMouseMove: s,
+  theme: o = "dark",
+  className: c,
+  CarouselContentClassName: d
+ }) {
+  let u = "dark" === o;
+  return (0, t.jsx)("div", {
+   className: (0, a.cn)("group/spotlight-group-container", c),
+   onMouseMove: s,
+   children: (0, t.jsx)(n.Carousel, {
+    className: (0, a.cn)("[--item-gap:16px]"),
+    children: (0, t.jsx)(l.SpotlightGroup, {
+     mouseX: r,
+     mouseY: i,
+     children: (0, t.jsx)(n.CarouselContent, {
+      classNameInner: (0, a.cn)("p-x-2xl lg:-ml-(--item-gap)", d),
+      children: e.map((e, r) => {
+       let {
+        _key: i,
+        title: s,
+        subtitle: o
+       } = e || {};
+       return (0, t.jsx)(n.CarouselItem, {
+        className: "basis-2/3 md:basis-1/3 xl:basis-1/4",
+        children: (0, t.jsx)(l.SpotlightCard, {
+         className: (0, a.cn)(u ? "[--l-card-border-color:var(--color-green-5)]" : "[--l-card-border-color:var(--color-white-3)]", 'relative before:block before:pt-[100%] before:content-[""]', u ? "bg-green-6/50" : "bg-white-2"),
+         style: {
+          "--l-card-rounded": "8px",
+          borderColor: "var(--l-card-border-color)"
+         },
+         children: (0, t.jsxs)("div", {
+          className: "absolute inset-0 flex flex-col items-center justify-center gap-6 p-6 text-center",
+          children: [s && (0, t.jsx)("h3", {
+           className: "t-h-2 leading-tight text-balance",
+           children: s
+          }), o && (0, t.jsx)("p", {
+           className: "t-b-1 text-balance opacity-70",
+           children: o
+          })]
+         })
+        })
+       }, i || r)
+      })
+     })
+    })
+   })
+  })
+ }
+ e.s(["StatsList", () => u, "default", () => c])
+}, 165097, e => {
+ "use strict";
+ var t = e.i(843476);
+ e.i(207670);
+ var r = e.i(919056);
+
+ function a({
+  className: e,
+  dotSize: a = 1,
+  gap: i = 40
+ }) {
+  let s = {
+   "--dot-size": `${a}px`,
+   "--dot-gap": `${i}px`,
+   backgroundImage: "radial-gradient(circle at center, currentColor calc(var(--dot-size) / 2), transparent 0)",
+   backgroundSize: "var(--dot-gap) var(--dot-gap)"
+  };
+  return (0, t.jsx)("div", {
+   className: (0, r.twMerge)("pointer-events-none absolute inset-0 h-full w-full", e),
+   style: s,
+   "aria-hidden": "true"
+  })
+ }
+ e.s(["default", () => a])
+}, 198588, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(380064),
+  a = e.i(824511);
+
+ function i({
+  items: e = [],
+  className: i,
+  ...s
+ }) {
+  return e && 0 !== e.length ? (0, t.jsx)(a.m.ul, {
+   className: (0, r.cn)("t-l-1", i),
+   ...s,
+   children: e.map((e, r) => (0, t.jsxs)("li", {
+    className: "flex max-w-[250px] items-center gap-2 leading-none",
+    children: [(0, t.jsx)("span", {
+     className: "inline-block size-2.5 shrink-0 rounded-xs bg-current"
+    }), (0, t.jsx)("p", {
+     children: e
+    })]
+   }, r))
+  }) : null
+ }
+ e.s(["default", () => i])
+}, 839613, e => {
+ "use strict";
+ var t = e.i(271645);
+ let r = new WeakMap,
+  a = ["a[href]", "input:not([disabled])", "textarea:not([disabled])", "select:not([disabled])", "button:not([disabled])", "iframe", "details", "[contenteditable]", "[tabindex]:not([disabled])"];
+
+ function i(e, s = [], l = 0) {
+  let n = () => {
+   if (!e.current) return;
+   let t = "true" === e.current.getAttribute("aria-hidden");
+   e.current.querySelectorAll(a.join(", ")).forEach(e => {
+    if (r.has(e) || r.set(e, e.getAttribute("tabindex")), t) e.setAttribute("tabindex", -1);
+    else {
+     let t = r.get(e);
+     e.setAttribute("tabindex", t || l)
+    }
+   })
+  };
+  return (0, t.useEffect)(() => {
+   if (!e.current) return;
+   let t = new MutationObserver(e => {
+    e.forEach(e => {
+     "attributes" === e.type && "aria-hidden" === e.attributeName && n()
+    })
+   });
+   return t.observe(e.current, {
+    attributes: !0,
+    attributeFilter: ["aria-hidden"]
+   }), n(), () => {
+    t.disconnect()
+   }
+  }, [e, ...s]), null
+ }
+ e.s(["default", () => i])
+}, 433768, e => {
+ "use strict";
+ var t = e.i(271645);
+
+ function r(e, r, a) {
+  (0, t.useInsertionEffect)(() => e.on(r, a), [e, r, a])
+ }
+ e.s(["useMotionValueEvent", () => r])
+}, 924176, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(522016),
+  a = e.i(113182),
+  i = e.i(380064),
+  s = e.i(60919),
+  l = e.i(448773),
+  n = e.i(813098),
+  o = e.i(13417),
+  c = e.i(892159),
+  d = e.i(143443),
+  u = e.i(824511);
+ let f = (0, i.cn)("img-object-cover transition-transform duration-500 ease-out group-hover:transform-[translate3d(-50%,-50%,0)_scale(1.02)]"),
+  h = u.m.create(r.default);
+
+ function m({
+  data: e,
+  indicator: r,
+  className: m,
+  hasOverlay: x,
+  overlayOpacity: p,
+  ...g
+ }) {
+  let {
+   backgroundMedia: v,
+   title: y,
+   paragraph: j,
+   label: b = "SOLUTIONS:",
+   solutions: w,
+   paragraphCta: k,
+   callToAction: N
+  } = e || {}, C = N?.href ? h : u.m.div, M = (0, s.useInViewAnimation)(a.STAGGER_CONTAINER_CONFIG);
+  return (0, t.jsxs)(u.m.div, {
+   className: (0, i.cn)("bg-white-2 relative flex flex-col sm:flex-row", m),
+   ...M,
+   ...g,
+   children: [v && (0, t.jsx)(C, {
+    ...N?.href ? {
+     href: N.href
+    } : {},
+    className: (0, i.cn)("group bg-subtle relative w-full overflow-hidden max-sm:before:block max-sm:before:pt-[56.25%] sm:w-2/3 lg:w-[70%] xl:w-3/4", !(0, i.hasValidMedia)(v) && "before:block sm:before:pt-[100%] md:before:pt-[80%] lg:before:pt-[60%]"),
+    variants: a.fadeAnim,
+    children: (0, i.hasValidMedia)(v) ? (0, t.jsx)(o.default, {
+     data: v,
+     isBackgroundVideo: !0,
+     className: (0, i.cn)(f, "absolute"),
+     imageClassName: "img-object-cover"
+    }) : (0, t.jsx)("span", {
+     className: (0, i.cn)(f),
+     children: (0, t.jsx)(n.default, {
+      image: v,
+      alt: y
+     })
+    })
+   }), (0, t.jsxs)("div", {
+    className: "px-contain border-white-3 flex flex-1 flex-col border-t border-b pt-4 pb-5 sm:w-1/3 sm:pt-6 sm:pb-10 sm:pl-6 lg:w-1/4",
+    children: [(0, t.jsxs)("div", {
+     className: "mb-4 flex flex-col gap-2 sm:mb-8 sm:gap-4",
+     children: [(0, t.jsxs)("div", {
+      className: "flex flex-row-reverse justify-between gap-2 sm:flex-col",
+      children: [r && (0, t.jsx)(u.m.span, {
+       className: "t-l-2 max-sm:text-right",
+       variants: a.fadeMoveAnim,
+       children: r
+      }), y && (0, t.jsx)(u.m.h3, {
+       className: "t-h-2 2xl:t-h-1 max-2xl:text-[40px]!",
+       variants: a.fadeMoveAnim,
+       children: y
+      })]
+     }), j && (0, t.jsx)(u.m.p, {
+      className: "t-h-3 lg:t-h-4 2xl:t-h-3 max-w-xs",
+      variants: a.fadeMoveAnim,
+      children: j
+     }), (0, i.hasArrayValue)(w) && (0, t.jsxs)(u.m.div, {
+      className: "mt-2 flex flex-col gap-2 sm:gap-2.5",
+      variants: a.fadeMoveAnim,
+      children: [b && (0, t.jsx)("span", {
+       className: "t-l-1",
+       children: b
+      }), w.map((e, r) => (0, t.jsxs)("div", {
+       className: "flex items-center gap-2",
+       children: [e.icon && (0, t.jsx)(c.default, {
+        icon: e.icon,
+        style: {
+         backgroundColor: e.iconColor?.hex
+        },
+        className: "size-9 p-1"
+       }), e.title && (0, t.jsx)("span", {
+        className: "t-l-1",
+        children: e.title
+       })]
+      }, e._id || r))]
+     })]
+    }), (k || (0, i.hasValidCta)(N)) && (0, t.jsxs)(u.m.div, {
+     className: "mt-10 sm:mt-auto",
+     variants: a.fadeMoveAnim,
+     children: [k && (0, t.jsx)("p", {
+      className: "t-l-1 mb-4 max-w-xs text-balance max-sm:hidden",
+      children: k
+     }), (0, i.hasValidCta)(N) && (0, t.jsx)(d.Button, {
+      asChild: !0,
+      variant: "arrow",
+      tone: "gray",
+      className: "w-fit",
+      children: (0, t.jsxs)(l.default, {
+       link: N,
+       children: [N.label, (0, t.jsx)("span", {
+        className: "sr-only",
+        children: `Link to ${y}`
+       })]
+      })
+     })]
+    })]
+   }), x && (0, t.jsx)(u.m.div, {
+    className: "bg-green-7 pointer-events-none absolute inset-0",
+    style: {
+     opacity: p
+    },
+    "aria-hidden": "true"
+   })]
+  })
+ }
+ e.s(["default", () => m])
+}, 557774, 769311, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(380064),
+  a = e.i(629447);
+
+ function i({
+  htmlFor: e,
+  labelText: i,
+  description: s,
+  isLabelVisible: l = !1,
+  isDisabled: n = !1,
+  className: o = "",
+  children: c
+ }) {
+  return (0, t.jsxs)("div", {
+   className: (0, r.cn)("relative grid w-full gap-2", o),
+   children: [(0, t.jsx)(a.Label, {
+    htmlFor: e,
+    className: (0, r.cn)(!l && "sr-only", n && "opacity-50"),
+    children: i
+   }), c, s && (0, t.jsx)("p", {
+    className: (0, r.cn)(n && "opacity-50", "text-xs"),
+    children: s
+   })]
+  })
+ }
+ e.s(["FieldLabelDescription", () => i], 557774);
+ var s = e.i(271645),
+  l = e.i(114674),
+  n = e.i(700146);
+
+ function o({
+  fieldState: e = {},
+  isFocused: r,
+  isShowErrorOnFocus: a = !1
+ }) {
+  let i = e.invalid && !!e.error,
+   [o, d] = (0, s.useState)(!1);
+  return a ? (0, t.jsxs)(n.Tooltip, {
+   open: !!i && r || o,
+   children: [(0, t.jsx)(n.TooltipTrigger, {
+    className: "absolute top-1/2 right-2 -translate-y-1/2",
+    asChild: !0,
+    children: i && (0, t.jsx)(l.HiOutlineInformationCircle, {
+     className: "text-error h-5 w-5",
+     onMouseEnter: () => d(!0),
+     onMouseLeave: () => d(!1)
+    })
+   }), (0, t.jsx)(c, {
+    message: e.error?.message
+   })]
+  }) : (0, t.jsxs)(n.Tooltip, {
+   open: o,
+   children: [(0, t.jsx)(n.TooltipTrigger, {
+    className: "absolute top-1/2 right-2 -translate-y-1/2",
+    asChild: !0,
+    children: i && (0, t.jsx)(l.HiOutlineInformationCircle, {
+     className: "text-error h-5 w-5",
+     onMouseEnter: () => d(!0),
+     onMouseLeave: () => d(!1),
+     onClick: () => d(e => !e)
+    })
+   }), (0, t.jsx)(c, {
+    message: e.error?.message
+   })]
+  })
+ }
+
+ function c({
+  message: e
+ }) {
+  return (0, t.jsx)(n.TooltipContent, {
+   className: "pointer-events-none",
+   align: "end",
+   sideOffset: -2,
+   children: (0, t.jsx)("p", {
+    children: e
+   })
+  })
+ }
+ e.s(["FieldStatus", () => o], 769311)
+}, 615019, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(271645),
+  a = e.i(557774),
+  i = e.i(769311),
+  s = e.i(706352);
+
+ function l({
+  isLabelVisible: e = !1,
+  name: l = "email",
+  labelText: n = "Email",
+  placeholder: o = "",
+  description: c = "",
+  fieldState: d = {},
+  className: u,
+  ...f
+ }) {
+  let [h, m] = (0, r.useState)(!1);
+  return (0, t.jsx)(a.FieldLabelDescription, {
+   htmlFor: f?.id || l,
+   labelText: n,
+   description: c,
+   isLabelVisible: e,
+   isDisabled: f?.disabled,
+   children: (0, t.jsxs)("div", {
+    className: "relative flex gap-2",
+    children: [(0, t.jsx)(s.Input, {
+     id: f?.id || l,
+     name: l,
+     placeholder: o,
+     className: u,
+     ...f,
+     onFocus: () => m(!0),
+     onBlur: e => {
+      f?.onBlur?.(e), m(!1)
+     }
+    }), (0, t.jsx)(i.FieldStatus, {
+     fieldState: d,
+     isFocused: h,
+     isShowErrorOnFocus: !0
+    })]
+   })
+  })
+ }
+ e.s(["Input", () => l])
+}, 934224, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(271645),
+  a = e.i(557774),
+  i = e.i(769311),
+  s = e.i(83884);
+
+ function l({
+  isLabelVisible: e = !1,
+  name: l = "message",
+  labelText: n = "Your Message",
+  placeholder: o = "Enter your message here...",
+  description: c = "",
+  fieldState: d = {},
+  className: u,
+  ...f
+ }) {
+  let [h, m] = (0, r.useState)(!1);
+  return (0, t.jsx)(a.FieldLabelDescription, {
+   htmlFor: f?.id || l,
+   labelText: n,
+   description: c,
+   isLabelVisible: e,
+   isDisabled: f?.disabled,
+   children: (0, t.jsxs)("div", {
+    className: "relative grid",
+    children: [(0, t.jsx)(s.Textarea, {
+     id: f?.id || l,
+     name: l,
+     placeholder: o,
+     className: u,
+     ...f,
+     onFocus: () => m(!0),
+     onBlur: e => {
+      f?.onBlur?.(e), m(!1)
+     }
+    }), (0, t.jsx)(i.FieldStatus, {
+     fieldState: d,
+     isFocused: h,
+     isShowErrorOnFocus: !0
+    })]
+   })
+  })
+ }
+ e.s(["Textarea", () => l])
+}, 310542, e => {
+ "use strict";
+ var t = e.i(486427),
+  r = e.i(965566),
+  a = e.i(271645),
+  i = e.i(260830),
+  s = e.i(287022);
+
+ function l(e, t) {
+  let r, a = () => {
+   let {
+    currentTime: a
+   } = t, i = (null === a ? 0 : a.value) / 100;
+   r !== i && e(i), r = i
+  };
+  return s.frame.preUpdate(a, !0), () => (0, s.cancelFrame)(a)
+ }
+ var n = e.i(930551),
+  o = e.i(661327),
+  c = e.i(783920),
+  d = e.i(325791);
+ let u = () => ({
+   current: 0,
+   offset: [],
+   progress: 0,
+   scrollLength: 0,
+   targetOffset: 0,
+   targetLength: 0,
+   containerLength: 0,
+   velocity: 0
+  }),
+  f = {
+   x: {
+    length: "Width",
+    position: "Left"
+   },
+   y: {
+    length: "Height",
+    position: "Top"
+   }
+  };
+
+ function h(e, t, r, a) {
+  let i = r[t],
+   {
+    length: s,
+    position: l
+   } = f[t],
+   n = i.current,
+   o = r.time;
+  i.current = e[`scroll${l}`], i.scrollLength = e[`scroll${s}`] - e[`client${s}`], i.offset.length = 0, i.offset[0] = 0, i.offset[1] = i.scrollLength, i.progress = (0, c.progress)(0, i.scrollLength, i.current);
+  let u = a - o;
+  i.velocity = u > 50 ? 0 : (0, d.velocityPerSecond)(i.current - n, u)
+ }
+ e.i(247167);
+ var m = e.i(344230),
+  x = e.i(515923),
+  p = e.i(476959),
+  g = e.i(772846);
+ let v = {
+  start: 0,
+  center: .5,
+  end: 1
+ };
+
+ function y(e, t, r = 0) {
+  let a = 0;
+  if (e in v && (e = v[e]), "string" == typeof e) {
+   let t = parseFloat(e);
+   e.endsWith("px") ? a = t : e.endsWith("%") ? e = t / 100 : e.endsWith("vw") ? a = t / 100 * document.documentElement.clientWidth : e.endsWith("vh") ? a = t / 100 * document.documentElement.clientHeight : e = t
+  }
+  return "number" == typeof e && (a = t * e), r + a
+ }
+ let j = [0, 0],
+  b = [
+   [0, 0],
+   [1, 1]
+  ],
+  w = {
+   x: 0,
+   y: 0
+  },
+  k = new WeakMap,
+  N = new WeakMap,
+  C = new WeakMap,
+  M = new WeakMap,
+  S = new WeakMap,
+  A = e => e === document.scrollingElement ? window : e;
+
+ function E(e, {
+  container: t = document.scrollingElement,
+  trackContentSize: r = !1,
+  ...a
+ } = {}) {
+  if (!t) return i.noop;
+  let l = C.get(t);
+  l || (l = new Set, C.set(t, l));
+  let n = function(e, t, r, a = {}) {
+   return {
+    measure: t => {
+     ! function(e, t = e, r) {
+      if (r.x.targetOffset = 0, r.y.targetOffset = 0, t !== e) {
+       let a = t;
+       for (; a && a !== e;) r.x.targetOffset += a.offsetLeft, r.y.targetOffset += a.offsetTop, a = a.offsetParent
+      }
+      r.x.targetLength = t === e ? t.scrollWidth : t.clientWidth, r.y.targetLength = t === e ? t.scrollHeight : t.clientHeight, r.x.containerLength = e.clientWidth, r.y.containerLength = e.clientHeight
+     }(e, a.target, r), h(e, "x", r, t), h(e, "y", r, t), r.time = t, (a.offset || a.target) && function(e, t, r) {
+      let {
+       offset: a = b
+      } = r, {
+       target: i = e,
+       axis: s = "y"
+      } = r, l = "y" === s ? "height" : "width", n = i !== e ? function(e, t) {
+       let r = {
+         x: 0,
+         y: 0
+        },
+        a = e;
+       for (; a && a !== t;)
+        if ((0, g.isHTMLElement)(a)) r.x += a.offsetLeft, r.y += a.offsetTop, a = a.offsetParent;
+        else if ("svg" === a.tagName) {
+        let e = a.getBoundingClientRect(),
+         t = (a = a.parentElement).getBoundingClientRect();
+        r.x += e.left - t.left, r.y += e.top - t.top
+       } else if (a instanceof SVGGraphicsElement) {
+        let {
+         x: e,
+         y: t
+        } = a.getBBox();
+        r.x += e, r.y += t;
+        let i = null,
+         s = a.parentNode;
+        for (; !i;) "svg" === s.tagName && (i = s), s = a.parentNode;
+        a = i
+       } else break;
+       return r
+      }(i, e) : w, o = i === e ? {
+       width: e.scrollWidth,
+       height: e.scrollHeight
+      } : "getBBox" in i && "svg" !== i.tagName ? i.getBBox() : {
+       width: i.clientWidth,
+       height: i.clientHeight
+      }, c = {
+       width: e.clientWidth,
+       height: e.clientHeight
+      };
+      t[s].offset.length = 0;
+      let d = !t[s].interpolate,
+       u = a.length;
+      for (let e = 0; e < u; e++) {
+       let r = function(e, t, r, a) {
+        let i = Array.isArray(e) ? e : j,
+         s = 0;
+        return "number" == typeof e ? i = [e, e] : "string" == typeof e && (i = (e = e.trim()).includes(" ") ? e.split(" ") : [e, v[e] ? e : "0"]), (s = y(i[0], r, a)) - y(i[1], t)
+       }(a[e], c[l], o[l], n[s]);
+       d || r === t[s].interpolatorOffsets[e] || (d = !0), t[s].offset[e] = r
+      }
+      d && (t[s].interpolate = (0, m.interpolate)(t[s].offset, (0, x.defaultOffset)(a), {
+       clamp: !1
+      }), t[s].interpolatorOffsets = [...t[s].offset]), t[s].progress = (0, p.clamp)(0, 1, t[s].interpolate(t[s].current))
+     }(e, r, a)
+    },
+    notify: () => t(r)
+   }
+  }(t, e, {
+   time: 0,
+   x: u(),
+   y: u()
+  }, a);
+  if (l.add(n), !k.has(t)) {
+   let e = () => {
+     for (let e of l) e.measure(s.frameData.timestamp);
+     s.frame.preUpdate(r)
+    },
+    r = () => {
+     for (let e of l) e.notify()
+    },
+    a = () => s.frame.read(e);
+   k.set(t, a);
+   let i = A(t);
+   window.addEventListener("resize", a, {
+    passive: !0
+   }), t !== document.documentElement && N.set(t, (0, o.resize)(t, a)), i.addEventListener("scroll", a, {
+    passive: !0
+   }), a()
+  }
+  if (r && !S.has(t)) {
+   let e = k.get(t),
+    r = {
+     width: t.scrollWidth,
+     height: t.scrollHeight
+    };
+   M.set(t, r);
+   let a = s.frame.read(() => {
+    let a = t.scrollWidth,
+     i = t.scrollHeight;
+    (r.width !== a || r.height !== i) && (e(), r.width = a, r.height = i)
+   }, !0);
+   S.set(t, a)
+  }
+  let c = k.get(t);
+  return s.frame.read(c, !1, !0), () => {
+   (0, s.cancelFrame)(c);
+   let e = C.get(t);
+   if (!e || (e.delete(n), e.size)) return;
+   let r = k.get(t);
+   k.delete(t), r && (A(t).removeEventListener("scroll", r), N.get(t)?.(), window.removeEventListener("resize", r));
+   let a = S.get(t);
+   a && ((0, s.cancelFrame)(a), S.delete(t)), M.delete(t)
+  }
+ }
+ let O = new Map;
+
+ function V({
+  source: e,
+  container: t,
+  ...r
+ }) {
+  var a;
+  let i, s, {
+   axis: l
+  } = r;
+  e && (t = e);
+  let o = O.get(t) ?? new Map;
+  O.set(t, o);
+  let c = r.target ?? "self",
+   d = o.get(c) ?? {},
+   u = l + (r.offset ?? []).join(",");
+  return d[u] || (d[u] = !r.target && (0, n.supportsScrollTimeline)() ? new ScrollTimeline({
+   source: t,
+   axis: l
+  }) : (a = {
+   container: t,
+   ...r
+  }, i = {
+   value: 0
+  }, s = E(e => {
+   i.value = 100 * e[a.axis].progress
+  }, a), {
+   currentTime: i,
+   cancel: s
+  })), d[u]
+ }
+ var R = e.i(947414),
+  T = e.i(674008);
+ let L = () => ({
+   scrollX: (0, t.motionValue)(0),
+   scrollY: (0, t.motionValue)(0),
+   scrollXProgress: (0, t.motionValue)(0),
+   scrollYProgress: (0, t.motionValue)(0)
+  }),
+  q = e => !!e && !e.current;
+
+ function I({
+  container: e,
+  target: t,
+  ...s
+ } = {}) {
+  let n = (0, R.useConstant)(L),
+   o = (0, a.useRef)(null),
+   c = (0, a.useRef)(!1),
+   d = (0, a.useCallback)(() => (o.current = function(e, {
+    axis: t = "y",
+    container: r = document.scrollingElement,
+    ...a
+   } = {}) {
+    var s, n;
+    let o;
+    if (!r) return i.noop;
+    let c = {
+     axis: t,
+     container: r,
+     ...a
+    };
+    return "function" == typeof e ? (s = e, n = c, 2 === s.length ? E(e => {
+     s(e[n.axis].progress, e)
+    }, n) : l(s, V(n))) : (o = V(c), e.attachTimeline({
+     timeline: c.target ? void 0 : o,
+     observe: e => (e.pause(), l(t => {
+      e.time = e.iterationDuration * t
+     }, o))
+    }))
+   }((e, {
+    x: t,
+    y: r
+   }) => {
+    n.scrollX.set(t.current), n.scrollXProgress.set(t.progress), n.scrollY.set(r.current), n.scrollYProgress.set(r.progress)
+   }, {
+    ...s,
+    container: e?.current || void 0,
+    target: t?.current || void 0
+   }), () => {
+    o.current?.()
+   }), [e, t, JSON.stringify(s.offset)]);
+  return (0, T.useIsomorphicLayoutEffect)(() => {
+   if (c.current = !1, !(q(e) || q(t))) return d();
+   c.current = !0
+  }, [d]), (0, a.useEffect)(() => c.current ? ((0, r.invariant)(!q(e), "Container ref is defined but not hydrated", "use-scroll-ref"), (0, r.invariant)(!q(t), "Target ref is defined but not hydrated", "use-scroll-ref"), d()) : void 0, [d]), n
+ }
+ e.s(["useScroll", () => I], 310542)
+}, 132983, e => {
+ "use strict";
+ var t, r, a, i, s, l, n, o, c = e.i(843476),
+  d = e.i(271645),
+  u = e.i(989970),
+  f = function() {
+   return "u" > typeof window
+  },
+  h = function() {
+   return t || f() && (t = window.gsap) && t.registerPlugin && t
+  },
+  m = /[-+=\.]*\d+[\.e\-\+]*\d*[e\-\+]*\d*/gi,
+  x = {
+   rect: ["width", "height"],
+   circle: ["r", "r"],
+   ellipse: ["rx", "ry"],
+   line: ["x2", "y2"]
+  },
+  p = function(e) {
+   return Math.round(1e4 * e) / 1e4
+  },
+  g = function(e) {
+   return parseFloat(e) || 0
+  },
+  v = function(e, t) {
+   var r = g(e);
+   return ~e.indexOf("%") ? r / 100 * t : r
+  },
+  y = function(e, t) {
+   return g(e.getAttribute(t))
+  },
+  j = Math.sqrt,
+  b = function(e, t, r, a, i, s) {
+   return j(Math.pow((g(r) - g(e)) * i, 2) + Math.pow((g(a) - g(t)) * s, 2))
+  },
+  w = function(e) {
+   return console.warn(e)
+  },
+  k = function(e) {
+   return "non-scaling-stroke" === e.getAttribute("vector-effect")
+  },
+  N = function(e, t, r) {
+   var a, i, s = e.indexOf(" ");
+   return s < 0 ? (a = void 0 !== r ? r + "" : e, i = e) : (a = e.substr(0, s), i = e.substr(s + 1)), (a = v(a, t)) > (i = v(i, t)) ? [i, a] : [a, i]
+  },
+  C = function(e) {
+   if (!(e = r(e)[0])) return 0;
+   var t, a, i, s, n, o, c, d = e.tagName.toLowerCase(),
+    u = e.style,
+    f = 1,
+    h = 1;
+   k(e) && (f = j((h = e.getScreenCTM()).a * h.a + h.b * h.b), h = j(h.d * h.d + h.c * h.c));
+   try {
+    a = e.getBBox()
+   } catch (e) {
+    w("Some browsers won't measure invisible elements (like display:none or masks inside defs).")
+   }
+   var g = a || {
+     x: 0,
+     y: 0,
+     width: 0,
+     height: 0
+    },
+    v = g.x,
+    N = g.y,
+    C = g.width,
+    M = g.height;
+   if (a && (C || M) || !x[d] || (C = y(e, x[d][0]), M = y(e, x[d][1]), "rect" !== d && "line" !== d && (C *= 2, M *= 2), "line" === d && (v = y(e, "x1"), N = y(e, "y1"), C = Math.abs(C - v), M = Math.abs(M - N))), "path" === d) s = u.strokeDasharray, u.strokeDasharray = "none", t = e.getTotalLength() || 0, p(f) !== p(h) && !l && (l = 1) && w("Warning: <path> length cannot be measured when vector-effect is non-scaling-stroke and the element isn't proportionally scaled."), t *= (f + h) / 2, u.strokeDasharray = s;
+   else if ("rect" === d) t = 2 * C * f + 2 * M * h;
+   else if ("line" === d) t = b(v, N, v + C, N + M, f, h);
+   else if ("polyline" === d || "polygon" === d)
+    for (i = e.getAttribute("points").match(m) || [], "polygon" === d && i.push(i[0], i[1]), t = 0, n = 2; n < i.length; n += 2) t += b(i[n - 2], i[n - 1], i[n], i[n + 1], f, h) || 0;
+   else("circle" === d || "ellipse" === d) && (t = Math.PI * (3 * ((o = C / 2 * f) + (c = M / 2 * h)) - j((3 * o + c) * (o + 3 * c))));
+   return t || 0
+  },
+  M = function(e, t) {
+   if (!(e = r(e)[0])) return [0, 0];
+   t || (t = C(e) + 1);
+   var i = a.getComputedStyle(e),
+    s = i.strokeDasharray || "",
+    l = g(i.strokeDashoffset),
+    n = s.indexOf(",");
+   return n < 0 && (n = s.indexOf(" ")), (s = n < 0 ? t : g(s.substr(0, n))) > t && (s = t), [-l || 0, s - l || 0]
+  },
+  S = function() {
+   f() && (document, a = window, s = t = h(), r = t.utils.toArray, n = t.core.getStyleSaver, o = t.core.reverting || function() {}, i = -1 !== ((a.navigator || {}).userAgent || "").indexOf("Edge"))
+  },
+  A = {
+   version: "3.14.2",
+   name: "drawSVG",
+   register: function(e) {
+    t = e, S()
+   },
+   init: function(e, t, r, l, o) {
+    if (!e.getBBox) return !1;
+    s || S();
+    var c, d, u, f = C(e);
+    return this.styles = n && n(e, "strokeDashoffset,strokeDasharray,strokeMiterlimit"), this.tween = r, this._style = e.style, this._target = e, t + "" == "true" ? t = "0 100%" : t ? -1 === (t + "").indexOf(" ") && (t = "0 " + t) : t = "0 0", c = M(e, f), d = N(t, f, c[0]), this._length = p(f), this._dash = p(c[1] - c[0]), this._offset = p(-c[0]), this._dashPT = this.add(this, "_dash", this._dash, p(d[1] - d[0]), 0, 0, 0, 0, 0, 1), this._offsetPT = this.add(this, "_offset", this._offset, p(-d[0]), 0, 0, 0, 0, 0, 1), i && (u = a.getComputedStyle(e)).strokeLinecap !== u.strokeLinejoin && (d = g(u.strokeMiterlimit), this.add(e.style, "strokeMiterlimit", d, d + .01)), this._live = k(e) || ~(t + "").indexOf("live"), this._nowrap = ~(t + "").indexOf("nowrap"), this._props.push("drawSVG"), 1
+   },
+   render: function(e, t) {
+    if (t.tween._time || !o()) {
+     var r, a, i, s, l = t._pt,
+      n = t._style;
+     if (l) {
+      for (t._live && (r = C(t._target)) !== t._length && (a = r / t._length, t._length = r, t._offsetPT && (t._offsetPT.s *= a, t._offsetPT.c *= a), t._dashPT ? (t._dashPT.s *= a, t._dashPT.c *= a) : t._dash *= a); l;) l.r(e, l.d), l = l._next;
+      i = t._dash || e && 1 !== e && 1e-4 || 0, r = t._length - i + .1, s = t._offset, i && s && i + Math.abs(s % t._length) > t._length - .05 && (s += s < 0 ? .005 : -.005) && (r += .005), n.strokeDashoffset = i ? s : s + .001, n.strokeDasharray = r < .1 ? "none" : i ? i + "px," + (t._nowrap ? 999999 : r) + "px" : "0px, 999999px"
+     }
+    } else t.styles.revert()
+   },
+   getLength: C,
+   getPosition: M
+  };
+ h() && t.registerPlugin(A);
+ var E = e.i(449492),
+  O = e.i(824511),
+  V = e.i(887652),
+  R = e.i(310542),
+  T = e.i(895420);
+ u.gsap.registerPlugin(A);
+ let L = "m63.112 31.888 17.551-17.551c.51-.51.817-1.225.817-1.96V2.174c0-.918-.735-1.653-1.654-1.653H69.624c-.735 0-1.43.286-1.96.817l-17.49 17.49V2.172c0-.918-.734-1.653-1.653-1.653H33.44c-.919 0-1.653.735-1.653 1.653v16.633l-17.47-17.49A2.8 2.8 0 0 0 12.357.5H2.153C1.235.5.5 1.255.5 2.173v10.205c0 .734.286 1.428.816 1.959l17.49 17.49H2.153C1.235 31.827.5 32.56.5 33.48V48.56c0 .919.735 1.653 1.653 1.653h16.633l-17.47 17.47A2.8 2.8 0 0 0 .5 69.643v10.204c0 .918.735 1.653 1.653 1.653h10.204c.735 0 1.429-.286 1.96-.816l17.49-17.49v16.632c0 .919.734 1.654 1.652 1.654h15.082c.918 0 1.653-.735 1.653-1.654V63.194l17.49 17.49c.51.51 1.224.816 1.959.816h10.204c.918 0 1.653-.735 1.653-1.653V69.643c0-.735-.286-1.429-.816-1.96l-17.551-17.55";
+
+ function q({
+  className: e,
+  baseColor: t = "var(--color-white-3)",
+  progressColor: r = "var(--color-green-5)",
+  strokeWidth: a = 1,
+  targetRef: i,
+  offset: s = ["start start", "end end"],
+  reverse: l = !1,
+  variant: n = "draw",
+  disabled: o = !1,
+  mode: f = "scroll",
+  progress: h = 0
+ }) {
+  let m = (0, d.useRef)(null),
+   {
+    scrollYProgress: x
+   } = (0, R.useScroll)({
+    target: i,
+    offset: s
+   }),
+   p = (0, V.useMotionValue)(h);
+  (0, d.useEffect)(() => {
+   if ("manual" !== f) return;
+   let e = (0, E.animate)(p, h, {
+    duration: .2,
+    ease: "easeInOut"
+   });
+   return () => e.stop()
+  }, [h, f, p]);
+  let g = "manual" === f ? p : x;
+  (0, d.useEffect)(() => {
+   if ("draw" !== n || o) return;
+   let e = m.current;
+   if (!e) return;
+   let t = g.get();
+   l ? u.gsap.set(e, {
+    drawSVG: `${100-100*t}% 100%`
+   }) : u.gsap.set(e, {
+    drawSVG: `0% ${100*t}%`
+   });
+   let r = g.on("change", t => {
+    l ? u.gsap.to(e, {
+     drawSVG: `${100-100*t}% 100%`,
+     duration: .2,
+     overwrite: !0
+    }) : u.gsap.to(e, {
+     drawSVG: `0% ${100*t}%`,
+     duration: .2,
+     overwrite: !0
+    })
+   });
+   return () => r()
+  }, [g, l, n, o]);
+  let v = l ? [0, 1] : [1, 0],
+   y = (0, T.useTransform)(g, v, v),
+   j = (0, T.useTransform)(g, v, [t, r]),
+   b = (0, T.useTransform)(g, v, [a, 5 * a]);
+  return (0, c.jsxs)("svg", {
+   xmlns: "http://www.w3.org/2000/svg",
+   fill: "none",
+   viewBox: "0 0 82 82",
+   className: e,
+   children: [(0, c.jsx)("path", {
+    stroke: t,
+    strokeWidth: a,
+    fill: "none",
+    d: L
+   }), "draw" === n ? (0, c.jsx)("path", {
+    ref: m,
+    stroke: o ? t : r,
+    strokeWidth: a,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    fill: "none",
+    d: L
+   }) : (0, c.jsx)(O.m.path, {
+    d: L,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    ..."fill" === n && {
+     stroke: "none",
+     fill: r,
+     fillOpacity: o ? 1 : y
+    },
+    ..."color" === n && {
+     stroke: o ? r : j,
+     strokeWidth: a
+    },
+    ..."thick" === n && {
+     stroke: r,
+     strokeWidth: o ? a : b
+    }
+   })]
+  })
+ }
+ e.s(["BrandLogoProgress", () => q], 132983)
+}, 683194, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(271645),
+  a = e.i(113182),
+  i = e.i(380064),
+  s = e.i(60919),
+  l = e.i(132983),
+  n = e.i(448773),
+  o = e.i(13417),
+  c = e.i(908223),
+  d = e.i(143443),
+  u = e.i(824511);
+
+ function f({
+  data: e
+ }) {
+  let f = (0, r.useRef)(null),
+   h = (0, s.useInViewAnimation)(a.STAGGER_CONTAINER_CONFIG),
+   {
+    graphicType: m,
+    title: x,
+    description: p,
+    ctaPrimary: g,
+    ctaSecondary: v,
+    backgroundMedia: y
+   } = e || {};
+  return (0, t.jsxs)(u.m.section, {
+   className: (0, i.cn)("relative flex flex-col", (0, i.hasValidMedia)(y) && "min-h-main"),
+   ...h,
+   children: [(0, t.jsxs)("div", {
+    ref: f,
+    className: "p-x-xl relative flex items-end justify-center pt-[calc(var(--h-header)+var(--s-section)*3)] pb-10 md:pt-[calc(var(--h-header)+var(--s-vp-height)*.2)] md:pb-[calc(var(--s-vp-height)*.1)]",
+    children: [(0, t.jsxs)("div", {
+     className: "flex flex-col gap-4 md:w-full md:flex-row md:items-center md:justify-between",
+     children: [(0, t.jsx)("div", {
+      className: "flex flex-col justify-end",
+      children: x && (0, t.jsx)(u.m.h1, {
+       className: "t-h-1 max-w-[500px] font-light! whitespace-pre-line",
+       variants: a.fadeMoveAnim,
+       children: x
+      })
+     }), (0, t.jsxs)("div", {
+      className: "flex flex-col gap-10 md:gap-5",
+      children: [p && (0, t.jsx)(u.m.p, {
+       className: "t-b-1 max-w-xs text-balance",
+       variants: a.fadeMoveAnim,
+       children: p
+      }), (g?.label || v?.label) && (0, t.jsxs)(u.m.div, {
+       className: "flex flex-wrap items-center gap-4",
+       variants: a.fadeMoveAnim,
+       children: [g?.label && g?.href && (0, t.jsx)(d.Button, {
+        asChild: !0,
+        tone: "white",
+        children: (0, t.jsx)(n.default, {
+         link: g,
+         children: g.label
+        })
+       }), v?.label && v?.href && (0, t.jsx)(d.Button, {
+        asChild: !0,
+        variant: "arrow",
+        tone: "gray",
+        children: (0, t.jsx)(n.default, {
+         link: v,
+         children: v.label
+        })
+       })]
+      })]
+     })]
+    }), m && (0, t.jsx)(u.m.div, {
+     className: "pointer-events-none absolute inset-0 -z-10 overflow-hidden",
+     "aria-hidden": "true",
+     variants: a.fadeMoveAnim,
+     children: "logo" === m ? (0, t.jsx)(l.BrandLogoProgress, {
+      className: "absolute top-[calc(var(--h-header)+40px)] left-0 h-auto w-md max-w-lg translate-x-[10%] md:top-full md:left-1/2 md:w-[70%] md:-translate-x-1/2 md:-translate-y-[30%]",
+      strokeWidth: .1,
+      targetRef: f,
+      offset: ["start start", "end start"],
+      disabled: !0
+     }) : (0, t.jsx)(c.default, {
+      className: "translate-y-[20%]"
+     })
+    })]
+   }), (0, i.hasValidMedia)(y) && (0, t.jsx)(u.m.div, {
+    className: "bg-subtle relative flex-1",
+    variants: a.fadeMoveAnim,
+    children: (0, t.jsx)("div", {
+     className: (0, i.cn)("absolute inset-0 isolate", "has-[img.lazyloaded]:[&>*:nth-child(2)]:opacity-100 has-[video.is-loaded]:[&>*:nth-child(2)]:opacity-100"),
+     children: (0, t.jsx)(o.default, {
+      data: y,
+      className: "img-object-cover",
+      imageClassName: "img-object-cover"
+     })
+    })
+   })]
+  })
+ }
+ e.s(["default", () => f])
+}, 188203, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(113182),
+  a = e.i(60919),
+  i = e.i(986025),
+  s = e.i(649125);
+
+ function l({
+  data: e
+ }) {
+  let {
+   title: l,
+   marquee: n
+  } = e || {}, o = (0, a.useInViewAnimation)(r.fadeAnim);
+  return (0, t.jsxs)("section", {
+   className: "py-section",
+   children: [l && (0, t.jsx)(s.default, {
+    children: (0, t.jsx)("h2", {
+     className: "t-h-2 md:t-h-3 p-x-sm mx-auto mb-5 text-center whitespace-pre-line md:mb-10",
+     children: l
+    })
+   }), (0, t.jsx)(i.default, {
+    data: n,
+    className: "p-x-2xl",
+    ...o
+   })]
+  })
+ }
+ e.s(["default", () => l])
+}, 85123, e => {
+ "use strict";
+ var t = e.i(843476);
+ e.i(271645);
+ var r = e.i(380064),
+  a = e.i(683412);
+
+ function i({
+  data: e,
+  className: i
+ }) {
+  let {
+   content: s,
+   sectionAppearance: l
+  } = e, {
+   backgroundColor: n,
+   textColor: o,
+   textAlign: c = "text-left",
+   maxWidth: d = "none",
+   spacingTop: u,
+   spacingBottom: f,
+   spacingTopDesktop: h,
+   spacingBottomDesktop: m
+  } = l || {}, x = !!n, p = [(0, r.getSpacingClass)("spacingTop", u, x), (0, r.getSpacingClass)("spacingBottom", f, x), (0, r.getSpacingClass)("spacingTopDesktop", h, x), (0, r.getSpacingClass)("spacingBottomDesktop", m, x)].filter(Boolean);
+  return (0, t.jsx)("section", {
+   className: i,
+   style: {
+    color: (0, r.buildRgbaCssString)(o) || "inherit",
+    backgroundColor: (0, r.buildRgbaCssString)(n) || null
+   },
+   children: (0, t.jsx)("div", {
+    className: (0, r.cn)("wysiwyg mx-auto", c, {
+     none: "w-full",
+     "3xl": "max-w-3xl",
+     "2xl": "max-w-2xl",
+     xl: "max-w-xl",
+     lg: "max-w-lg",
+     md: "max-w-md",
+     sm: "max-w-sm",
+     xs: "max-w-xs"
+    } [d] || "w-full", ...p),
+    children: (0, t.jsx)(a.default, {
+     blocks: s
+    })
+   })
+  })
+ }
+ e.s(["default", () => i])
+}, 259301, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(113182),
+  a = e.i(380064),
+  i = e.i(60919),
+  s = e.i(142999),
+  l = e.i(813098),
+  n = e.i(625076),
+  o = e.i(836236),
+  c = e.i(382657),
+  d = e.i(824511);
+ let u = (0, a.cn)("pointer-events-none absolute h-auto w-[120%] text-(--l-card-border-color) md:h-[150%] md:w-auto");
+
+ function f({
+  data: e
+ }) {
+  let {
+   text: f,
+   author: h,
+   role: m,
+   image: x,
+   theme: p = "light"
+  } = e || {}, {
+   mouseX: g,
+   mouseY: v,
+   handleMouseMove: y
+  } = (0, s.useSmoothMouse)(), j = (0, i.useInViewAnimation)(r.STAGGER_CONTAINER_CONFIG);
+  if (!f) return null;
+  let b = !!x?.asset,
+   w = "dark" === p;
+  return (0, t.jsxs)("section", {
+   className: (0, a.cn)(w ? "[--l-card-border-color:var(--color-green-5)]" : "[--l-card-border-color:var(--color-white-3)]", "group/spotlight-group-container", "relative flex items-center justify-center py-[var(--s-section)] md:py-[calc(var(--s-section)*2)]", w && "bg-green-7 text-green-1"),
+   onMouseMove: b ? y : void 0,
+   children: [!b && (w ? (0, t.jsx)(c.default, {
+    type: "octagon-large",
+    className: (0, a.cn)(u),
+    "aria-hidden": "true"
+   }) : (0, t.jsx)(o.default, {
+    type: "octagon",
+    className: (0, a.cn)(u),
+    strokeWidth: .1,
+    "aria-hidden": "true"
+   })), (0, t.jsx)(d.m.div, {
+    ...j,
+    className: (0, a.cn)("p-x-lg relative"),
+    children: (0, t.jsx)(d.m.div, {
+     variants: r.fadeMoveAnim,
+     children: b ? (0, t.jsx)(n.SpotlightGroup, {
+      mouseX: g,
+      mouseY: v,
+      children: (0, t.jsxs)(n.SpotlightCard, {
+       className: (0, a.cn)("flex flex-col gap-6 rounded-lg p-4 md:flex-row md:gap-12 md:p-6"),
+       style: {
+        "--l-card-rounded": "8px",
+        borderColor: "var(--l-card-border-color)"
+       },
+       children: [(0, t.jsx)("div", {
+        className: "relative aspect-square size-25 shrink-0 overflow-hidden md:size-33",
+        children: (0, t.jsx)(l.default, {
+         image: x,
+         className: "object-contain h-full w-full",
+         alt: h || "Quote Author"
+        })
+       }), (0, t.jsxs)("div", {
+        className: "flex flex-col gap-6",
+        children: [(0, t.jsx)("q", {
+         className: "t-h-2 text-balance",
+         children: f
+        }), (0, t.jsxs)("div", {
+         className: (0, a.cn)("t-b-1 flex flex-col gap-1", w && "text-green-2"),
+         children: [h && (0, t.jsx)("cite", {
+          className: "not-italic",
+          children: h
+         }), m && (0, t.jsx)("span", {
+          children: m
+         })]
+        })]
+       })]
+      })
+     }) : (0, t.jsxs)("div", {
+      className: "flex flex-col items-center justify-center text-center",
+      children: [(0, t.jsx)("q", {
+       className: "t-h-1 mb-10",
+       children: f
+      }), (0, t.jsxs)("div", {
+       className: "t-b-1 flex flex-col gap-1",
+       children: [h && (0, t.jsx)("cite", {
+        className: "not-italic",
+        children: h
+       }), m && (0, t.jsx)("span", {
+        children: m
+       })]
+      })]
+     })
+    })
+   })]
+  })
+ }
+ e.s(["default", () => f])
+}, 160330, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(271645),
+  a = e.i(380064),
+  i = e.i(839613),
+  s = e.i(132983),
+  l = e.i(924176),
+  n = e.i(448773),
+  o = e.i(986025),
+  c = e.i(649125),
+  d = e.i(143443),
+  u = e.i(433768),
+  f = e.i(310542);
+
+ function h({
+  data: e
+ }) {
+  let i = (0, r.useRef)(null),
+   s = (0, r.useRef)(null),
+   [l, c] = (0, r.useState)(0),
+   {
+    title: u,
+    sections: f,
+    actionBanner: h
+   } = e || {},
+   {
+    title: x,
+    marqueeText: p,
+    subtitle: g,
+    link: v
+   } = h || {};
+  (0, r.useEffect)(() => {
+   let e = () => {
+    i.current && c(i.current.offsetHeight)
+   };
+   return e(), window.addEventListener("resize", e), () => window.removeEventListener("resize", e)
+  }, []);
+  let y = (0, r.useRef)([]);
+  return f && y.current.length !== f.length && (y.current = f.map((e, t) => y.current[t] || {
+   current: null
+  })), (0, t.jsxs)("section", {
+   className: "relative",
+   children: [(0, t.jsx)("div", {
+    ref: s,
+    className: "relative",
+    children: (0, a.hasArrayValue)(f) && f.map((e, r) => (0, t.jsx)(m, {
+     section: e,
+     index: r,
+     isFirstSection: 0 === r,
+     offsetHeight: l,
+     sectionTitle: u,
+     sectionRef: s,
+     headerRef: i,
+     nextSectionRef: y.current[r + 1],
+     setRef: e => y.current[r].current = e
+    }, e._key))
+   }), h && !h?.isHidden && (0, t.jsxs)("div", {
+    className: "flex flex-col sm:flex-row",
+    children: [(0, t.jsx)("div", {
+     className: "relative overflow-hidden sm:w-2/3 lg:w-3/4",
+     children: p && (0, t.jsx)(o.default, {
+      data: {
+       speed: 50
+      },
+      className: "pointer-none overflow-hidden py-[unset]! select-none",
+      children: (0, t.jsx)("div", {
+       className: "t-h-1 text-white-3 px-10 text-[clamp(120px,30vw,240px)]!",
+       children: p
+      })
+     })
+    }), (x || g || (0, a.hasValidCta)(v)) && (0, t.jsxs)("div", {
+     className: "px-contain bg-orange state-selection-orange flex flex-1 flex-col py-6 text-white sm:w-1/3 sm:pl-6 lg:w-1/4",
+     children: [x && (0, t.jsx)("h3", {
+      className: "t-h-3 mb-4 max-w-[240px]",
+      children: x
+     }), g && (0, t.jsx)("p", {
+      className: "t-l-1 mb-4",
+      children: g
+     }), (0, a.hasValidCta)(v) && (0, t.jsx)(d.Button, {
+      asChild: !0,
+      variant: "arrow",
+      tone: "white",
+      className: "mt-12 w-fit sm:mt-auto",
+      children: (0, t.jsx)(n.default, {
+       link: v,
+       children: v.label
+      })
+     })]
+    })]
+   })]
+  })
+ }
+
+ function m({
+  section: e,
+  index: n,
+  isFirstSection: o,
+  offsetHeight: d,
+  sectionTitle: h,
+  sectionRef: m,
+  headerRef: x,
+  nextSectionRef: p,
+  setRef: g
+ }) {
+  let v = (0, r.useRef)(null),
+   [y, j] = (0, r.useState)(!1);
+  (0, i.default)(v, [y]);
+  let b = (0, r.useCallback)(e => {
+    v.current = e, "function" == typeof g ? g(e) : g && (g.current = e)
+   }, [g]),
+   {
+    scrollYProgress: w
+   } = (0, f.useScroll)({
+    target: p,
+    offset: ["start end", "start start"]
+   });
+  (0, u.useMotionValueEvent)(w, "change", e => {
+   j((p ? e : 0) > 0)
+  });
+  let k = p ? w : 0;
+  return (0, t.jsxs)("div", {
+   ref: b,
+   className: (0, a.cn)("sticky", !o && "mt-[calc(var(--s-vp-height)*0.3)]"),
+   style: {
+    top: o ? "calc(var(--h-header) + 20px)" : `calc(${d}px + var(--h-header) + 20px)`
+   },
+   "aria-hidden": y ? "true" : void 0,
+   children: [o && (0, t.jsxs)("div", {
+    ref: x,
+    className: "p-x-max after:bg-white-3 relative flex items-center justify-between py-4 after:absolute after:top-0 after:h-px after:w-[calc(100%-var(--padding-max)-var(--padding-max))] sm:py-6",
+    children: [h && (0, t.jsx)(c.default, {
+     children: (0, t.jsx)("h2", {
+      className: "t-h-2 2xl:t-h-1 max-w-sm text-balance",
+      children: h
+     })
+    }), (0, t.jsx)(s.BrandLogoProgress, {
+     targetRef: m,
+     className: "w-[10vw] max-w-20 min-w-15",
+     reverse: !0
+    })]
+   }), (0, t.jsx)(l.default, {
+    data: e,
+    indicator: (0, a.formatPad)(n + 1),
+    hasOverlay: !!p,
+    overlayOpacity: k,
+    style: {
+     height: `Min(calc(var(--s-vp-height) - var(--h-header) - ${d}px - 20px), var(--h-vp-height-max))`
+    }
+   })]
+  })
+ }
+ e.s(["default", () => h])
+}, 143575, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(522016),
+  a = e.i(113182),
+  i = e.i(380064),
+  s = e.i(60919);
+ e.i(448773);
+ var l = e.i(683412),
+  n = e.i(13417),
+  o = e.i(143443),
+  c = e.i(627230),
+  d = e.i(824511);
+ let u = d.m.create(r.default);
+
+ function f({
+  data: e
+ }) {
+  let {
+   items: r,
+   theme: l = "light",
+   enableCarousel: n = !1
+  } = e || {}, o = (0, s.useInViewAnimation)(a.STAGGER_CONTAINER_CONFIG);
+  if (!(0, i.hasArrayValue)(r)) return null;
+  let u = r.length,
+   f = "dark" === l,
+   m = u > 1,
+   x = n && u >= 3;
+  return (0, t.jsx)("section", {
+   className: (0, i.cn)(f ? "[--l-border-color:var(--color-green-5)]" : "[--l-border-color:var(--color-white-3)]", "py-section", f && "bg-green-7 text-green-1"),
+   children: (0, t.jsxs)(d.m.div, {
+    ...o,
+    children: [m && (0, t.jsxs)(c.Carousel, {
+     opts: {
+      loop: !1,
+      align: "start",
+      containScroll: "keepSnaps"
+     },
+     gap: "var(--s-contain)",
+     className: (0, i.cn)(!x && "md:hidden"),
+     children: [(0, t.jsx)(c.CarouselContent, {
+      className: (0, i.cn)("p-x-2xl"),
+      children: r.map((e, r) => (0, t.jsx)(c.CarouselItem, {
+       className: (0, i.cn)("basis-[85%] md:basis-[40%]"),
+       children: (0, t.jsx)(h, {
+        item: e,
+        isLarge: !1
+       })
+      }, e._key || r))
+     }), (0, t.jsx)(c.CarouselPagination, {
+      isDark: f,
+      activeNavDotWidth: "32px",
+      className: "p-x-2xl!"
+     })]
+    }), (!m || !x) && (0, t.jsx)("div", {
+     className: (0, i.cn)("p-x-2xl grid gap-4", m && "max-md:hidden", 2 === u && "md:grid-cols-2", 3 === u && "md:grid-cols-3"),
+     children: r.map((e, r) => (0, t.jsx)(h, {
+      item: e,
+      isLarge: 1 === u
+     }, e._key || r))
+    })]
+   })
+  })
+ }
+
+ function h({
+  item: e,
+  isLarge: r
+ }) {
+  let {
+   media: s,
+   title: c,
+   description: f,
+   cta: h
+  } = e || {}, m = (0, i.hasValidCta)(h) ? u : d.m.div;
+  return (0, t.jsxs)(m, {
+   ...(0, i.hasValidCta)(h) ? {
+    href: h.href,
+    "aria-label": `Learn more about ${c}`
+   } : {},
+   className: (0, i.cn)("group flex flex-col", r ? "md:flex-row md:*:flex-1" : "h-full"),
+   variants: a.fadeMoveAnim,
+   children: [(0, i.hasValidMedia)(s) && (0, t.jsx)("div", {
+    className: (0, i.cn)("relative aspect-4/3 overflow-hidden"),
+    children: (0, t.jsx)(n.default, {
+     data: s,
+     className: (0, i.cn)((0, i.hasValidCta)(h) && "group-hover:transform-[translate3d(-50%,-50%,0)_scale(1.02)]", "img-object-cover transition-transform duration-500 ease-out group-focus-visible:transform-[translate3d(-50%,-50%,0)_scale(1.02)]")
+    })
+   }), (0, t.jsxs)("div", {
+    className: (0, i.cn)("flex flex-col items-start gap-4 border border-(--l-border-color) p-4", r ? "md:p-8" : "md:p-6"),
+    children: [c && (0, t.jsx)("h2", {
+     className: (0, i.cn)("t-h-2"),
+     children: c
+    }), f && (0, t.jsx)("div", {
+     className: (0, i.cn)("wysiwyg"),
+     children: (0, t.jsx)(l.default, {
+      blocks: f
+     })
+    }), (0, i.hasValidCta)(h) && (0, t.jsx)(o.Button, {
+     shape: "rounded",
+     tabIndex: -1,
+     className: "mt-2 md:mt-auto",
+     children: h.label
+    })]
+   })]
+  })
+ }
+ e.s(["default", () => f])
+}, 997645, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(271645),
+  a = e.i(113182),
+  i = e.i(380064),
+  s = e.i(60919),
+  l = e.i(681083),
+  n = e.i(393134),
+  o = e.i(448773),
+  c = e.i(892159),
+  d = e.i(836236),
+  u = e.i(382657),
+  f = e.i(649125),
+  h = e.i(143443),
+  m = e.i(88653),
+  x = e.i(63209),
+  p = e.i(824511);
+ let g = p.m.create(o.default);
+
+ function v({
+  data: e
+ }) {
+  let {
+   title: o,
+   solutionCards: v
+  } = e || {}, [y, j] = (0, r.useState)(null), {
+   isTouchDevice: b
+  } = (0, l.default)(), w = (0, s.useInViewAnimation)(a.STAGGER_CONTAINER_CONFIG);
+  return (0, t.jsxs)("section", {
+   className: "text-foreground-muted py-section relative flex min-h-[min(var(--s-vp-height),var(--height-max))] flex-col justify-center md:pt-[calc(var(--s-section)*1)] md:pb-[calc(var(--s-section)*2)]",
+   children: [(0, t.jsx)(n.default, {}), (0, t.jsx)(x.MotionConfig, {
+    transition: {
+     type: "spring",
+     duration: .5,
+     bounce: 0
+    },
+    children: (0, t.jsx)(m.AnimatePresence, {
+     mode: "popLayout",
+     initial: !1,
+     children: null !== y && v[y]?.icon && (0, t.jsx)(p.m.div, {
+      className: "text-green-4 pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden",
+      variants: a.fadeAnim,
+      initial: "hide",
+      animate: "show",
+      exit: "hide",
+      children: (0, t.jsx)(u.default, {
+       type: v[y].icon,
+       className: (0, i.cn)("w-auto shrink-0", ["h-[150%]", "h-[140%]", "h-[200%]"][y]),
+       strokeWidth: .1
+      })
+     }, v[y].icon)
+    })
+   }), (0, t.jsxs)("div", {
+    className: "p-x-sm relative mx-auto flex flex-col items-center gap-9 md:gap-15",
+    children: [o && (0, t.jsx)(f.default, {
+     children: (0, t.jsx)("h2", {
+      className: "t-h-2 md:t-h-3 text-center",
+      children: o
+     })
+    }), (0, i.hasArrayValue)(v) && (0, t.jsx)(p.m.div, {
+     className: "flex w-full flex-col gap-4 md:gap-6",
+     ...w,
+     children: v.map((e, r) => {
+      let s = !!e.link?.href,
+       l = s ? g : p.m.div,
+       n = null !== y && y >= r,
+       o = (0, i.cn)("transition-[color,border-color,background-color,opacity,scale,translate] duration-300 ease-in-out");
+      return (0, t.jsxs)(l, {
+       className: (0, i.cn)("[--l-card-btn-gap:12px] [--l-card-btn-h:16px] [--l-card-pad:8px] [--l-card-radius:16px]", "group relative flex flex-col"),
+       ...s && {
+        link: e.link
+       },
+       "aria-label": e.link && `Link to ${e.title}`,
+       onMouseEnter: () => !b && j(r),
+       onMouseLeave: () => !b && j(null),
+       onFocus: () => !b && j(r),
+       onBlur: () => !b && j(null),
+       variants: a.fadeMoveAnim,
+       children: [(0, t.jsxs)("div", {
+        className: (0, i.cn)("border-green-2/30 group-hover:bg-white-3 group-focus-visible:bg-white-3 relative flex gap-6 rounded-(--l-card-radius) border p-(--l-card-pad) pr-6 will-change-transform group-hover:scale-[1.02] group-hover:border-transparent group-focus-visible:scale-[1.02] group-focus-visible:border-transparent", o, n && "-translate-y-[calc(var(--l-card-btn-h)+var(--l-card-btn-gap))]"),
+        children: [e.icon && (0, t.jsx)(c.default, {
+         icon: e.icon,
+         className: (0, i.cn)("group-hover:bg-white-3! group-focus-visible:bg-white-3! size-25 shrink-0 rounded-[calc(var(--l-card-radius)-var(--l-card-pad))]", o),
+         style: {
+          backgroundColor: e.iconColor?.hex
+         }
+        }), (e.title || e.subtitle) && (0, t.jsxs)("div", {
+         className: "flex flex-col items-start gap-1 pt-2",
+         children: [e.title && (0, t.jsx)("h3", {
+          className: (0, i.cn)("md:t-h-3 text-background group-hover:text-foreground group-focus-visible:text-foreground text-lg leading-[1.2]", o),
+          children: e.title
+         }), e.subtitle && (0, t.jsx)("p", {
+          className: (0, i.cn)("text-green-2 group-hover:text-foreground group-focus-visible:text-foreground max-w-xs text-balance whitespace-pre-line", o),
+          children: e.subtitle
+         })]
+        })]
+       }), e.link?.href && (0, t.jsx)("div", {
+        className: (0, i.cn)("pointer-events-none absolute bottom-0 flex h-[calc(var(--l-card-btn-h)+var(--l-card-btn-gap))] w-full justify-center pt-(--l-card-btn-gap) opacity-0", y === r && "opacity-100", o, y === r ? "delay-50" : "duration-200"),
+        children: (0, t.jsx)(h.Button, {
+         variant: "underline",
+         tabIndex: -1,
+         "aria-hidden": "true",
+         children: e.link.label || "Learn More"
+        })
+       }), e.link?.href && (0, t.jsx)(d.default, {
+        type: "arrow-right",
+        className: "text-green-2 absolute right-(--l-card-pad) bottom-(--l-card-pad) hidden size-4 pointer-coarse:block"
+       })]
+      }, e._id || r)
+     })
+    })]
+   })]
+  })
+ }
+ e.s(["default", () => v])
+}, 399926, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(113182),
+  a = e.i(380064),
+  i = e.i(60919),
+  s = e.i(394307),
+  l = e.i(683412),
+  n = e.i(649125);
+
+ function o({
+  accordionList: e
+ }) {
+  if (!e?.length) return null;
+  let r = e.map(e => ({
+   "@type": "Question",
+   name: e.title,
+   acceptedAnswer: {
+    "@type": "Answer",
+    text: (0, a.toPlainText)(e.content)
+   }
+  }));
+  return (0, t.jsx)("script", {
+   type: "application/ld+json",
+   dangerouslySetInnerHTML: {
+    __html: JSON.stringify({
+     "@context": "https://schema.org",
+     "@type": "FAQPage",
+     mainEntity: r
+    })
+   }
+  })
+ }
+ var c = e.i(607514),
+  d = e.i(824511);
+ let u = d.m.create(c.AccordionItem);
+
+ function f({
+  data: e
+ }) {
+  let {
+   title: s,
+   subtitle: n,
+   description: f,
+   accordionList: m
+  } = e || {}, x = (0, i.useInViewAnimation)(r.STAGGER_CONTAINER_CONFIG);
+  return (0, t.jsxs)(t.Fragment, {
+   children: [(0, a.hasArrayValue)(m) && (0, t.jsx)(o, {
+    accordionList: m
+   }), (0, t.jsxs)("section", {
+    children: [(0, t.jsx)(h, {
+     title: s,
+     subtitle: n
+    }), (0, t.jsxs)(d.m.div, {
+     className: "px-contain flex flex-wrap gap-6 bg-white pt-10 pb-20",
+     ...x,
+     children: [(0, t.jsx)("div", {
+      className: "basis-full lg:flex-1",
+      children: (0, t.jsx)(d.m.div, {
+       className: "wysiwyg lg:max-w-88 lg:pl-22 xl:pl-32",
+       variants: r.fadeMoveAnim,
+       children: (0, t.jsx)(l.default, {
+        blocks: f
+       })
+      })
+     }), (0, t.jsx)("div", {
+      className: "basis-full lg:flex-1",
+      children: (0, a.hasArrayValue)(m) && (0, t.jsx)(c.Accordion, {
+       type: "single",
+       collapsible: !0,
+       children: m.map(e => {
+        let {
+         title: a,
+         id: i,
+         content: s
+        } = e || {};
+        return (0, t.jsxs)(u, {
+         value: i,
+         className: "border-white-4 data-[state=open]:border-green-5 hover:border-green-5 border-b transition-colors duration-300",
+         variants: r.fadeMoveAnim,
+         children: [(0, t.jsx)(c.AccordionTrigger, {
+          svgIcon: "arrow-down",
+          className: "font-antique-legacy text-white-4 focus-visible:text-green-5 data-[state=open]:text-green-5 hover:text-green-5 px-0 py-6 text-left text-2xl transition-[color] duration-300",
+          children: a
+         }), (0, t.jsx)(c.AccordionContent, {
+          children: (0, t.jsx)("div", {
+           className: "wysiwyg max-w-sm pb-10",
+           children: (0, t.jsx)(l.default, {
+            blocks: s
+           })
+          })
+         })]
+        }, i)
+       })
+      })
+     })]
+    })]
+   })]
+  })
+ }
+
+ function h({
+  title: e,
+  subtitle: a
+ }) {
+  let l = (0, i.useInViewAnimation)(r.STAGGER_CONTAINER_CONFIG);
+  return (0, t.jsxs)("div", {
+   className: "bg-green-3 px-contain state-selection-green relative flex w-full flex-wrap gap-4 overflow-hidden py-10 text-white md:min-h-96 md:pt-16 md:pb-20",
+   children: [(0, t.jsx)("div", {
+    className: "flex basis-full items-end md:flex-1",
+    children: e && (0, t.jsx)(n.default, {
+     children: (0, t.jsx)("h1", {
+      className: "t-h-1 lg:pl-22 xl:max-w-122 xl:pl-32",
+      children: e
+     })
+    })
+   }), (0, t.jsxs)(d.m.div, {
+    className: "relative flex basis-full items-end md:flex-1",
+    ...l,
+    children: [(0, t.jsx)(s.BrandLogoStroke, {
+     className: "text-green-4/50 absolute top-0 right-0 size-28 md:size-116",
+     variants: r.fadeAnim
+    }), a && (0, t.jsx)(d.m.h3, {
+     className: "t-h-4 z-10 text-balance md:max-w-70",
+     variants: r.fadeMoveAnim,
+     children: a
+    })]
+   })]
+  })
+ }
+ e.s(["default", () => f], 399926)
+}, 944433, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(271645),
+  a = e.i(113182),
+  i = e.i(380064),
+  s = e.i(839613),
+  l = e.i(60919),
+  n = e.i(198588),
+  o = e.i(448773),
+  c = e.i(13417),
+  d = e.i(836236),
+  u = e.i(143443),
+  f = e.i(824511);
+ let h = {
+  left: (0, i.cn)("md:w-[calc(50vw-var(--l-space-x-half)-var(--l-offset-left))]"),
+  right: (0, i.cn)("w-[calc(50%-var(--l-space-x-half))] grow")
+ };
+
+ function m({
+  data: e
+ }) {
+  let {
+   products: a,
+   dashboardMedias: s
+  } = e || {}, [l, n] = (0, r.useState)(-1);
+  return (0, i.hasArrayValue)(a) ? (0, t.jsxs)("section", {
+   className: (0, i.cn)("[--l-offset-left:var(--padding-3xl)] [--l-space-section-bottom:var(--s-section)] [--l-space-section-top:calc(var(--h-header)+16px)] [--l-space-x-half:16px] [--l-space-y:12px]", "md:[--l-card-height:var(--s-vp-height)] md:[--l-space-section-top:calc(var(--h-header)+var(--s-section-half))] md:[--l-space-y:16px]", "lg:[--l-space-y:8px] xl:[--l-space-y:12px] 2xl:[--l-space-y:16px]", "bg-white-2 relative"),
+   children: [(0, t.jsx)("div", {
+    className: "relative",
+    children: a.map((e, r) => (0, t.jsx)(x, {
+     product: e,
+     index: r,
+     isCovered: l > r,
+     onActivate: n
+    }, e._key || e._id || r))
+   }), (0, i.hasArrayValue)(s) && (0, t.jsx)("div", {
+    className: "pointer-events-none absolute inset-0 max-md:hidden",
+    role: "img",
+    "aria-label": "Product dashboards",
+    children: (0, t.jsx)("div", {
+     className: (0, i.cn)("[--l-offset-left:calc(50%+var(--l-space-x-half))]", "sticky top-0 flex h-(--l-card-height) items-center overflow-hidden pt-(--l-space-section-top) pb-(--l-space-section-bottom) pl-(--l-offset-left)"),
+     children: (0, t.jsx)("div", {
+      className: (0, i.cn)(h.right, "relative [--l-grid-container-padding:max(16px,0.85vw)] [--l-grid-container-rounded:24px]", "bg-white-3 min-w-md rounded-l-(--l-grid-container-rounded) p-(--l-grid-container-padding)"),
+      children: s.map((e, r) => {
+       let a = 0 === r,
+        s = l >= r;
+       return (0, t.jsx)(c.default, {
+        data: e,
+        className: (0, i.cn)(!a && "absolute inset-(--l-grid-container-padding)", "transition-opacity duration-300 ease-in-out", !s && "opacity-30"),
+        imgQuality: 100
+       }, r)
+      })
+     })
+    })
+   })]
+  }) : null
+ }
+
+ function x({
+  product: e,
+  index: c,
+  isCovered: m,
+  onActivate: x
+ }) {
+  let {
+   icon: g,
+   title: v,
+   subtitle: y,
+   description: j,
+   featuresTitle: b,
+   features: w,
+   audienceTitle: k,
+   audienceDescription: N,
+   callToAction: C
+  } = e || {}, M = (0, r.useRef)(null), S = (0, r.useRef)(!1), A = (0, l.useInViewAnimation)(a.STAGGER_CONTAINER_CONFIG);
+  return (0, s.default)(M, [m]), (0, r.useEffect)(() => {
+   let e = M.current;
+   if (!e) return;
+   let t = new IntersectionObserver(([e]) => {
+    if (!S.current) {
+     S.current = !0;
+     return
+    }
+    e.isIntersecting ? x(c) : e.boundingClientRect.top > 0 && x(c - 1)
+   }, {
+    rootMargin: "-60% 0px -40% 0px",
+    threshold: 0
+   });
+   return t.observe(e), () => t.disconnect()
+  }, [c, x]), (0, t.jsxs)(f.m.div, {
+   ref: M,
+   className: (0, i.cn)("sticky top-0 h-(--l-card-height)", "bg-white-2 flex flex-col justify-center gap-(--l-space-y) pt-(--l-space-section-top) pb-(--l-space-section-bottom) pl-(--l-offset-left) max-md:pr-(--l-offset-left)", 0 !== c && "border-white-3 mt-[calc(var(--s-vp-height)*0.3)] border-t"),
+   "aria-hidden": m ? "true" : void 0,
+   ...A,
+   children: [(0, t.jsxs)(f.m.div, {
+    className: (0, i.cn)(h.left, "flex flex-col items-start justify-start gap-(--l-space-y)"),
+    variants: a.fadeMoveAnim,
+    children: [(0, t.jsxs)("div", {
+     className: "bg-foreground t-l-1 text-white-2 flex items-center gap-4 rounded-md px-4 py-2 font-medium! uppercase",
+     children: [(0, t.jsx)("span", {
+      className: "inline-block leading-none",
+      children: (0, i.formatPad)(c + 1)
+     }), g && (0, t.jsx)(d.default, {
+      type: g,
+      className: "text-green-3 size-4"
+     }), v && (0, t.jsx)("span", {
+      children: v
+     })]
+    }), y && (0, t.jsx)("h2", {
+     className: "t-h-2 lg:t-h-3 xl:t-h-2 max-w-[450px] text-balance",
+     children: y
+    }), j && (0, t.jsx)("p", {
+     className: "t-l-1 max-w-[400px] text-balance",
+     children: j
+    })]
+   }), (b || (0, i.hasArrayValue)(w)) && (0, t.jsxs)(t.Fragment, {
+    children: [(0, t.jsx)(p, {}), (0, t.jsxs)(f.m.div, {
+     className: (0, i.cn)(h.left, "flex flex-col items-start justify-start gap-(--l-space-y)"),
+     variants: a.fadeMoveAnim,
+     children: [b && (0, t.jsx)("h2", {
+      className: "t-l-1 uppercase",
+      children: b
+     }), (0, i.hasArrayValue)(w) && (0, t.jsx)(n.default, {
+      items: w,
+      className: (0, i.cn)("grid grid-cols-2 gap-x-(--l-space-y) gap-y-(--l-space-y) md:gap-x-10")
+     })]
+    })]
+   }), (k || N || (0, i.hasValidCta)(C)) && (0, t.jsxs)(t.Fragment, {
+    children: [(0, t.jsx)(p, {
+     className: "mt-3 md:mt-5"
+    }), (0, t.jsxs)(f.m.div, {
+     className: (0, i.cn)(h.left, "flex flex-col items-start justify-start gap-(--l-space-y)"),
+     variants: a.fadeMoveAnim,
+     children: [k && (0, t.jsx)("h2", {
+      className: "t-l-1 uppercase",
+      children: k
+     }), N && (0, t.jsx)("p", {
+      className: "t-l-1 max-w-[450px] text-balance",
+      children: N
+     }), (0, i.hasValidCta)(C) && (0, t.jsx)(u.Button, {
+      asChild: !0,
+      shape: "rounded",
+      className: "mt-2",
+      children: (0, t.jsx)(o.default, {
+       link: C,
+       children: C.label
+      })
+     })]
+    })]
+   })]
+  })
+ }
+
+ function p({
+  className: e
+ }) {
+  return (0, t.jsx)(f.m.div, {
+   className: (0, i.cn)("bg-white-3 h-px w-full shrink-0", e),
+   "aria-hidden": "true",
+   variants: (0, a.lineDrawAnim)({
+    delay: 1
+   })
+  })
+ }
+ e.s(["default", () => m])
+}, 159101, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(271645),
+  a = e.i(357247),
+  i = e.i(113182),
+  s = e.i(380064),
+  l = e.i(60919),
+  n = e.i(394307),
+  o = e.i(448773),
+  c = e.i(143443),
+  d = e.i(627230),
+  u = e.i(88653),
+  f = e.i(63209),
+  h = e.i(824511),
+  m = e.i(846932);
+ let x = {
+  CONTAINER: {
+   class: (0, s.cn)("grid grid-cols-16 grid-rows-8"),
+   area: 128
+  },
+  BORDER_ITEM: {
+   class: (0, s.cn)("relative -mt-px -ml-px border-(--l-grid-border-color)", 'before:block before:w-full before:pb-[100%] before:content-[""]', "[&>*:first-child]:absolute [&>*:first-child]:inset-(--l-item-inset,0) [&>*:first-child]:top-1/2 [&>*:first-child]:left-1/2 [&>*:first-child]:h-[75%] [&>*:first-child]:w-[75%] [&>*:first-child]:-translate-x-1/2 [&>*:first-child]:-translate-y-1/2 [&>svg]:max-w-[100px]")
+  },
+  TEXT_BLOCK: {
+   class: (0, s.cn)("col-span-5 col-start-2 row-span-3 row-start-1"),
+   area: 15
+  },
+  DETAIL_BLOCK: {
+   class: (0, s.cn)("col-span-4 col-start-7 row-span-4 row-start-2"),
+   area: 16
+  },
+  PLACEHOLDERS: [{
+   class: (0, s.cn)("col-span-2 col-start-1 row-span-2 row-start-7 border-b"),
+   area: 4
+  }, {
+   class: (0, s.cn)("col-span-2 col-start-15 row-span-2 row-start-5 border-t border-l"),
+   area: 4
+  }],
+  OTHERS: [{
+   class: "col-start-4 row-start-6 col-span-1 row-span-1",
+   area: 1
+  }, {
+   class: "col-start-3 row-start-7 col-span-2 row-span-2",
+   area: 4
+  }, {
+   class: "col-start-5 row-start-4 col-span-2 row-span-2",
+   area: 4
+  }, {
+   class: "col-start-5 row-start-6 col-span-2 row-span-2",
+   area: 4
+  }, {
+   class: "col-start-7 row-start-7 col-span-1 row-span-1",
+   area: 1
+  }, {
+   class: "col-start-8 row-start-6 col-span-1 row-span-1",
+   area: 1
+  }, {
+   class: "col-start-9 row-start-6 col-span-2 row-span-2",
+   area: 4
+  }, {
+   class: "col-start-11 row-start-2 col-span-2 row-span-2",
+   area: 4
+  }, {
+   class: "col-start-12 row-start-4 col-span-1 row-span-1",
+   area: 1
+  }, {
+   class: "col-start-11 row-start-5 col-span-2 row-span-2",
+   area: 4
+  }, {
+   class: "col-start-13 row-start-1 col-span-1 row-span-1",
+   area: 1
+  }, {
+   class: "col-start-13 row-start-2 col-span-2 row-span-2",
+   area: 4
+  }, {
+   class: "col-start-13 row-start-5 col-span-1 row-span-1",
+   area: 1
+  }, {
+   class: "col-start-14 row-start-6 col-span-1 row-span-1",
+   area: 1
+  }, {
+   class: "col-start-13 row-start-7 col-span-1 row-span-1",
+   area: 1
+  }]
+ };
+
+ function p({
+  data: e
+ }) {
+  let {
+   title: a,
+   description: n,
+   callToAction: o,
+   integrations: c
+  } = e || {}, u = (0, s.hasArrayValue)(c), f = c.filter(e => e.name), [m, p] = (0, r.useState)(f[0] || (u ? c[1] : null)), j = (0, l.useInViewAnimation)(i.STAGGER_CONTAINER_CONFIG);
+  if (!u) return null;
+  let [b, w] = (0, r.useState)(), k = e => {
+   p(e)
+  };
+  return (0, r.useEffect)(() => {
+   if (!b) return;
+   let e = () => {
+    let e = b.selectedSnap();
+    f[e] && k(f[e])
+   };
+   return e(), b.on("select", e), () => {
+    b.off("select", e)
+   }
+  }, [b, c]), (0, t.jsxs)(h.m.section, {
+   className: (0, s.cn)("[--l-grid-border-color:var(--color-white-3)]", "lg:py-section py-section flex justify-center md:py-[calc(var(--s-section)*2)]"),
+   ...j,
+   children: [(0, t.jsxs)("div", {
+    className: (0, s.cn)("flex w-full flex-col gap-10 md:hidden"),
+    children: [(0, t.jsx)(g, {
+     title: a,
+     description: n,
+     callToAction: o
+    }), (0, t.jsxs)(h.m.div, {
+     className: "flex flex-col",
+     variants: i.fadeMoveAnim,
+     children: [(0, t.jsx)(y, {
+      activeIntegration: m,
+      integrations: c,
+      className: (0, s.cn)("border-y border-(--l-grid-border-color)")
+     }), (0, t.jsxs)(d.Carousel, {
+      setApi: w,
+      opts: {
+       containScroll: "keepSnaps"
+      },
+      children: [(0, t.jsx)(d.CarouselContent, {
+       className: "pl-px",
+       children: f.map((e, r) => {
+        let {
+         _key: a
+        } = e, i = m?._key === a;
+        return (0, t.jsx)(d.CarouselItem, {
+         className: "-ml-px basis-[40%]",
+         children: (0, t.jsx)(v, {
+          integration: e,
+          isActive: i,
+          onClick: () => {
+           k(e), b && void 0 !== r && b.goTo(r)
+          },
+          className: "w-full"
+         })
+        }, a || r)
+       })
+      }), (0, t.jsx)(d.CarouselPagination, {
+       activeNavDotWidth: "32px"
+      })]
+     })]
+    })]
+   }), (0, t.jsxs)(h.m.div, {
+    className: (0, s.cn)("[--l-top-offset:100px]", "relative w-full max-w-3xl pt-px pl-px max-lg:mt-(--l-top-offset) max-md:hidden", x.CONTAINER.class),
+    variants: i.fadeMoveAnim,
+    children: [(0, t.jsx)(g, {
+     title: a,
+     description: n,
+     callToAction: o,
+     className: (0, s.cn)("max-xl:absolute max-lg:-mt-(--l-top-offset)", x.TEXT_BLOCK.class)
+    }), (0, t.jsx)(y, {
+     activeIntegration: m,
+     integrations: c,
+     className: (0, s.cn)("border", x.BORDER_ITEM.class, x.DETAIL_BLOCK.class)
+    }), c.slice(0, 15).map((e, r) => {
+     let a = x.OTHERS[r];
+     if (!a) return null;
+     let i = m?._key === e._key;
+     return (0, t.jsx)(v, {
+      integration: e,
+      isActive: i,
+      onClick: () => k(e),
+      className: a.class
+     }, e._key || r)
+    }), x.PLACEHOLDERS.map((e, r) => (0, t.jsx)("div", {
+     className: (0, s.cn)(e.class, x.BORDER_ITEM.class),
+     "aria-hidden": "true"
+    }, r))]
+   })]
+  })
+ }
+ let g = ({
+   title: e,
+   description: r,
+   callToAction: a,
+   className: l
+  }) => (0, t.jsxs)("div", {
+   className: (0, s.cn)("max-md:p-x-max flex flex-col items-start justify-center gap-3 md:gap-2 xl:gap-4", l),
+   children: [e && (0, t.jsx)(h.m.h2, {
+    className: "t-h-2 md:t-h-3 max-w-[450px]",
+    variants: i.fadeMoveAnim,
+    children: e
+   }), r && (0, t.jsx)(h.m.p, {
+    className: "t-b-1 md:t-b-2 xl:t-b-1 max-w-xs text-balance whitespace-pre-line",
+    variants: i.fadeMoveAnim,
+    children: r
+   }), (0, s.hasValidCta)(a) && (0, t.jsx)(h.m.div, {
+    variants: i.fadeMoveAnim,
+    children: (0, t.jsx)(c.Button, {
+     variant: "arrow",
+     tone: "gray",
+     asChild: !0,
+     className: "mt-3 xl:mt-6",
+     children: (0, t.jsx)(o.default, {
+      link: a,
+      children: a.label
+     })
+    })
+   })]
+  }),
+  v = ({
+   integration: e,
+   isActive: r,
+   onClick: i,
+   className: l
+  }) => {
+   let {
+    name: n,
+    icon: o
+   } = e || {}, c = !n && o;
+   return (0, t.jsx)("button", {
+    onClick: c ? void 0 : i,
+    className: (0, s.cn)("bg-white-2 flex items-center justify-center border outline-offset-[-3px] transition-[background-color,box-shadow] duration-300 ease-in-out", x.BORDER_ITEM.class, !c && "hover:bg-background cursor-pointer", r && "bg-background ring-1 ring-green-500 ring-inset", l),
+    "aria-label": c ? void 0 : `Show details of ${n}`,
+    children: o ? (0, t.jsx)(a.default, {
+     src: o
+    }) : (0, t.jsx)("span", {
+     className: "t-l-1 p-4 font-bold!",
+     children: n
+    })
+   })
+  },
+  y = ({
+   activeIntegration: e,
+   integrations: r,
+   className: a
+  }) => {
+   let {
+    _key: l,
+    name: o
+   } = e || {};
+   return (0, t.jsx)("div", {
+    className: (0, s.cn)("[--l-item-inset:12px] xl:[--l-item-inset:16px]", "relative flex flex-col overflow-hidden", "max-md:p-x-max max-md:pt-6 max-md:pb-[calc(var(--s-section)*2)] max-md:text-center", a),
+    children: (0, t.jsx)(f.MotionConfig, {
+     transition: i.fadeBlurAnim.transition,
+     children: (0, t.jsxs)("div", {
+      className: (0, s.cn)("[--l-rounded-height:40px] [--l-rounded-radius:6px]", "flex flex-col items-center gap-6 md:size-[90%]! md:items-start md:gap-2 lg:size-[80%]!"),
+      children: [(0, t.jsxs)("div", {
+       className: "flex items-center gap-2",
+       children: [(0, t.jsx)(m.motion.div, {
+        layout: !0,
+        className: "flex h-(--l-rounded-height) items-center justify-center rounded-(--l-rounded-radius) border p-2",
+        children: (0, t.jsx)(n.BrandLogo, {
+         className: "size-[22px]"
+        })
+       }), o && (0, t.jsxs)("div", {
+        className: "flex items-center gap-2",
+        children: [(0, t.jsx)(m.motion.span, {
+         layout: !0,
+         className: "font-medium",
+         children: "x"
+        }), (0, t.jsx)(u.AnimatePresence, {
+         mode: "popLayout",
+         initial: !1,
+         children: (0, t.jsx)(h.m.div, {
+          className: "flex h-(--l-rounded-height) items-center justify-center rounded-(--l-rounded-radius) border px-4 whitespace-nowrap xl:px-8",
+          initial: {
+           opacity: 0,
+           y: 4
+          },
+          animate: {
+           opacity: 1,
+           y: 0,
+           transition: {
+            delay: .2
+           }
+          },
+          exit: {
+           opacity: 0,
+           y: -4
+          },
+          children: (0, t.jsx)("span", {
+           className: "t-l-1 font-medium!",
+           children: o
+          })
+         }, l + o)
+        })]
+       })]
+      }), (0, t.jsx)("div", {
+       className: "grid w-full items-start justify-items-center md:justify-items-start",
+       children: (0, s.hasArrayValue)(r) && r.map(r => {
+        let a = e?._key === r._key,
+         {
+          details: l
+         } = r;
+        return l?.category || l?.text ? (0, t.jsxs)(h.m.div, {
+         className: (0, s.cn)("col-start-1 row-start-1 flex flex-col items-center gap-4 md:items-start", !a && "pointer-events-none"),
+         "aria-hidden": !a,
+         variants: i.fadeBlurAnim,
+         animate: a ? "show" : "hide",
+         transition: {
+          ...i.fadeBlurAnim.transition,
+          duration: 2.5 * i.fadeBlurAnim.transition.duration
+         },
+         children: [l?.category && (0, t.jsx)("div", {
+          className: "border-subtle flex h-(--l-rounded-height) items-center justify-center rounded-(--l-rounded-radius) border px-4 py-1 md:px-2 lg:px-4 lg:py-2 xl:px-8",
+          children: (0, t.jsx)("span", {
+           className: "t-l-1 font-medium!",
+           children: l.category
+          })
+         }), l?.text && (0, t.jsx)("p", {
+          className: "t-l-2 xl:t-h-4 max-w-xs whitespace-pre-line",
+          children: l.text
+         })]
+        }, r._key) : null
+       })
+      })]
+     })
+    })
+   })
+  };
+ e.s(["default", () => p])
+}, 6294, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(271645),
+  a = e.i(380064),
+  i = e.i(21206),
+  s = e.i(142999),
+  l = e.i(393134),
+  n = e.i(448773),
+  o = e.i(13417),
+  c = e.i(625076),
+  d = e.i(382657),
+  u = e.i(697347),
+  f = e.i(143443),
+  h = e.i(63209),
+  m = e.i(449492),
+  x = e.i(824511),
+  p = e.i(887652),
+  g = e.i(772328);
+ let v = {
+   duration: .9,
+   ease: "circOut"
+  },
+  y = {
+   duration: .6,
+   ease: "easeOut"
+  },
+  j = {
+   duration: .9,
+   ease: "backOut"
+  };
+
+ function b({
+  data: e
+ }) {
+  let {
+   labels: b,
+   labelsAutoplayDuration: w,
+   title: k,
+   ctaPrimary: N,
+   ctaSecondary: C,
+   dashboardMedias: M
+  } = e || {}, S = (0, r.useRef)(null), A = (0, r.useRef)(null), [E, O] = (0, r.useState)(0), {
+   mouseX: V,
+   mouseY: R,
+   handleMouseMove: T
+  } = (0, s.useSmoothMouse)(), L = (0, i.useIntroDelay)(), q = (0, g.useReducedMotion)(), I = {
+   title: (0, p.useMotionValue)(30),
+   media0: (0, p.useMotionValue)("20%"),
+   media1: (0, p.useMotionValue)("20%"),
+   media2: (0, p.useMotionValue)("20%"),
+   media3: (0, p.useMotionValue)("20%")
+  }, _ = {
+   labelsContainer: (0, p.useMotionValue)(60)
+  }, z = {
+   labels: (0, p.useMotionValue)(0),
+   title: (0, p.useMotionValue)(0),
+   mediaContainer: (0, p.useMotionValue)(0),
+   media0: (0, p.useMotionValue)(0),
+   media1: (0, p.useMotionValue)(0),
+   media2: (0, p.useMotionValue)(0),
+   media3: (0, p.useMotionValue)(0),
+   svg: (0, p.useMotionValue)(0)
+  }, P = {
+   labelsContainer: (0, p.useMotionValue)(0),
+   ctaPrimary: (0, p.useMotionValue)(0),
+   ctaSecondary: (0, p.useMotionValue)(0),
+   svg: (0, p.useMotionValue)(.9)
+  };
+  return (0, r.useEffect)(() => {
+   let e = A.current;
+   if (!e) return;
+   let t = new ResizeObserver(() => {
+    O(e.offsetWidth)
+   });
+   return t.observe(e), () => {
+    t.disconnect()
+   }
+  }, []), (0, r.useEffect)(() => {
+   if (null === L || A && 0 === E) return;
+   if (sessionStorage.getItem("hasPlayedHeroTwoIntro") || q) {
+    Object.values(I).forEach(e => e.set("0%")), Object.values(_).forEach(e => e.set(E)), Object.values(z).forEach(e => e.set(1)), Object.values(P).forEach(e => e.set(1));
+    return
+   }
+   let e = (0, m.animate)([
+    [P.labelsContainer, 1, j],
+    [_.labelsContainer, E, {
+     duration: .9,
+     ease: "circOut"
+    }],
+    [z.labels, 1, {
+     ...y,
+     at: "<"
+    }],
+    [I.title, 0, {
+     ...v,
+     at: .3
+    }],
+    [z.title, 1, {
+     ...y,
+     at: "<"
+    }],
+    [P.ctaPrimary, 1, {
+     ...j,
+     at: .6
+    }],
+    [P.ctaSecondary, 1, {
+     ...j,
+     at: "<+0.2"
+    }],
+    [z.mediaContainer, 1, {
+     ...y,
+     at: "<"
+    }],
+    [I.media0, "0%", {
+     ...v
+    }],
+    [z.media0, 1, {
+     ...y,
+     at: "<"
+    }],
+    [I.media1, "0%", {
+     ...v,
+     at: "<+0.2"
+    }],
+    [z.media1, 1, {
+     ...y,
+     at: "<"
+    }],
+    [I.media2, "0%", {
+     ...v,
+     at: "<+0.2"
+    }],
+    [z.media2, 1, {
+     ...y,
+     at: "<"
+    }],
+    [I.media3, "0%", {
+     ...v,
+     at: "<+0.2"
+    }],
+    [z.media3, 1, {
+     ...y,
+     at: "<"
+    }],
+    [z.svg, 1, {
+     duration: .3,
+     ease: "circOut",
+     at: "<+0.3"
+    }],
+    [P.svg, 1, {
+     duration: .9,
+     ease: "circOut",
+     at: "<"
+    }]
+   ], {
+    delay: L
+   });
+   return sessionStorage.setItem("hasPlayedHeroTwoIntro", "true"), () => {
+    e.stop()
+   }
+  }, [L, E, q]), (0, t.jsxs)("section", {
+   ref: S,
+   onMouseMove: T,
+   className: (0, a.cn)("[--l-card-rounded:8px] [--l-h-text-carousel:40px] [--l-pt:calc(var(--s-vp-height)*0.15)] lg:[--l-pt:min(calc(var(--h-vp-height-max)*0.2),calc(var(--s-vp-height)*0.2))]", "group/spotlight-group-container text-foreground-muted min-h-main relative flex flex-col items-center justify-between gap-15 overflow-hidden pt-(--l-pt)"),
+   children: [(0, t.jsx)(l.default, {}), (0, t.jsx)(h.MotionConfig, {
+    transition: {
+     type: "spring",
+     bounce: .3,
+     duration: .8
+    },
+    children: (0, t.jsx)(d.default, {
+     type: "prism-large-horizontal",
+     className: (0, a.cn)("text-green-4 pointer-events-none absolute top-[calc(var(--l-pt)+var(--l-h-text-carousel)/2)] left-1/2 -z-10 h-4/5 w-auto -translate-x-1/2 -translate-y-[29%] md:h-[90%]", "mask-[linear-gradient(to_right,transparent_0%,black_30%,black_70%,transparent_100%)]"),
+     style: {
+      opacity: z.svg,
+      scaleY: P.svg
+     }
+    })
+   }), (0, t.jsxs)("div", {
+    className: "p-x-max flex flex-col items-center gap-4 text-center",
+    children: [(0, t.jsxs)("div", {
+     ref: A,
+     className: "relative flex h-(--l-h-text-carousel) items-center justify-center rounded-full px-13",
+     children: [(0, t.jsx)(x.m.div, {
+      className: "bg-green-6 absolute left-1/2 h-full w-full -translate-x-1/2 rounded-[inherit]",
+      "aria-hidden": "true",
+      style: {
+       width: _.labelsContainer,
+       scale: P.labelsContainer
+      }
+     }), (0, t.jsx)(u.default, {
+      texts: b,
+      interval: 1e3 * w,
+      className: "text-white-2",
+      style: {
+       opacity: z.labels
+      }
+     })]
+    }), k && (0, t.jsx)(x.m.h1, {
+     className: "t-h-1 max-w-sm font-light! whitespace-pre-line",
+     style: {
+      y: I.title,
+      opacity: z.title
+     },
+     children: k
+    }), ((0, a.hasValidCta)(N) || (0, a.hasValidCta)(C)) && (0, t.jsxs)("div", {
+     className: "mt-6 flex flex-wrap items-center justify-center gap-4",
+     children: [(0, a.hasValidCta)(N) && (0, t.jsx)(x.m.div, {
+      style: {
+       scale: P.ctaPrimary
+      },
+      children: (0, t.jsx)(f.Button, {
+       asChild: !0,
+       tone: "white",
+       children: (0, t.jsx)(n.default, {
+        link: N,
+        children: N.label
+       })
+      })
+     }), (0, a.hasValidCta)(C) && (0, t.jsx)(x.m.div, {
+      style: {
+       scale: P.ctaSecondary
+      },
+      children: (0, t.jsx)(f.Button, {
+       asChild: !0,
+       variant: "arrow",
+       children: (0, t.jsx)(n.default, {
+        link: C,
+        children: C.label
+       })
+      })
+     })]
+    })]
+   }), (0, a.hasArrayValue)(M) && (0, t.jsx)(x.m.div, {
+    className: "p-x-max w-full",
+    style: {
+     opacity: z.mediaContainer
+    },
+    children: (0, t.jsx)(c.SpotlightGroup, {
+     mouseX: V,
+     mouseY: R,
+     className: (0, a.cn)("relative mx-auto -mb-px flex w-[75%] justify-center px-3 max-md:max-w-[400px] md:w-[90%]", 'before:bg-green-6 before:absolute before:inset-0 before:translate-y-6 before:rounded-(--l-card-rounded) before:content-[""]', "md:grid md:grid-cols-10 md:grid-rows-[auto_1fr] md:gap-[min(1.67vw,32px)]"),
+     children: M.map((e, r) => {
+      let i = I[`media${r}`] || I.media0,
+       s = z[`media${r}`] || z.media0;
+      return (0, t.jsx)(c.SpotlightCard, {
+       style: {
+        y: i,
+        opacity: s
+       },
+       className: (0, a.cn)(1 === r ? "rounded-(--l-card-rounded)" : "rounded-t-(--l-card-rounded)", 0 !== r && "hidden md:block", (0 === r || 3 === r) && "max-md:w-full md:col-span-2 md:row-span-2 md:self-end", (1 === r || 2 === r) && "md:col-span-6", 3 === r && "md:-col-end-1 md:row-start-1"),
+       rounded: 1 === r ? "all" : "top",
+       children: (0, t.jsx)(o.default, {
+        data: e,
+        imgQuality: 100,
+        className: "bg-green-6 overflow-hidden rounded-[inherit]"
+       })
+      }, e._key || r)
+     })
+    })
+   })]
+  })
+ }
+ e.s(["default", () => b])
+}, 473467, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(271645),
+  a = e.i(113182),
+  i = e.i(380064),
+  s = e.i(21206),
+  l = e.i(394307),
+  n = e.i(448773),
+  o = e.i(522016),
+  c = e.i(683412),
+  d = e.i(986025),
+  u = e.i(836236),
+  f = e.i(449492),
+  h = e.i(824511),
+  m = e.i(887652),
+  x = e.i(772328);
+ let p = {
+   duration: .6,
+   ease: "backOut"
+  },
+  g = {
+   duration: .9,
+   ease: "easeInOut"
+  };
+
+ function v({
+  link: e,
+  marqueeText: a,
+  className: l,
+  animationDelay: n = 0,
+  ...v
+ }) {
+  let [y, j] = (0, r.useState)(!1), [b, w] = (0, r.useState)(0), [k, N] = (0, r.useState)(!0), C = (0, r.useRef)(null), M = (0, x.useReducedMotion)(), S = (0, s.useIntroDelay)() + n, {
+   href: A,
+   isFile: E,
+   isNewTab: O
+  } = e || {}, V = "ease-cubic-out transition-[background-color] duration-200", R = (0, m.useMotionValue)(0), T = (0, m.useMotionValue)(0), L = (0, m.useMotionValue)(0), q = (0, m.useMotionValue)(0), I = (0, m.useMotionValue)(0), _ = (0, m.useMotionValue)(0);
+  return (0, r.useEffect)(() => {
+   let e = C.current;
+   if (!e) return;
+   let t = new ResizeObserver(e => {
+    let t = e[0];
+    t && w(t.contentRect.width)
+   });
+   return t.observe(e), () => {
+    t.disconnect()
+   }
+  }, []), (0, r.useEffect)(() => {
+   if (0 === b) return;
+   if (M) {
+    R.set(1), q.set(1), L.set(1), I.set(0), T.set(b + 8), _.set(1), N(!0);
+    return
+   }
+   N(!1);
+   let e = (b - 70) / 2;
+   I.set(-e), T.set(78), q.set(0);
+   let t = (0, f.animate)([
+    [R, 1, {
+     ...p
+    }],
+    [q, 1, {
+     ...p,
+     at: "<+0.2"
+    }],
+    [L, 1, {
+     ...p,
+     at: "<+0.4"
+    }],
+    [I, 0, {
+     ...g
+    }],
+    [T, b + 8, {
+     ...g,
+     at: "<"
+    }],
+    [_, 1, {
+     duration: .9,
+     ease: "easeOut",
+     at: "<+0.6"
+    }]
+   ], {
+    delay: S
+   });
+   return t.then(() => N(!0)), () => {
+    t.stop()
+   }
+  }, [b, R, T, q, L, _, I, M]), (0, t.jsxs)(o.default, {
+   ref: C,
+   href: A,
+   className: (0, i.cn)("[--l-rounded:42px]", "group text-background relative flex max-w-[calc(100%-var(--l-offset)*2)] cursor-pointer items-center p-(--l-pad) active:scale-[0.98] md:max-w-xs", V, !k && "pointer-events-none", l),
+   style: {
+    "--l-pad": "4px"
+   },
+   onMouseEnter: () => j(!0),
+   onMouseLeave: () => j(!1),
+   target: O || E ? "_blank" : void 0,
+   rel: O || E ? "noopener noreferrer" : void 0,
+   ...v,
+   children: [(0, t.jsx)(h.m.div, {
+    className: "absolute left-1/2 h-full w-full -translate-x-1/2 rounded-(--l-rounded) bg-black/60 backdrop-blur-sm transition-colors duration-200 ease-in-out group-hover:bg-black/80",
+    "aria-hidden": "true",
+    style: {
+     scale: R,
+     width: T
+    }
+   }), (0, i.hasArrayValue)(a) && (0, t.jsx)(h.m.div, {
+    style: {
+     opacity: _
+    },
+    children: (0, t.jsx)(d.default, {
+     data: {
+      speed: 20,
+      showGradient: !0
+     },
+     play: !y,
+     className: "py-[unset]!",
+     children: (0, t.jsx)("div", {
+      className: "t-l-2 px-1",
+      children: (0, t.jsx)(c.default, {
+       blocks: a
+      })
+     })
+    })
+   }), (0, t.jsx)(h.m.div, {
+    className: (0, i.cn)("bg-background text-foreground relative flex shrink-0 items-center justify-center rounded-[calc(var(--l-rounded)-var(--l-pad))] py-3 group-hover:bg-[color-mix(in_srgb,var(--color-white-3)_60%,var(--color-white-1))]", V),
+    style: {
+     scale: q,
+     x: I,
+     width: 70
+    },
+    children: (0, t.jsx)(h.m.span, {
+     style: {
+      scale: L
+     },
+     children: (0, t.jsx)(u.default, {
+      type: "download",
+      className: "h-3 w-auto"
+     })
+    })
+   })]
+  })
+ }
+ var y = e.i(13417),
+  j = e.i(143443);
+ let b = {
+   duration: 1.5,
+   ease: "circOut"
+  },
+  w = {
+   duration: .9,
+   ease: "easeOut"
+  },
+  k = (0, a.lineDrawAnim)({
+   type: "horizontal"
+  }),
+  N = (0, i.cn)("overflow-hidden");
+
+ function C({
+  data: e
+ }) {
+  let {
+   backgroundMedia: a,
+   titleLeft: o,
+   titleRight: c,
+   descriptionLeft: d,
+   descriptionCenter: u,
+   descriptionRight: p,
+   cta: g,
+   marqueeText: C,
+   marqueeTextLink: M,
+   darkenMedia: S
+  } = e || {}, A = (0, s.useIntroDelay)(), E = (0, x.useReducedMotion)(), O = {
+   titleLeft: (0, m.useMotionValue)("100%"),
+   titleRight: (0, m.useMotionValue)("100%"),
+   descriptionLeft: (0, m.useMotionValue)("-100%"),
+   descriptionCenter: (0, m.useMotionValue)("-100%"),
+   descriptionRight: (0, m.useMotionValue)("-100%")
+  }, V = {
+   titleLeft: (0, m.useMotionValue)(0),
+   titleRight: (0, m.useMotionValue)(0),
+   descriptionLeft: (0, m.useMotionValue)(0),
+   descriptionCenter: (0, m.useMotionValue)(0),
+   descriptionRight: (0, m.useMotionValue)(0)
+  }, R = {
+   media: (0, m.useMotionValue)(1.1),
+   logo: (0, m.useMotionValue)(0),
+   cta: (0, m.useMotionValue)(0)
+  }, T = (0, m.useMotionValue)(k.hide.clipPath);
+  return (0, r.useEffect)(() => {
+   if (null === A) return;
+   if (sessionStorage.getItem("hasPlayedHeroOneIntro") || E) {
+    Object.values(O).forEach(e => e.set("0%")), Object.values(V).forEach(e => e.set(1)), Object.values(R).forEach(e => e.set(1)), T.set(k.show.clipPath);
+    return
+   }
+   let e = (0, f.animate)([
+     [R.media, 1, {
+      duration: 1.2,
+      ease: "circOut"
+     }],
+     [R.logo, 1, {
+      duration: .9,
+      ease: "backOut",
+      at: "<"
+     }],
+     [O.titleLeft, "0%", {
+      ...b,
+      at: .3
+     }],
+     [V.titleLeft, 1, {
+      ...w,
+      at: "<"
+     }],
+     [O.titleRight, "0%", {
+      ...b,
+      at: .6
+     }],
+     [V.titleRight, 1, {
+      ...w,
+      at: "<"
+     }]
+    ], {
+     delay: A
+    }),
+    t = (0, f.animate)(T, k.show.clipPath, {
+     delay: A,
+     duration: k.show.transition.duration,
+     ease: k.show.transition.ease
+    }),
+    r = (0, f.animate)([
+     [O.descriptionLeft, "0%", {
+      ...b,
+      at: .3
+     }],
+     [V.descriptionLeft, 1, {
+      ...w,
+      at: "<"
+     }],
+     [O.descriptionCenter, "0%", {
+      ...b,
+      at: .6
+     }],
+     [V.descriptionCenter, 1, {
+      ...w,
+      at: "<"
+     }],
+     [O.descriptionRight, "0%", {
+      ...b,
+      at: .9
+     }],
+     [V.descriptionRight, 1, {
+      ...w,
+      at: "<"
+     }],
+     [R.cta, 1, {
+      duration: 1.2,
+      ease: "backOut",
+      at: .9
+     }]
+    ], {
+     delay: A
+    });
+   return sessionStorage.setItem("hasPlayedHeroOneIntro", "true"), () => {
+    e.stop(), t.stop(), r.stop()
+   }
+  }, [A, E]), (0, t.jsxs)("section", {
+   className: "text-background min-h-main relative flex flex-col items-stretch justify-center",
+   children: [(0, i.hasValidMedia)(a) && (0, t.jsx)(h.m.div, {
+    className: (0, i.cn)("absolute inset-0 isolate", "has-[img.lazyloaded]:[&>*:nth-child(2)]:opacity-100 has-[video.is-loaded]:[&>*:nth-child(2)]:opacity-100"),
+    style: {
+     scale: R.media
+    },
+    children: (0, t.jsx)(y.default, {
+     data: a,
+     isBackgroundVideo: !0,
+     priority: !0,
+     className: "img-object-cover",
+     imageClassName: "img-object-cover",
+     style: {
+      filter: S > 0 ? `brightness(${1-S/100})` : void 0
+     }
+    })
+   }), (0, t.jsx)("div", {
+    className: "relative xl:pt-[calc(var(--s-vp-height)*0.1)]",
+    children: (0, t.jsxs)("div", {
+     className: "grid grid-cols-1 md:grid-cols-12 md:gap-x-2",
+     children: [(0, t.jsxs)("div", {
+      className: (0, i.cn)("p-x-max col-span-1 grid grid-cols-1 pt-3 pb-6 lg:gap-16 md:col-span-12 md:grid-cols-subgrid md:pb-10", N),
+      children: [(0, t.jsx)("div", {
+       className: "flex flex-col gap-4 col-span-12 lg:col-span-4 xl:flex-row xl:gap-8",
+       children: o && (0, t.jsxs)(t.Fragment, {
+        children: [(0, t.jsx)(l.BrandLogo, {
+         className: "h-auto w-20",
+         style: {
+          scale: R.logo
+         }
+        }), (0, t.jsx)(h.m.h1, {
+         className: "t-h-1 whitespace-pre-line",
+         style: {
+          y: O.titleLeft,
+          opacity: V.titleLeft
+         },
+         children: o
+        })]
+       })
+      }), c && (0, t.jsx)("div", {
+       className: "flex items-end max-lg:justify-start md:col-span-12 md:-col-end-1 lg:col-span-6 lg:col-start-5",
+       children: (0, t.jsx)(h.m.h2, {
+        className: "t-h-1 text-left whitespace-pre-line",
+        style: {
+         y: O.titleRight,
+         opacity: V.titleRight
+        },
+        children: c
+       })
+      })]
+     }), (d || u || p || g) && (0, t.jsx)("div", {
+      className: "p-x-max col-span-1 md:col-span-12",
+      "aria-hidden": "true",
+      children: (0, t.jsx)(h.m.hr, {
+       className: "border-current",
+       style: {
+        clipPath: T
+       }
+      })
+     }), (0, t.jsxs)("div", {
+      className: (0, i.cn)("p-x-max col-span-1 grid grid-cols-1 pt-2 pb-3 lg:gap-16 max-md:gap-28 md:col-span-12 md:grid-cols-subgrid", N),
+      children: [(d || p) && (0, t.jsxs)("p", {
+       className: "t-b-1 flex items-start justify-between gap-6 md:col-span-3",
+       children: [(0, t.jsx)(h.m.span, {
+        className: "min-w-[100px] text-pretty",
+        style: {
+         y: O.descriptionLeft,
+         opacity: V.descriptionLeft
+        },
+        children: d
+       }), (0, t.jsx)(h.m.span, {
+        className: "text-right md:hidden text-pretty",
+        style: {
+         y: O.descriptionRight,
+         opacity: V.descriptionRight
+        },
+        children: p
+       })]
+      }), (0, t.jsxs)("div", {
+       className: "flex flex-col gap-4 md:col-span-4 md:col-start-5 md:gap-6",
+       children: [u && (0, t.jsx)(h.m.p, {
+        className: "t-b-1 max-w-xs text-pretty",
+        style: {
+         y: O.descriptionCenter,
+         opacity: V.descriptionCenter
+        },
+        children: u
+       }), (0, i.hasValidCta)(g) && (0, t.jsx)(h.m.div, {
+        className: "w-fit",
+        style: {
+         scale: R.cta
+        },
+        children: (0, t.jsx)(j.Button, {
+         asChild: !0,
+         tone: "white",
+         children: (0, t.jsx)(n.default, {
+          link: g,
+          children: g.label
+         })
+        })
+       })]
+      }), p && (0, t.jsx)("p", {
+       className: "t-b-1 flex items-start justify-end text-right max-md:hidden md:col-span-4 md:-col-end-1 text-pretty lg:text-balance",
+       children: (0, t.jsx)(h.m.span, {
+        style: {
+         y: O.descriptionRight,
+         opacity: V.descriptionRight
+        },
+        children: p
+       })
+      })]
+     })]
+    })
+   }), M?.href && (0, t.jsx)(v, {
+    link: M,
+    marqueeText: C,
+    className: (0, i.cn)("[--l-offset:var(--s-contain)] md:[--l-offset:16px]", "absolute right-(--l-offset) bottom-(--l-offset)"),
+    animationDelay: .6
+   })]
+  })
+ }
+ e.s(["default", () => C], 473467)
+}, 229138, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(271645),
+  a = e.i(255667),
+  i = e.i(113182),
+  s = e.i(380064),
+  l = e.i(839613),
+  n = e.i(60919),
+  o = e.i(393134),
+  c = e.i(198588),
+  d = e.i(448773),
+  u = e.i(836236),
+  f = e.i(382657),
+  h = e.i(143443),
+  m = e.i(824511),
+  x = e.i(433768),
+  p = e.i(310542),
+  g = e.i(895420);
+ let v = m.m.create(h.Button);
+
+ function y({
+  data: e
+ }) {
+  let {
+   solutionCards: i,
+   ctaSection: l
+  } = e || {}, n = (0, r.useRef)(null), o = (0, r.useRef)(null), [c, d] = (0, r.useState)("0px end"), f = (0, r.useCallback)(() => {
+   let e = o.current;
+   if (!e) return;
+   let t = e.offsetTop;
+   d(e => {
+    let r = `${t}px end`;
+    return e === r ? e : r
+   })
+  }, []);
+  (0, r.useEffect)(() => {
+   f();
+   let e = new ResizeObserver(f);
+   return n.current && e.observe(n.current), () => {
+    e.disconnect()
+   }
+  }, [f]);
+  let {
+   scrollYProgress: h
+  } = (0, p.useScroll)({
+   target: n,
+   offset: [c, "end end"]
+  }), m = (0, g.useTransform)(h, [0, 1], [0, i?.length || 1]), [v, y] = (0, r.useState)(0);
+  (0, x.useMotionValueEvent)(m, "change", e => {
+   let t = Math.min(Math.max(0, Math.floor(e - .6)), (i?.length || 1) - 1);
+   t !== v && y(t)
+  });
+  let j = (0, a.useLenis)(),
+   w = e => {
+    e.preventDefault(), j.scrollTo(`#${slug}`)
+   };
+  return (0, t.jsx)("section", {
+   ref: n,
+   className: (0, s.cn)("relative", "[--l-card-color-divider:var(--color-green-5)] [--l-card-size-icon-group:48px] [--l-card-size-number-block:40px] [--l-card-space-base:12px] [--l-card-space-large:calc(var(--l-card-space-base)*2)] [--l-card-space-small:8px] md:[--l-card-size-icon-group:60px] md:[--l-card-space-base:16px]", "text-green-1"),
+   children: (0, t.jsx)("div", {
+    className: (0, s.cn)("relative grid grid-cols-[1fr_auto] max-md:gap-x-(--l-card-space-large) md:grid-cols-[max-content_1fr_1fr_1fr] xl:grid-cols-[max-content_4fr_3fr_6fr]"),
+    children: (0, s.hasArrayValue)(i) && i.map((e, r) => {
+     let a = 0 === r;
+     return (0, t.jsx)(b, {
+      solution: e,
+      ctaSection: l,
+      cardIndex: r,
+      progressStartRef: a ? o : null,
+      globalProgress: m,
+      isCovered: v > r,
+      children: a && (0, t.jsx)("div", {
+       className: (0, s.cn)("md:col-start-2", "text-green-5 flex items-center gap-2 max-md:justify-end md:mx-(--l-card-space-base) md:gap-4 md:px-(--l-card-space-small)"),
+       children: i.map((e, r) => {
+        let a = r === v;
+        return (0, t.jsx)("a", {
+         href: `#${e.slug}`,
+         "aria-label": `Jump To ${e.title}`,
+         className: (0, s.cn)("ease-circ-in-out flex size-(--l-card-size-icon-group) items-center justify-center rounded-md border p-1 transition-[color,background-color] duration-500", a ? "border-transparent" : "border-current"),
+         onClick: w,
+         style: a ? {
+          backgroundColor: e.iconColor?.hex
+         } : {},
+         children: (0, t.jsx)(u.default, {
+          type: e?.icon,
+          className: "size-full"
+         })
+        }, "solution-icon-" + (e._id || r))
+       })
+      })
+     }, e._id || r)
+    })
+   })
+  })
+ }
+ let j = {
+  BASE: (0, s.cn)("absolute h-auto text-(--l-card-color-divider) max-md:bottom-0 md:top-[5%]"),
+  octagon: {
+   name: "octagon-large",
+   size: (0, s.cn)("w-lg md:w-[250%]"),
+   position: (0, s.cn)("-left-[40px] max-md:-bottom-[600px] md:-left-[5%]")
+  },
+  prism: {
+   name: "prism-large-horizontal",
+   size: (0, s.cn)("w-lg md:w-[400%]"),
+   position: (0, s.cn)("-right-[150px] max-md:-bottom-[60px] md:-right-[40%]")
+  },
+  spark: {
+   name: "spark",
+   size: (0, s.cn)("w-sm md:w-[150%]"),
+   position: (0, s.cn)("-left-[15px] max-md:-bottom-[300px] md:left-[15%]"),
+   strokeWidth: .1
+  }
+ };
+
+ function b({
+  progressStartRef: e,
+  solution: a,
+  ctaSection: u,
+  cardIndex: h,
+  globalProgress: x,
+  isCovered: p,
+  className: y,
+  children: b
+ }) {
+  let {
+   title: w,
+   subtitle: k,
+   description: N,
+   features: C,
+   icon: M,
+   slug: S
+  } = a, A = (0, n.useInViewAnimation)(i.STAGGER_CONTAINER_CONFIG), E = (h + 1).toString().padStart(2, "0"), O = 0 === h, V = j[M] || M, R = (0, r.useRef)(null), T = (0, r.useRef)(null), L = (0, r.useRef)(null), q = (0, r.useRef)(null), I = function(e, t) {
+   let [a, i] = (0, r.useState)([]);
+   return (0, r.useEffect)(() => {
+    let r = () => {
+     if (!e.current) return;
+     let r = [];
+     t.forEach(e => {
+      if (e.current) {
+       let t = e.current.offsetLeft + e.current.offsetWidth;
+       r.push(t)
+      }
+     }), i(r)
+    };
+    r();
+    let a = new ResizeObserver(() => {
+     requestAnimationFrame(r)
+    });
+    return e.current && a.observe(e.current), () => a.disconnect()
+   }, [e, t]), a
+  }(R, (0, r.useMemo)(() => [T, L, q], []));
+  (0, l.default)(q, [p]);
+  let _ = (0, r.useMemo)(() => {
+    let e = T.current?.offsetWidth || 0;
+    return e / (e + (L.current?.offsetWidth || 0) || 1)
+   }, [I]),
+   z = (0, g.useTransform)(x, e => {
+    let t = e - h;
+    return t <= 0 ? 0 : t <= 1 ? Math.min(1, t / _) : t <= 2 ? Math.max(0, 1 - (t - 1) / _) : 0
+   }),
+   P = (0, g.useTransform)(x, e => {
+    let t = e - h;
+    if (t <= 0) return 0;
+    if (t <= 1) return t < _ ? 0 : Math.min(1, (t - _) / (1 - _));
+    if (t <= 2) {
+     let e = t - 1;
+     return e < _ ? 1 : Math.max(0, 1 - (e - _) / (1 - _))
+    }
+    return 0
+   }),
+   B = (0, g.useTransform)(x, e => e <= h + 1 ? "left" : "right"),
+   H = (0, g.useTransform)(x, [h, h + 1, h + 2], [0, 1, 0]),
+   W = (0, g.useTransform)(H, [0, 1], ["color-mix(in srgb, var(--color-green-1) 20%, var(--color-green-7))", "color-mix(in srgb, var(--color-green-1) 100%, var(--color-green-7))"]),
+   D = {
+    tailwind: (0, s.cn)("[--l-first-card-top-offset:calc(var(--h-header)+var(--l-card-space-base))] md:[--l-first-card-top-offset:var(--s-section)]", "[--l-card-height:var(--s-vp-height)]", "[--l-card-calculated-height:calc(var(--l-card-height)-var(--l-sticky-top-offset))]"),
+    inline: {
+     "--l-sticky-top-offset": O ? "0px" : `calc(var(--l-first-card-top-offset) + var(--l-card-size-icon-group) + var(--l-card-space-base) * ${h+1})`
+    }
+   };
+  return (0, t.jsxs)(t.Fragment, {
+   children: [(0, t.jsx)("span", {
+    id: S,
+    className: (0, s.cn)(D.tailwind, "pointer-events-none invisible relative left-0 h-px w-px"),
+    style: {
+     ...D.inline,
+     scrollMarginTop: "calc(var(--s-scroll-padding-top) * -1 + var(--l-sticky-top-offset) - 2px)"
+    },
+    "aria-hidden": "true"
+   }), (0, t.jsxs)(m.m.div, {
+    ref: R,
+    className: (0, s.cn)(D.tailwind, "col-span-full grid grid-cols-subgrid content-start gap-y-(--l-card-space-base)", "p-x-3xl sticky isolate will-change-[color]", O && "pt-(--l-first-card-top-offset)", O ? "md:grid-rows-[auto_auto_1fr]" : "md:grid-rows-[auto_1fr]", y),
+    style: {
+     ...D.inline,
+     top: "var(--l-sticky-top-offset)",
+     height: "var(--l-card-calculated-height)",
+     color: W,
+     zIndex: h
+    },
+    ...A,
+    children: [(0, t.jsx)(o.default, {
+     className: "bg-green-7"
+    }), (0, s.hasArrayValue)(I) && (0, t.jsx)("div", {
+     className: (0, s.cn)("[--l-border-size:1px]", "pointer-events-none absolute inset-0"),
+     "aria-hidden": "true",
+     children: I.map((e, r) => (0, t.jsx)("div", {
+      className: (0, s.cn)(0 !== r && "max-md:hidden", O ? "top-(--l-card-space-base) h-[calc(100%-var(--l-card-space-base))]" : "top-0 h-full", "absolute w-(--l-border-size) bg-(--l-card-color-divider)"),
+      style: {
+       left: `calc(${e}px + (var(--l-card-space-large) / 2) - var(--l-border-size) / 2)`
+      }
+     }, `divider-${r}`))
+    }), b && (0, t.jsx)("div", {
+     className: "col-span-full md:grid md:grid-cols-subgrid",
+     children: b
+    }), (0, t.jsx)(m.m.div, {
+     className: (0, s.cn)("md:col-start-2 md:-row-end-1", "pointer-events-none absolute -z-10 overflow-hidden max-md:inset-0 max-md:-left-[calc(var(--l-card-space-large)/2)] max-md:col-start-2 max-md:w-[calc(100%+var(--l-card-space-large)/2)] md:relative"),
+     "aria-hidden": "true",
+     variants: i.fadeAnim,
+     children: (0, t.jsx)(f.default, {
+      type: V.name,
+      className: (0, s.cn)(j.BASE, V.position, V.size, "[&_.prism-static-group_path:last-child]:fill-green-6/20 [&_.prism-static-group_path:nth-child(5)]:fill-green-6/20"),
+      disableEnterAnimation: !0,
+      isBeamAnimation: !0,
+      strokeWidth: V.strokeWidth
+     })
+    }), (0, t.jsxs)("div", {
+     ref: t => {
+      T.current = t, e && (e.current = t)
+     },
+     className: "relative flex w-(--l-card-size-number-block) flex-col items-center border-t border-(--l-card-color-divider) pt-(--l-card-space-base) md:mr-(--l-card-space-base)",
+     children: [(0, t.jsx)(m.m.span, {
+      className: "bg-green-1 absolute -top-px left-0 h-px w-full will-change-transform",
+      "aria-hidden": "true",
+      style: {
+       scaleX: z,
+       transformOrigin: B
+      }
+     }), E && (0, t.jsx)(m.m.span, {
+      className: "t-l-1",
+      variants: i.fadeMoveAnim,
+      children: E
+     })]
+    }), (0, t.jsxs)("div", {
+     ref: L,
+     className: (0, s.cn)("max-md:col-start-3", "relative flex flex-col border-t border-(--l-card-color-divider) px-(--l-card-space-small) pt-(--l-card-space-base) md:mx-(--l-card-space-base)"),
+     children: [(0, t.jsx)(m.m.span, {
+      className: "bg-green-1 absolute -top-px left-0 h-px w-full will-change-transform",
+      "aria-hidden": "true",
+      style: {
+       scaleX: P,
+       transformOrigin: B
+      }
+     }), w && (0, t.jsx)(m.m.h2, {
+      className: "t-h-2 md:t-h-3",
+      variants: i.fadeMoveAnim,
+      children: w
+     })]
+    }), (0, t.jsxs)("div", {
+     ref: q,
+     className: (0, s.cn)("max-md:col-start-3 md:row-span-2", "flex flex-col gap-4 border-(--l-card-color-divider) px-(--l-card-space-small) md:mx-(--l-card-space-base) md:gap-6 md:border-t md:pt-(--l-card-space-base)"),
+     "aria-hidden": p ? "true" : void 0,
+     children: [k && (0, t.jsx)(m.m.h3, {
+      className: "t-h-3",
+      variants: i.fadeMoveAnim,
+      children: k
+     }), N && (0, t.jsx)(m.m.p, {
+      variants: i.fadeMoveAnim,
+      className: "text-balance",
+      children: N
+     }), (0, s.hasValidCta)(u) && (0, t.jsx)(m.m.div, {
+      variants: i.fadeMoveAnim,
+      children: (0, t.jsx)(v, {
+       tone: "greenDark",
+       asChild: !0,
+       variant: "arrow",
+       className: "w-fit max-md:hidden md:mt-15 lg:mt-10 xl:mt-20 2xl:mt-30",
+       style: {
+        opacity: H
+       },
+       children: (0, t.jsx)(d.default, {
+        link: u,
+        children: u.label
+       })
+      })
+     })]
+    }), (0, t.jsxs)("div", {
+     className: (0, s.cn)("max-md:col-start-3 md:row-span-2", "border-(--l-card-color-divider) px-(--l-card-space-small) md:ml-(--l-card-space-base) md:border-t md:pt-(--l-card-space-base)"),
+     children: [(0, s.hasArrayValue)(C) && (0, t.jsx)(c.default, {
+      items: C,
+      className: "mt-(--l-card-space-small) flex flex-col gap-(--l-card-space-base)",
+      variants: i.fadeMoveAnim
+     }), (0, s.hasValidCta)(u) && (0, t.jsx)(m.m.div, {
+      variants: i.fadeMoveAnim,
+      children: (0, t.jsx)(v, {
+       tone: "greenDark",
+       asChild: !0,
+       variant: "arrow",
+       className: "mt-10 md:hidden",
+       style: {
+        opacity: H
+       },
+       children: (0, t.jsx)(d.default, {
+        link: u,
+        children: u.label
+       })
+      })
+     })]
+    })]
+   })]
+  })
+ }
+ e.s(["default", () => y])
+}, 380076, e => {
+ "use strict";
+ var t = e.i(843476),
+  r = e.i(271645),
+  a = e.i(113182),
+  i = e.i(380064),
+  s = e.i(60919),
+  l = e.i(448773),
+  n = e.i(165097),
+  o = e.i(649125),
+  c = {
+   0: 8203,
+   1: 8204,
+   2: 8205,
+   3: 8290,
+   4: 8291,
+   5: 8288,
+   6: 65279,
+   7: 8289,
+   8: 119155,
+   9: 119156,
+   a: 119157,
+   b: 119158,
+   c: 119159,
+   d: 119160,
+   e: 119161,
+   f: 119162
+  },
+  d = {
+   0: 8203,
+   1: 8204,
+   2: 8205,
+   3: 65279
+  };
+ [, , , , ].fill(String.fromCodePoint(d[0])).join(""), Object.fromEntries(Object.entries(d).map(e => e.reverse())), Object.fromEntries(Object.entries(c).map(e => e.reverse()));
+ var u = `${Object.values(c).map(e=>`\\u{${e.toString(16)}}`).join("")}`,
+  f = RegExp(`[${u}]{4,}`, "gu"),
+  h = e.i(846932),
+  m = e.i(947414),
+  x = e.i(737806),
+  p = e.i(772328),
+  g = e.i(449492);
+
+ function v() {
+  var e;
+  let t = (0, m.useConstant)(() => ({
+    current: null,
+    animations: []
+   })),
+   a = function() {
+    let e = (0, p.useReducedMotion)(),
+     {
+      reducedMotion: t
+     } = (0, r.useContext)(x.MotionConfigContext);
+    return "never" !== t && ("always" === t || e)
+   }() ?? void 0,
+   i = (0, r.useMemo)(() => (0, g.createScopedAnimate)({
+    scope: t,
+    reduceMotion: a
+   }), [t, a]);
+  return e = () => {
+   t.animations.forEach(e => e.stop()), t.animations.length = 0
+  }, (0, r.useEffect)(() => () => e(), []), [t, i]
+ }
+ let y = (0, i.cn)("text-base font-medium"),
+  j = {
+   opacity: 0,
+   y: 10
+  },
+  b = {
+   opacity: 0
+  },
+  w = {
+   x: "0%",
+   opacity: 1
+  };
+
+ function k() {
+  let [e, a] = v();
+  return (0, r.useEffect)(() => {
+   if (!e.current) return;
+   let t = a([
+    [".animated-green-bar-bottom", {
+     x: "-110%"
+    }, {
+     duration: 1.2,
+     ease: "circInOut"
+    }],
+    [".animated-green-bar-top", {
+     x: "-75%"
+    }, {
+     duration: 1.2,
+     ease: "circInOut",
+     at: "-0.6"
+    }],
+    [".animated-green-bar-top", {
+     opacity: 0
+    }, {
+     duration: .2,
+     ease: "circInOut"
+    }],
+    [".animated-text-highlight", {
+     opacity: 1
+    }, {
+     duration: .6,
+     ease: "easeInOut",
+     at: "-0.3"
+    }],
+    [".animated-text-block", {
+     opacity: 1,
+     y: 0
+    }, {
+     duration: .6,
+     at: "-0.3"
+    }]
+   ]);
+   return () => {
+    t.stop()
+   }
+  }, [a]), (0, t.jsxs)("svg", {
+   ref: e,
+   xmlns: "http://www.w3.org/2000/svg",
+   fill: "none",
+   viewBox: "0 0 1072 913",
+   children: [(0, t.jsxs)("g", {
+    children: [(0, t.jsx)("circle", {
+     cx: "10.5",
+     cy: "-2",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "85.5",
+     cy: "-2",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "10.5",
+     cy: "358",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "10.5",
+     cy: "423",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "10.5",
+     cy: "488",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "10.5",
+     cy: "553",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "85.5",
+     cy: "358",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "85.5",
+     cy: "423",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "85.5",
+     cy: "488",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "85.5",
+     cy: "553",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "10.5",
+     cy: "913",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "85.5",
+     cy: "913",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "240.5",
+     cy: "-2",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "240.5",
+     cy: "63",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "390.5",
+     cy: "-2",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "540.5",
+     cy: "-2",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "315.5",
+     cy: "-2",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "315.5",
+     cy: "63",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "465.5",
+     cy: "-2",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "615.5",
+     cy: "-2",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "690.5",
+     cy: "-2",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "240.5",
+     cy: "553",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "240.5",
+     cy: "423.5",
+     r: "27.5",
+     fill: "currentColor"
+    }), (0, t.jsx)("circle", {
+     cx: "240.5",
+     cy: "488.5",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "240.5",
+     cy: "618",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "390.5",
+     cy: "358",
+     r: "27.5",
+     fill: "currentColor"
+    }), (0, t.jsx)("circle", {
+     cx: "390.5",
+     cy: "553",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "390.5",
+     cy: "423.5",
+     r: "27.5",
+     fill: "currentColor"
+    }), (0, t.jsx)("circle", {
+     cx: "390.5",
+     cy: "487.5",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "540.5",
+     cy: "488",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "540.5",
+     cy: "553",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "540.5",
+     cy: "423.5",
+     r: "27.5",
+     fill: "currentColor"
+    }), (0, t.jsx)("circle", {
+     cx: "315.5",
+     cy: "553",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "315.5",
+     cy: "423.5",
+     r: "27.5",
+     fill: "currentColor"
+    }), (0, t.jsx)("circle", {
+     cx: "315.5",
+     cy: "488.5",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "315.5",
+     cy: "618",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "465.5",
+     cy: "358",
+     r: "27.5",
+     fill: "currentColor"
+    }), (0, t.jsx)("circle", {
+     cx: "540.5",
+     cy: "358",
+     r: "27.5",
+     fill: "currentColor"
+    }), (0, t.jsx)("circle", {
+     cx: "615.5",
+     cy: "358",
+     r: "27.5",
+     fill: "currentColor"
+    }), (0, t.jsx)("circle", {
+     cx: "465.5",
+     cy: "488",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "465.5",
+     cy: "553",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "465.5",
+     cy: "423.5",
+     r: "27.5",
+     fill: "currentColor"
+    }), (0, t.jsx)("circle", {
+     cx: "615.5",
+     cy: "488",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "615.5",
+     cy: "553",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "615.5",
+     cy: "423.5",
+     r: "27.5",
+     fill: "currentColor"
+    }), (0, t.jsx)("circle", {
+     cx: "690.5",
+     cy: "358",
+     r: "27.5",
+     fill: "currentColor"
+    }), (0, t.jsx)("circle", {
+     cx: "690.5",
+     cy: "488",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "690.5",
+     cy: "553",
+     r: "27",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "690.5",
+     cy: "423.5",
+     r: "27.5",
+     fill: "currentColor"
+    }), (0, t.jsx)("path", {
+     fill: "currentColor",
+     d: "M227.12 278.62V259.5h3.68v17.44c0 6.92-.96 11.12-8.64 11.12-6.56 0-8.24-4.08-8.24-9.76h3.44c.12 2.84.12 6.88 4.96 6.88 4.04 0 4.8-2.32 4.8-6.56m21.87-11.72h3.35v20.6h-3.28v-2.8h-.03c-1.04 1.68-3.04 3.32-6.72 3.32q-3.38 0-5.25-1.92c-1.2-1.2-1.84-3.08-1.84-5.68V266.9h3.37v12.6c0 4.32 1.67 5.72 4.72 5.72 2 0 3.31-.8 4.31-2.08a7.3 7.3 0 0 0 1.37-4.32zm11.68 20.6h-3.36v-20.6h3.28v2.72h.04c1.04-1.6 3.16-3.24 6.76-3.24 2.24 0 4.08.64 5.32 1.92q1.82 1.79 1.84 5.68v13.52h-3.36v-12.6c0-4.32-1.64-5.72-4.68-5.72-2 0-3.48.8-4.48 2.08a7.3 7.3 0 0 0-1.36 4.32zm36.53-9.72h-16c0 4.36 2.64 7.48 6.72 7.48 3.84 0 5.28-2.52 5.88-4.4h3.4c-1.12 4.32-4.44 7.16-9.4 7.16-6.32 0-10-4.08-10-10.88 0-6.32 3.84-10.8 10-10.8 6.52 0 9.4 4.72 9.4 11.44m-15.96-2.52h12.4c-.16-3.48-2.2-6.36-5.96-6.36-3.96 0-6.24 2.88-6.44 6.36"
+    }), (0, t.jsx)("circle", {
+     cx: "240.5",
+     cy: "917.5",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "390.5",
+     cy: "917.5",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "540.5",
+     cy: "917.5",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "315.5",
+     cy: "917.5",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "465.5",
+     cy: "917.5",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "615.5",
+     cy: "917.5",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "690.5",
+     cy: "917.5",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("path", {
+     fill: "#e8e8e8",
+     d: "M228.24 818.52c8.84 0 13.48 6.6 13.48 14.6 0 7.96-4.52 14.52-13.48 14.52s-13.48-6.56-13.48-14.52c0-8 4.64-14.6 13.48-14.6m0 26.28c6.92 0 9.8-5.72 9.8-11.68 0-6-2.88-11.76-9.8-11.76s-9.8 5.76-9.8 11.76c0 5.96 2.88 11.68 9.8 11.68m34.63-11.56h-3.4c-.36-2.68-2.08-4.72-5.56-4.72-4.16 0-6.52 3.08-6.52 8.32 0 4.76 2.56 7.92 6.48 7.92 3.24 0 5.24-2.08 5.68-5.08h3.48c-.72 4.52-4.04 7.84-9.16 7.84-6.28 0-10-4.6-10-10.72 0-6.4 3.68-10.96 10.16-10.96 5.04 0 8.28 2.76 8.84 7.4m7.59-13.2v6.36h4.2v2.64h-4.2v12.68c0 1.92.24 2.68 2.48 2.68q.56.01 1.36-.04v2.76c-.96.08-1.36.12-2.36.12-1.84 0-3.08-.24-3.8-.92-.8-.72-1.04-1.92-1.04-4.04v-13.24h-3.28v-2.64h3.28v-6.36zm15.43 5.8c6.16 0 10.16 4.12 10.16 10.8 0 6.6-3.96 10.88-10.16 10.88-6.24 0-10.16-4.16-10.16-10.88 0-6.6 4-10.8 10.16-10.8m0 2.68c-4.68 0-6.64 3.6-6.64 8.16 0 4.52 2.08 8.12 6.64 8.12s6.64-3.6 6.64-8.12c0-4.56-2.08-8.16-6.64-8.16m13.63-9.52h3.36v9.88h.08c1.24-1.76 3.4-3.08 6.56-3.08 5.4 0 9.2 4.28 9.2 10.8 0 6.2-3.96 10.92-9.44 10.92-3.2 0-5.2-1.36-6.36-2.88h-.08V847h-3.32zm9.4 25.8c4.16 0 6.28-3.68 6.28-8.2 0-4.48-2.16-8.04-6.4-8.04-4.12 0-6.08 2.84-6.08 8.2 0 5.04 2.16 8.04 6.2 8.04m31.19-7.52h-16c0 4.36 2.64 7.48 6.72 7.48 3.84 0 5.28-2.52 5.88-4.4h3.4c-1.12 4.32-4.44 7.16-9.4 7.16-6.32 0-10-4.08-10-10.88 0-6.32 3.84-10.8 10-10.8 6.52 0 9.4 4.72 9.4 11.44m-15.96-2.52h12.4c-.16-3.48-2.2-6.36-5.96-6.36-3.96 0-6.24 2.88-6.44 6.36m28.34-5.84c-1.52 0-2.96.6-3.96 1.76-.96 1.08-1.52 2.68-1.52 5V847h-3.36v-20.6h3.24v3.16h.12c.76-1.96 3-3.72 5.84-3.72.6 0 1.04.08 1.24.12v3.08c-.72-.12-1.24-.12-1.6-.12"
+    }), (0, t.jsx)("circle", {
+     cx: "845.5",
+     cy: "-2",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "845.5",
+     cy: "63",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "995.5",
+     cy: "-2",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "920.5",
+     cy: "-2",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "920.5",
+     cy: "63",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "1070.5",
+     cy: "-2",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "845.5",
+     cy: "358",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "845.5",
+     cy: "423",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "845.5",
+     cy: "488",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "845.5",
+     cy: "553",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "845.5",
+     cy: "618",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "995.5",
+     cy: "358",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "995.5",
+     cy: "423",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "995.5",
+     cy: "488",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "995.5",
+     cy: "553",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "920.5",
+     cy: "358",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "920.5",
+     cy: "423",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "920.5",
+     cy: "488",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "920.5",
+     cy: "553",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "920.5",
+     cy: "618",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "1070.5",
+     cy: "358",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "1070.5",
+     cy: "423",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "1070.5",
+     cy: "488",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "1070.5",
+     cy: "553",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("path", {
+     fill: "#e8e8e8",
+     d: "M832.12 278.62V259.5h3.68v17.44c0 6.92-.96 11.12-8.64 11.12-6.56 0-8.24-4.08-8.24-9.76h3.44c.12 2.84.12 6.88 4.96 6.88 4.04 0 4.8-2.32 4.8-6.56m21.87-11.72h3.36v20.6h-3.28v-2.8h-.05c-1.03 1.68-3.03 3.32-6.72 3.32q-3.36 0-5.23-1.92c-1.2-1.2-1.85-3.08-1.85-5.68V266.9h3.37v12.6c0 4.32 1.67 5.72 4.71 5.72 2 0 3.33-.8 4.33-2.08a7.3 7.3 0 0 0 1.36-4.32zm8.32-7.4h3.36v28h-3.36zm13.45 27.88-8.04-20.48h3.6l3.24 8.96q1.32 3.58 2.88 8.24h.08c.8-2.44 1.72-5.64 2.72-8.52l2.92-8.68h3.32l-8.6 23.08c-1.36 3.64-3.2 4.56-6.32 4.56-.84 0-1.2-.04-1.76-.08v-2.68c.4.08.96.08 1.52.08 2.52 0 3.36-1.16 4.24-3.84z"
+    }), (0, t.jsx)("circle", {
+     cx: "845.5",
+     cy: "913",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "995.5",
+     cy: "913",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "920.5",
+     cy: "913",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("circle", {
+     cx: "1070.5",
+     cy: "913",
+     r: "27",
+     fill: "#fff",
+     stroke: "#e8e8e8"
+    }), (0, t.jsx)("path", {
+     fill: "#e8e8e8",
+     d: "M821.36 842.5v-28h3.96l9.64 14.16c1.88 2.8 3.76 5.68 5.56 8.44h.08c0-2.64-.08-5.76-.08-8.48V814.5h3.56v28h-3.88l-9.16-13.44c-2.16-3.16-3.44-5.28-6.04-9.28h-.08c0 2.68.04 5.76.04 8.48v14.24zm36.42-21.16c6.16 0 10.16 4.12 10.16 10.8 0 6.6-3.96 10.88-10.16 10.88-6.24 0-10.16-4.16-10.16-10.88 0-6.6 4-10.8 10.16-10.8m0 2.68c-4.68 0-6.64 3.6-6.64 8.16 0 4.52 2.08 8.12 6.64 8.12s6.64-3.6 6.64-8.12c0-4.56-2.08-8.16-6.64-8.16m18.04 18.48-7.36-20.6h3.6l3.32 10.36c.76 2.4 1.52 4.68 2.24 6.68h.08c.72-2.12 1.64-4.64 2.44-6.96l3.56-10.08h3.44l-7.8 20.6zm31.06-9.72h-16c0 4.36 2.64 7.48 6.72 7.48 3.84 0 5.28-2.52 5.88-4.4h3.4c-1.12 4.32-4.44 7.16-9.4 7.16-6.32 0-10-4.08-10-10.88 0-6.32 3.84-10.8 10-10.8 6.52 0 9.4 4.72 9.4 11.44m-15.96-2.52h12.4c-.16-3.48-2.2-6.36-5.96-6.36-3.96 0-6.24 2.88-6.44 6.36m49.5 12.24h-3.36v-12.6c0-4.32-1.6-5.72-4.44-5.72-1.72 0-3.2.8-4.2 2.08a7.3 7.3 0 0 0-1.32 4.32v11.92h-3.36v-12.6c0-4.32-1.6-5.72-4.44-5.72-1.72 0-3.2.8-4.2 2.08a7.3 7.3 0 0 0-1.32 4.32v11.92h-3.36v-20.6h3.28v2.76h.04a7.7 7.7 0 0 1 6.56-3.28c2.92 0 5.08 1.24 6.08 3.56h.04c.96-1.64 3.56-3.56 7.08-3.56 2.32 0 3.88.6 5.12 1.88q1.8 1.81 1.8 5.72zm4.74-28h3.36v9.88h.08c1.24-1.76 3.4-3.08 6.56-3.08 5.4 0 9.2 4.28 9.2 10.8 0 6.2-3.96 10.92-9.44 10.92-3.2 0-5.2-1.36-6.36-2.88h-.08v2.36h-3.32zm9.4 25.8c4.16 0 6.28-3.68 6.28-8.2 0-4.48-2.16-8.04-6.4-8.04-4.12 0-6.08 2.84-6.08 8.2 0 5.04 2.16 8.04 6.2 8.04m31.19-7.52h-16c0 4.36 2.63 7.48 6.72 7.48 3.83 0 5.27-2.52 5.88-4.4h3.4c-1.12 4.32-4.45 7.16-9.4 7.16-6.33 0-10-4.08-10-10.88 0-6.32 3.83-10.8 10-10.8 6.51 0 9.4 4.72 9.4 11.44m-15.97-2.52h12.4c-.15-3.48-2.2-6.36-5.95-6.36-3.97 0-6.25 2.88-6.45 6.36m28.34-5.84c-1.52 0-2.96.6-3.96 1.76-.96 1.08-1.52 2.68-1.52 5v11.32h-3.36v-20.6h3.24v3.16h.12c.76-1.96 3-3.72 5.84-3.72.6 0 1.04.08 1.24.12v3.08c-.72-.12-1.24-.12-1.6-.12"
+    }), (0, t.jsxs)("g", {
+     children: [(0, t.jsx)("rect", {
+      width: "129",
+      height: "56",
+      x: "213.5",
+      y: "330",
+      fill: "var(--color-green-3)",
+      stroke: "var(--color-green-3)",
+      rx: "27"
+     }), (0, t.jsxs)(h.motion.text, {
+      x: "278",
+      y: "359.5",
+      fill: "currentColor",
+      dominantBaseline: "middle",
+      textAnchor: "middle",
+      className: (0, i.cn)(y, "animated-text-highlight"),
+      initial: b,
+      children: [(0, t.jsx)("tspan", {
+       x: "278",
+       dy: "-0.6em",
+       children: "80% faster"
+      }), (0, t.jsx)("tspan", {
+       x: "278",
+       dy: "1.2em",
+       children: "(2 days)"
+      })]
+     })]
+    }), (0, t.jsxs)(h.motion.g, {
+     className: "animated-text-block",
+     initial: j,
+     children: [(0, t.jsx)("rect", {
+      width: 368,
+      x: 356,
+      y: 247,
+      height: 59,
+      rx: 7.5,
+      fill: "#fff",
+      stroke: "#e8e8e8"
+     }), (0, t.jsx)("text", {
+      x: "540",
+      y: "278",
+      fill: "currentColor",
+      dominantBaseline: "middle",
+      textAnchor: "middle",
+      className: y,
+      children: "Traditional procurement cycle (14 days)"
+     })]
+    }), (0, t.jsxs)("g", {
+     children: [(0, t.jsx)("g", {
+      clipPath: "url(#accelerated-process-diagram-a)",
+      children: (0, t.jsx)(h.motion.rect, {
+       width: "505.5",
+       height: "55",
+       x: "212.5",
+       y: "396",
+       rx: "27",
+       fill: "var(--color-green-3)",
+       stroke: "var(--color-green-3)",
+       className: "animated-green-bar-bottom",
+       initial: w
+      })
+     }), (0, t.jsx)("g", {
+      clipPath: "url(#accelerated-process-diagram-b)",
+      children: (0, t.jsx)(h.motion.rect, {
+       width: "504.5",
+       height: "56",
+       x: "213.5",
+       y: "330",
+       fill: "var(--color-green-3)",
+       stroke: "var(--color-green-3)",
+       rx: "27",
+       className: "animated-green-bar-top",
+       initial: w
+      })
+     })]
+    })]
+   }), (0, t.jsxs)("defs", {
+    children: [(0, t.jsx)("clipPath", {
+     id: "accelerated-process-diagram-a",
+     children: (0, t.jsx)("rect", {
+      width: "505.5",
+      height: "55",
+      x: "212.5",
+      y: "396",
+      rx: "27"
+     })
+    }), (0, t.jsx)("clipPath", {
+     id: "accelerated-process-diagram-b",
+     children: (0, t.jsx)("rect", {
+      width: "505.5",
+      height: "58",
+      x: "215",
+      y: "329",
+      rx: "27"
+     })
+    })]
+   })]
+  })
+ }
+ var N = e.i(532943);
+
+ function C(e = .1, {
+  startDelay: t = 0,
+  from: r = 0,
+  ease: a
+ } = {}) {
+  return (i, s) => {
+   let l = e * Math.abs(("number" == typeof r ? r : function(e, t) {
+    if ("first" === e) return 0;
+    {
+     let r = t - 1;
+     return "last" === e ? r : r / 2
+    }
+   }(r, s)) - i);
+   if (a) {
+    let t = s * e;
+    l = (0, N.easingDefinitionToFunction)(a)(l / t) * t
+   }
+   return t + l
+  }
+ }
+ let M = (0, i.cn)("text-base font-medium"),
+  S = {
+   height: 47,
+   rx: 7.5
+  },
+  A = {
+   pathLength: 0
+  },
+  E = {
+   opacity: 0,
+   scale: .5
+  },
+  O = {
+   opacity: 0,
+   scale: .5
+  },
+  V = {
+   opacity: 0,
+   y: 10
+  },
+  R = {
+   opacity: 0,
+   y: 10
+  };
+
+ function T() {
+  let [e, a] = v();
+  return (0, r.useEffect)(() => {
+   if (!e.current) return;
+   let t = a([
+    [".animated-path", {
+     pathLength: 1
+    }, {
+     duration: 1.5,
+     ease: "easeInOut"
+    }],
+    [".animated-red-node", {
+     opacity: 1,
+     scale: 1
+    }, {
+     type: "spring",
+     duration: .3,
+     delay: C(.25),
+     at: .3
+    }],
+    [".animated-green-node", {
+     opacity: 1,
+     scale: 1
+    }, {
+     type: "spring",
+     duration: .3,
+     delay: C(.3, {
+      ease: "easeInOut"
+     }),
+     at: .4
+    }],
+    [".animated-green-node-text", {
+     opacity: 1,
+     y: 0
+    }, {
+     type: "spring",
+     duration: .6,
+     delay: C(.25, {
+      ease: "easeInOut"
+     }),
+     at: "<+.1"
+    }],
+    [".animated-text-block", {
+     opacity: 1,
+     y: 0
+    }, {
+     duration: .6,
+     delay: C(.2),
+     at: "-0.6"
+    }]
+   ]);
+   return () => {
+    t.stop()
+   }
+  }, [a]), (0, t.jsxs)("svg", {
+   ref: e,
+   xmlns: "http://www.w3.org/2000/svg",
+   fill: "none",
+   viewBox: "0 0 1072 630",
+   children: [(0, t.jsxs)("g", {
+    children: [(0, t.jsxs)("g", {
+     children: [(0, t.jsx)("path", {
+      stroke: "currentColor",
+      d: "M-2 .5c479.5 76 548 622 1074 622"
+     }), (0, t.jsx)("circle", {
+      cx: "1015",
+      cy: "619.49",
+      r: "9.7",
+      fill: "#fff",
+      stroke: "#dadada",
+      strokeWidth: ".6"
+     }), (0, t.jsx)("circle", {
+      cx: "913",
+      cy: "603.49",
+      r: "9.7",
+      fill: "#fff",
+      stroke: "#dadada",
+      strokeWidth: ".6"
+     }), (0, t.jsx)("circle", {
+      cx: "796",
+      cy: "560.49",
+      r: "9.7",
+      fill: "#fff",
+      stroke: "#dadada",
+      strokeWidth: ".6"
+     }), (0, t.jsx)("circle", {
+      cx: "692",
+      cy: "496.49",
+      r: "9.7",
+      fill: "#fff",
+      stroke: "#dadada",
+      strokeWidth: ".6"
+     }), (0, t.jsx)("circle", {
+      cx: "605",
+      cy: "422.49",
+      r: "9.7",
+      fill: "#fff",
+      stroke: "#dadada",
+      strokeWidth: ".6"
+     }), (0, t.jsx)("circle", {
+      cx: "517",
+      cy: "341.49",
+      r: "9.7",
+      fill: "#fff",
+      stroke: "#dadada",
+      strokeWidth: ".6"
+     }), (0, t.jsx)("circle", {
+      cx: "428",
+      cy: "247.49",
+      r: "9.7",
+      fill: "#fff",
+      stroke: "#dadada",
+      strokeWidth: ".6"
+     }), (0, t.jsx)("circle", {
+      cx: "333",
+      cy: "158.49",
+      r: "9.7",
+      fill: "#fff",
+      stroke: "#dadada",
+      strokeWidth: ".6"
+     }), (0, t.jsx)("circle", {
+      cx: "227",
+      cy: "80.49",
+      r: "9.7",
+      fill: "#fff",
+      stroke: "#dadada",
+      strokeWidth: ".6"
+     }), (0, t.jsx)("circle", {
+      cx: "92",
+      cy: "24.49",
+      r: "9.7",
+      fill: "#fff",
+      stroke: "#dadada",
+      strokeWidth: ".6"
+     })]
+    }), (0, t.jsxs)("g", {
+     children: [(0, t.jsx)(h.motion.path, {
+      className: "animated-path",
+      stroke: "#fe4b25",
+      d: "M-2 .5c239.72 37.99 376.71 193.45 519.5 339.43",
+      initial: A
+     }), (0, t.jsxs)(h.motion.g, {
+      className: "animated-red-node",
+      initial: E,
+      children: [(0, t.jsx)("circle", {
+       cx: "92",
+       cy: "24.49",
+       r: "9.5",
+       fill: "#fe4b25",
+       stroke: "#fff"
+      }), (0, t.jsx)("path", {
+       stroke: "#fff",
+       strokeLinecap: "round",
+       strokeWidth: ".83",
+       d: "m87.26 24.29 4.2 3.79q.1.07.2-.02l5.08-7.25"
+      })]
+     }), (0, t.jsxs)(h.motion.g, {
+      className: "animated-red-node",
+      initial: E,
+      children: [(0, t.jsx)("circle", {
+       cx: "227",
+       cy: "80.49",
+       r: "9.5",
+       fill: "#fe4b25",
+       stroke: "#fff"
+      }), (0, t.jsx)("path", {
+       stroke: "#fff",
+       strokeLinecap: "round",
+       strokeWidth: ".83",
+       d: "m222.26 80.29 4.2 3.79q.1.07.2-.02l5.08-7.25"
+      })]
+     }), (0, t.jsxs)(h.motion.g, {
+      className: "animated-red-node",
+      initial: E,
+      children: [(0, t.jsx)("circle", {
+       cx: "333",
+       cy: "158.49",
+       r: "9.5",
+       fill: "#fe4b25",
+       stroke: "#fff"
+      }), (0, t.jsx)("path", {
+       stroke: "#fff",
+       strokeLinecap: "round",
+       strokeWidth: ".83",
+       d: "m328.26 158.29 4.2 3.79q.1.07.2-.02l5.08-7.25"
+      })]
+     }), (0, t.jsxs)(h.motion.g, {
+      className: "animated-red-node",
+      initial: E,
+      children: [(0, t.jsx)("circle", {
+       cx: "428",
+       cy: "247.49",
+       r: "9.5",
+       fill: "#fe4b25",
+       stroke: "#fff"
+      }), (0, t.jsx)("path", {
+       stroke: "#fff",
+       strokeLinecap: "round",
+       strokeWidth: ".83",
+       d: "m423.26 247.29 4.2 3.79q.1.07.2-.02l5.08-7.25"
+      })]
+     }), (0, t.jsxs)(h.motion.g, {
+      className: "animated-red-node",
+      initial: E,
+      children: [(0, t.jsx)("circle", {
+       cx: "517",
+       cy: "341.49",
+       r: "9.5",
+       fill: "#fe4b25",
+       stroke: "#fff"
+      }), (0, t.jsx)("path", {
+       stroke: "#fff",
+       strokeLinecap: "round",
+       strokeWidth: ".83",
+       d: "m512.26 341.29 4.2 3.79q.1.07.2-.02l5.08-7.25"
+      })]
+     })]
+    }), (0, t.jsxs)(h.motion.g, {
+     className: "animated-text-block",
+     initial: R,
+     children: [(0, t.jsx)("rect", {
+      ...S,
+      width: 243,
+      x: 539,
+      y: 520,
+      fill: "#fff",
+      stroke: "#e8e8e8",
+      className: (0, i.cn)(S.className, "lg:translate-x-[108px] lg:translate-y-[20px]")
+     }), (0, t.jsx)("text", {
+      x: 660.5,
+      y: 545,
+      fill: "currentColor",
+      dominantBaseline: "middle",
+      textAnchor: "middle",
+      className: (0, i.cn)(M, "lg:translate-x-[108px] lg:translate-y-[20px]"),
+      children: "Fewer procurement tasks"
+     })]
+    })]
+   }), (0, t.jsxs)("g", {
+    children: [(0, t.jsx)("g", {
+     clipPath: "url(#comparative-growth-plot-a)",
+     children: (0, t.jsx)("path", {
+      stroke: "#183028",
+      d: "M-216 644.25C692.55 600.71 650 0 1072 0"
+     })
+    }), (0, t.jsxs)("g", {
+     children: [(0, t.jsx)(h.motion.path, {
+      className: "animated-path",
+      stroke: "#38d059",
+      d: "M.39 621C477.86 537.59 623.15 271.04 796 115.6",
+      initial: A
+     }), (0, t.jsxs)("g", {
+      children: [(0, t.jsx)(h.motion.path, {
+       className: "animated-green-node-text",
+       fill: "#38d059",
+       d: "M191.58 541.38v11.64h-1.4l-.01-10.16h-.07l-2.84 1.89v-1.43l2.9-1.94zm7.14 11.8q-1.28 0-2.18-.7a4.4 4.4 0 0 1-1.38-2.04 10 10 0 0 1-.48-3.24q0-1.89.47-3.22a4.4 4.4 0 0 1 1.39-2.05q.9-.7 2.18-.71 1.27 0 2.18.7.9.72 1.38 2.05.5 1.35.49 3.22 0 1.9-.48 3.24-.47 1.34-1.38 2.04t-2.19.7m0-1.26q1.27 0 1.98-1.22.7-1.23.7-3.5 0-1.51-.32-2.58a3.5 3.5 0 0 0-.92-1.62q-.6-.55-1.44-.55-1.26 0-1.97 1.24-.71 1.25-.7 3.5a9 9 0 0 0 .31 2.58q.32 1.06.92 1.6.6.55 1.44.55m12.14-1.1v-.6q0-.64.26-1.17.27-.54.77-.85.51-.33 1.24-.33.74 0 1.24.32.5.33.76.86.25.53.25 1.16v.62q0 .63-.26 1.16a2.1 2.1 0 0 1-1.99 1.18q-.73 0-1.24-.32a2 2 0 0 1-.77-.85 3 3 0 0 1-.26-1.17m1.16-.6v.6q0 .53.25.95t.86.42q.6 0 .84-.42.25-.42.25-.94v-.62q0-.53-.23-.94-.24-.42-.86-.42-.6 0-.85.42-.26.42-.26.94m-6.96-6.05v-.61q0-.64.26-1.17.27-.53.78-.85.51-.33 1.23-.32.74 0 1.24.32t.76.85.25 1.16v.62q0 .63-.26 1.17a2.1 2.1 0 0 1-1.98 1.17q-.75 0-1.25-.32a2 2 0 0 1-.77-.85 3 3 0 0 1-.26-1.17m1.16-.61v.61q0 .53.25.95.25.4.87.41.6 0 .84-.41.25-.42.25-.95v-.62q0-.52-.24-.94t-.86-.42q-.6 0-.85.42-.26.42-.26.95m-.72 9.45 8-11.64h1.29l-8 11.64z",
+       initial: V
+      }), (0, t.jsx)(h.motion.rect, {
+       className: "animated-green-node",
+       width: "7.99",
+       height: "7.99",
+       x: "193",
+       y: "568.99",
+       fill: "#38d059",
+       rx: "2",
+       initial: O
+      })]
+     }), (0, t.jsxs)("g", {
+      children: [(0, t.jsx)(h.motion.path, {
+       className: "animated-green-node-text",
+       fill: "#38d059",
+       d: "M400.37 443v-1.02l3.84-4.2q.68-.74 1.1-1.29.45-.55.66-1.03.21-.5.21-1.02a1.9 1.9 0 0 0-1.09-1.76 3 3 0 0 0-1.14-.24q-.66 0-1.17.27-.5.28-.76.77a2.4 2.4 0 0 0-.27 1.16h-1.34q0-1.02.47-1.8.47-.76 1.28-1.2a4 4 0 0 1 1.84-.43q1.02 0 1.81.43.8.44 1.24 1.16.45.75.45 1.63 0 .65-.23 1.26-.23.6-.8 1.36-.56.75-1.56 1.82l-2.61 2.8v.08h5.4V443zm13.48.16q-1.29 0-2.19-.7a4.4 4.4 0 0 1-1.38-2.04 10 10 0 0 1-.48-3.24q0-1.88.48-3.22a4.4 4.4 0 0 1 1.38-2.04q.9-.72 2.19-.72 1.26 0 2.17.71.9.7 1.39 2.05.48 1.33.48 3.22t-.47 3.24a4.4 4.4 0 0 1-1.38 2.04q-.9.7-2.19.7m0-1.25q1.27 0 1.98-1.23.7-1.23.7-3.5 0-1.51-.33-2.57a3.5 3.5 0 0 0-.92-1.62q-.6-.56-1.43-.56-1.27 0-1.98 1.25-.7 1.24-.7 3.5a9 9 0 0 0 .31 2.57q.33 1.05.92 1.6.6.56 1.45.56m12.14-1.1v-.61q0-.64.26-1.17t.77-.85q.5-.32 1.24-.32.73 0 1.24.32.5.32.75.85.26.53.26 1.17v.61q0 .63-.26 1.17a2.1 2.1 0 0 1-1.99 1.17q-.74 0-1.25-.32a2 2 0 0 1-.76-.85 3 3 0 0 1-.26-1.17m1.15-.61v.61q0 .53.25.95t.87.42q.6 0 .84-.42.25-.42.25-.95v-.61q0-.53-.24-.95t-.85-.42q-.6 0-.86.43-.26.41-.25.94m-6.95-6.04v-.62q0-.63.26-1.16.27-.54.77-.86t1.24-.32q.74 0 1.24.32.5.33.75.86.26.53.26 1.16v.61q0 .64-.26 1.17a2.1 2.1 0 0 1-1.99 1.18q-.74 0-1.24-.32a2 2 0 0 1-.77-.85 3 3 0 0 1-.26-1.17m1.16-.62v.61q0 .54.25.95.24.42.86.42.6 0 .84-.42.25-.42.25-.95v-.6q0-.54-.24-.95-.24-.42-.85-.42-.6 0-.86.42-.25.41-.25.94m-.73 9.46 8-11.64h1.3l-8 11.64z",
+       initial: V
+      }), (0, t.jsx)(h.motion.rect, {
+       className: "animated-green-node",
+       width: "7.99",
+       height: "7.99",
+       x: "419",
+       y: "456.99",
+       fill: "#38d059",
+       rx: "2",
+       initial: O
+      })]
+     }), (0, t.jsxs)("g", {
+      children: [(0, t.jsx)(h.motion.path, {
+       className: "animated-green-node-text",
+       fill: "#38d059",
+       d: "M611.55 264.17q-1.13 0-2-.39a3.4 3.4 0 0 1-1.4-1.07 3 3 0 0 1-.56-1.61h1.43q.05.56.4.97.34.4.88.63.55.22 1.23.22.75 0 1.33-.27.57-.25.9-.72t.33-1.08q0-.64-.32-1.13a2 2 0 0 0-.93-.78q-.6-.27-1.5-.27h-.93v-1.25h.93q.7 0 1.22-.25t.82-.71.3-1.07q0-.59-.26-1.03a2 2 0 0 0-.74-.68 2.4 2.4 0 0 0-1.11-.24q-.6 0-1.14.22t-.86.63q-.34.4-.37.99h-1.36q.03-.9.55-1.6.52-.69 1.35-1.08a4.4 4.4 0 0 1 3.7.05 3.1 3.1 0 0 1 1.6 2.67q0 .99-.51 1.68-.5.69-1.4.96v.1q1.11.17 1.73.93.62.75.62 1.86 0 .95-.52 1.7-.5.75-1.4 1.18-.88.44-2.01.44m10.05 0q-1.29 0-2.19-.7a4.4 4.4 0 0 1-1.38-2.05 10 10 0 0 1-.48-3.23q0-1.9.48-3.23a4.4 4.4 0 0 1 1.38-2.04q.9-.71 2.19-.71 1.27 0 2.17.7.9.71 1.39 2.05t.48 3.22q0 1.9-.47 3.24a4.4 4.4 0 0 1-1.38 2.04q-.9.7-2.19.7m0-1.26q1.27 0 1.98-1.23.7-1.23.7-3.5 0-1.5-.33-2.57a3.5 3.5 0 0 0-.92-1.62q-.6-.56-1.43-.56-1.27 0-1.98 1.25-.7 1.24-.7 3.5a9 9 0 0 0 .32 2.57q.3 1.05.91 1.61.6.55 1.45.55m12.14-1.1v-.6q0-.64.26-1.17.26-.54.77-.86.5-.32 1.24-.32.73 0 1.24.32.5.32.75.85.26.53.26 1.17v.61q0 .64-.26 1.17a2.1 2.1 0 0 1-1.99 1.17q-.74 0-1.25-.31a2 2 0 0 1-.76-.85 3 3 0 0 1-.26-1.18m1.15-.61v.61q0 .54.25.95.25.42.87.42.6 0 .84-.42.25-.42.25-.95v-.61q0-.53-.24-.94-.24-.42-.85-.42-.6 0-.86.42-.26.41-.25.94m-6.95-6.04v-.62q0-.62.26-1.16t.77-.85q.5-.33 1.24-.33t1.24.33.75.85.26 1.16v.62q0 .63-.26 1.17a2.1 2.1 0 0 1-1.99 1.17q-.74 0-1.24-.32a2 2 0 0 1-.77-.85 3 3 0 0 1-.26-1.17m1.16-.62v.62q0 .53.25.95.24.4.86.41.6 0 .84-.41.25-.43.25-.95v-.62q0-.52-.24-.94t-.85-.42q-.6 0-.86.42-.25.42-.25.94m-.73 9.46 8-11.64h1.3l-8 11.64z",
+       initial: V
+      }), (0, t.jsx)(h.motion.rect, {
+       className: "animated-green-node",
+       width: "7.99",
+       height: "7.99",
+       x: "627",
+       y: "279.99",
+       fill: "#38d059",
+       rx: "2",
+       initial: O
+      })]
+     }), (0, t.jsxs)("g", {
+      children: [(0, t.jsx)(h.motion.path, {
+       className: "animated-green-node-text",
+       fill: "#38d059",
+       d: "M750.3 91.63v-1.16l5.11-8.1h.85v1.8h-.57l-3.86 6.12v.09h6.88v1.25zm5.48 2.38V82.38h1.34V94zm8.86.16q-1.29 0-2.19-.7a4.4 4.4 0 0 1-1.38-2.04 10 10 0 0 1-.48-3.24q0-1.89.48-3.22a4.4 4.4 0 0 1 1.38-2.05q.9-.7 2.18-.7t2.18.7q.9.7 1.39 2.05.48 1.33.48 3.22t-.47 3.24a4.4 4.4 0 0 1-1.38 2.04q-.9.7-2.19.7m0-1.25q1.27 0 1.98-1.23.7-1.23.7-3.5 0-1.51-.33-2.57a3.5 3.5 0 0 0-.92-1.62q-.6-.56-1.44-.56-1.26 0-1.97 1.25-.7 1.23-.7 3.5a9 9 0 0 0 .31 2.57q.33 1.05.92 1.6.6.56 1.45.56m12.13-1.1v-.61q.01-.64.26-1.17.27-.53.78-.85.5-.33 1.24-.32.73 0 1.24.32.5.32.75.85.26.52.26 1.17v.6q0 .64-.26 1.18a2.1 2.1 0 0 1-2 1.17q-.72 0-1.24-.32a2 2 0 0 1-.76-.85 3 3 0 0 1-.26-1.17m1.16-.61v.61q0 .53.25.95t.87.41q.6 0 .84-.41.24-.42.25-.95v-.61q0-.53-.24-.95t-.85-.42q-.6 0-.86.42t-.26.95m-6.95-6.05v-.6q0-.64.26-1.17t.77-.86q.5-.32 1.24-.32.73 0 1.24.32.5.32.75.85.26.53.26 1.17v.61q0 .64-.26 1.17a2.1 2.1 0 0 1-1.99 1.17q-.74 0-1.24-.31a2 2 0 0 1-.77-.85 3 3 0 0 1-.26-1.18m1.15-.6v.6q0 .53.26.95.24.42.86.42.6 0 .84-.42.25-.42.25-.95v-.61q0-.53-.24-.94-.24-.42-.85-.42-.6 0-.86.42-.25.41-.25.94m-.72 9.45 8-11.64h1.3l-8 11.63z",
+       initial: V
+      }), (0, t.jsx)(h.motion.rect, {
+       className: "animated-green-node",
+       width: "7.99",
+       height: "7.99",
+       x: "793",
+       y: "109.99",
+       fill: "#38d059",
+       rx: "2",
+       initial: O
+      })]
+     }), (0, t.jsxs)(h.motion.g, {
+      className: "animated-text-block lg:translate-y-[-20px]",
+      initial: R,
+      children: [(0, t.jsx)("rect", {
+       ...S,
+       width: 267,
+       x: 560,
+       y: 145,
+       fill: "#fff",
+       stroke: "#e8e8e8",
+       className: (0, i.cn)(S.className, "lg:translate-x-[132px] lg:translate-y-[12px]")
+      }), (0, t.jsx)("text", {
+       x: 693.5,
+       y: 170,
+       fill: "currentColor",
+       dominantBaseline: "middle",
+       textAnchor: "middle",
+       className: (0, i.cn)(M, "lg:translate-x-[132px] lg:translate-y-[12px]"),
+       children: "More than 40% time savings"
+      })]
+     })]
+    }), (0, t.jsx)("defs", {
+     children: (0, t.jsx)("clipPath", {
+      id: "comparative-growth-plot-a",
+      children: (0, t.jsx)("path", {
+       fill: "#fff",
+       d: "M0 0h1072v629H0z"
+      })
+     })
+    })]
+   })]
+  })
+ }
+ let L = (0, i.cn)("text-3xl font-medium lg:text-base"),
+  q = {
+   opacity: 0,
+   y: 10
+  };
+
+ function I() {
+  let [e, a] = v();
+  return (0, r.useEffect)(() => {
+   if (!e.current) return;
+   let t = a([
+    [".animated-bar", {
+     scaleX: 1
+    }, {
+     duration: 1.5,
+     ease: "circInOut"
+    }],
+    [".animated-text-block", {
+     opacity: 1,
+     y: 0
+    }, {
+     duration: .6,
+     at: "-0.6"
+    }]
+   ]);
+   return () => {
+    t.stop()
+   }
+  }, [a]), (0, t.jsxs)("svg", {
+   ref: e,
+   xmlns: "http://www.w3.org/2000/svg",
+   fill: "none",
+   viewBox: "0 0 1071 360",
+   children: [(0, t.jsxs)("g", {
+    fill: "#183028",
+    clipPath: "url(#reduced-delay-diagram-a)",
+    children: [(0, t.jsx)(h.motion.rect, {
+     width: "62",
+     height: "360",
+     x: "-19",
+     rx: "24",
+     className: "animated-bar origin-left!",
+     initial: {
+      scaleX: .6
+     }
+    }), (0, t.jsx)(h.motion.rect, {
+     width: "21",
+     height: "360",
+     x: "51",
+     rx: "10.5",
+     className: "animated-bar origin-left!",
+     style: {
+      transformOrigin: "left"
+     },
+     initial: {
+      scaleX: .8
+     }
+    }), (0, t.jsx)(h.motion.rect, {
+     width: "40",
+     height: "360",
+     x: "81",
+     rx: "20",
+     className: "animated-bar"
+    }), (0, t.jsx)(h.motion.rect, {
+     width: "70",
+     height: "360",
+     x: "130",
+     rx: "24",
+     className: "animated-bar",
+     initial: {
+      scaleX: .5
+     }
+    }), (0, t.jsx)(h.motion.rect, {
+     width: "166",
+     height: "360",
+     x: "209",
+     rx: "24",
+     className: "animated-bar",
+     initial: {
+      scaleX: .6
+     }
+    }), (0, t.jsx)(h.motion.rect, {
+     width: "109",
+     height: "360",
+     x: "383",
+     rx: "24",
+     className: "animated-bar origin-left!",
+     initial: {
+      scaleX: .4
+     }
+    }), (0, t.jsx)(h.motion.rect, {
+     width: "80",
+     height: "360",
+     x: "500",
+     rx: "24",
+     className: "animated-bar origin-left!",
+     initial: {
+      scaleX: .6
+     }
+    }), (0, t.jsx)(h.motion.rect, {
+     width: "527",
+     height: "360",
+     x: "588",
+     rx: "24",
+     className: "animated-bar origin-right!",
+     initial: {
+      scaleX: .7
+     }
+    }), (0, t.jsxs)(h.motion.g, {
+     className: "animated-text-block",
+     initial: q,
+     children: [(0, t.jsx)("rect", {
+      width: 450,
+      height: 96,
+      x: 605,
+      y: 14,
+      rx: 7.5,
+      fill: "#fff",
+      stroke: "#e8e8e8",
+      className: (0, i.cn)("lg:h-[47px] lg:w-[238px] lg:translate-x-[208px] lg:translate-y-[4px]")
+     }), (0, t.jsx)("text", {
+      x: "830",
+      y: "64",
+      fill: "currentColor",
+      dominantBaseline: "middle",
+      textAnchor: "middle",
+      className: (0, i.cn)(L, "lg:translate-x-[102px] lg:translate-y-[-21px]"),
+      children: "85% Less Line Stoppage"
+     })]
+    })]
+   }), (0, t.jsx)("defs", {
+    children: (0, t.jsx)("clipPath", {
+     id: "reduced-delay-diagram-a",
+     children: (0, t.jsx)("path", {
+      fill: "#fff",
+      d: "M0 0h1071v360H0z"
+     })
+    })
+   })]
+  })
+ }
+ let _ = (0, i.cn)("text-3xl font-medium lg:text-lg"),
+  z = {
+   opacity: 0,
+   y: 10
+  };
+
+ function P() {
+  let [e, a] = v();
+  return (0, r.useEffect)(() => {
+   if (!e.current) return;
+   let t = a([
+    [".animated-red-circle", {
+     scale: 1
+    }, {
+     duration: 1.5,
+     ease: "circInOut"
+    }],
+    [".animated-green-circle", {
+     scale: 1
+    }, {
+     duration: 1.5,
+     ease: "circInOut",
+     at: "<"
+    }],
+    [".animated-text-block", {
+     opacity: 1,
+     y: 0
+    }, {
+     duration: .6,
+     at: "-0.6"
+    }]
+   ]);
+   return () => {
+    t.stop()
+   }
+  }, [a]), (0, t.jsxs)("svg", {
+   ref: e,
+   viewBox: "0 0 1071 884",
+   fill: "none",
+   xmlns: "http://www.w3.org/2000/svg",
+   children: [(0, t.jsx)(h.motion.path, {
+    className: "animated-red-circle origin-top-left!",
+    d: "M442.5 0.5C686.61 0.5 884.5 198.167 884.5 442C884.5 685.833 686.61 883.5 442.5 883.5C198.39 883.5 0.5 685.833 0.5 442C0.5 198.167 198.39 0.5 442.5 0.5Z",
+    stroke: "#FE4B25",
+    initial: {
+     scale: .4
+    }
+   }), (0, t.jsx)(h.motion.circle, {
+    className: "animated-green-circle origin-bottom-right!",
+    cx: "934.5",
+    cy: "747.5",
+    r: "136.5",
+    fill: "currentColor",
+    initial: {
+     scale: 2.94
+    }
+   }), (0, t.jsxs)(h.motion.g, {
+    className: "animated-text-block",
+    initial: z,
+    children: [(0, t.jsx)("rect", {
+     width: 224,
+     height: 96,
+     x: 54,
+     y: 48,
+     rx: "8",
+     fill: "white",
+     stroke: "#E8E8E8",
+     className: "lg:h-[56px] lg:w-[138px] lg:translate-x-[42px] lg:translate-y-[20px]"
+    }), (0, t.jsx)("text", {
+     x: "165",
+     y: "98",
+     dominantBaseline: "middle",
+     textAnchor: "middle",
+     fill: "currentColor",
+     className: _,
+     children: "10x scale"
+    })]
+   })]
+  })
+ }
+
+ function B({
+  data: e
+ }) {
+  var r, a;
+  let {
+   infographic: i
+  } = e || {};
+  switch ("string" == typeof i ? i && JSON.parse({
+    cleaned: (r = JSON.stringify(i)).replace(f, ""),
+    encoded: (null == (a = r.match(f)) ? void 0 : a[0]) || ""
+   }.cleaned) : i) {
+   case "comparativeGrowthPlot":
+    return (0, t.jsx)(T, {});
+   case "acceleratedProcessDiagram":
+    return (0, t.jsx)(k, {});
+   case "relativeScaleDiagram":
+    return (0, t.jsx)(P, {});
+   case "reducedDelayDiagram":
+    return (0, t.jsx)(I, {})
+  }
+ }
+
+ function H({
+  type: e,
+  className: r,
+  color: a,
+  backgroundColor: i
+ }) {
+  let s = a || "var(--color-white-2)",
+   l = i || "var(--color-green-5)";
+  switch (e) {
+   case "comparativeGrowthPlot":
+    return (0, t.jsxs)("svg", {
+     xmlns: "http://www.w3.org/2000/svg",
+     fill: "none",
+     className: r,
+     children: [(0, t.jsx)("rect", {
+      fill: l,
+      rx: "8",
+      width: "100%",
+      height: "100%"
+     }), (0, t.jsx)("path", {
+      fill: s,
+      d: "M97.5 12c0 33.01-18.707 61.649-46.097 75.897-1.99 1.035-1.273 4.603.97 4.603H98v5H12v-5c44.459 0 80.5-36.041 80.5-80.5h5Z"
+     })]
+    });
+   case "acceleratedProcessDiagram":
+    return (0, t.jsxs)("svg", {
+     xmlns: "http://www.w3.org/2000/svg",
+     fill: "none",
+     className: r,
+     viewBox: "0 0 109 109",
+     children: [(0, t.jsx)("rect", {
+      width: "109",
+      height: "109",
+      fill: "#183028",
+      rx: "8"
+     }), (0, t.jsx)("rect", {
+      width: "96",
+      height: "50",
+      x: "6.5",
+      y: "6.5",
+      stroke: "#fff",
+      rx: "25"
+     }), (0, t.jsx)("circle", {
+      cx: "54",
+      cy: "80",
+      r: "22.5",
+      fill: "#fff",
+      stroke: "#fff"
+     })]
+    });
+   case "relativeScaleDiagram":
+    return (0, t.jsxs)("svg", {
+     xmlns: "http://www.w3.org/2000/svg",
+     fill: "none",
+     className: r,
+     children: [(0, t.jsx)("rect", {
+      width: "100%",
+      height: "100%",
+      fill: l,
+      rx: "8"
+     }), (0, t.jsx)("mask", {
+      id: "a",
+      fill: s,
+      children: (0, t.jsx)("path", {
+       d: "M51 15c24.3 0 44 19.7 44 44s-19.7 44-44 44S7 83.3 7 59s19.7-44 44-44Z"
+      })
+     }), (0, t.jsx)("path", {
+      fill: s,
+      d: "M51 15v1c23.748 0 43 19.252 43 43h2c0-24.853-20.147-45-45-45v1Zm44 44h-1c0 23.748-19.252 43-43 43v2c24.853 0 45-20.147 45-45h-1Zm-44 44v-1C27.252 102 8 82.748 8 59H6c0 24.853 20.147 45 45 45v-1ZM7 59h1c0-23.748 19.252-43 43-43v-2C26.147 14 6 34.147 6 59h1Z",
+      mask: "url(#a)"
+     }), (0, t.jsx)("circle", {
+      cx: "91",
+      cy: "18",
+      r: "13",
+      fill: s
+     })]
+    });
+   case "reducedDelayDiagram":
+    return (0, t.jsxs)("svg", {
+     xmlns: "http://www.w3.org/2000/svg",
+     fill: "none",
+     className: r,
+     viewBox: "0 0 109 109",
+     children: [(0, t.jsx)("rect", {
+      width: "109",
+      height: "109",
+      fill: "#183028",
+      rx: "8"
+     }), (0, t.jsx)("rect", {
+      width: "40",
+      height: "96",
+      x: "60.5",
+      y: "6.5",
+      stroke: "#fff",
+      rx: "20"
+     }), (0, t.jsx)("rect", {
+      width: "43",
+      height: "97",
+      x: "8",
+      y: "6",
+      fill: "#fff",
+      rx: "21.5"
+     })]
+    })
+  }
+ }
+ var W = e.i(143443),
+  D = e.i(627230),
+  $ = e.i(88653),
+  F = e.i(824511);
+
+ function G({
+  title: e,
+  className: r,
+  callToAction: n
+ }) {
+  let c = (0, s.useInViewAnimation)(a.fadeMoveAnim);
+  return (0, t.jsxs)("div", {
+   className: (0, i.cn)("space-y-4", r),
+   children: [e && (0, t.jsx)(o.default, {
+    children: (0, t.jsx)("h2", {
+     className: "t-h-2 md:t-h-3",
+     children: e
+    })
+   }), (0, i.hasValidCta)(n) && (0, t.jsx)(F.m.div, {
+    ...c,
+    children: (0, t.jsx)(W.Button, {
+     asChild: !0,
+     shape: "rounded",
+     tone: "white",
+     children: (0, t.jsx)(l.default, {
+      link: n,
+      children: n.label
+     })
+    })
+   })]
+  })
+ }
+
+ function X({
+  data: e
+ }) {
+  let {
+   title: l,
+   callToAction: o,
+   featureBlocks: c,
+   enableAutoplay: d,
+   autoplayDuration: u
+  } = e || {}, [f, h] = (0, r.useState)(), [m, x] = (0, r.useState)(0), p = (0, i.hasArrayValue)(c) ? c[m] ?? null : null, g = (0, s.useInViewAnimation)(a.STAGGER_CONTAINER_CONFIG), v = (0, r.useCallback)(() => {
+   f?.goToNext()
+  }, [f]), y = (0, r.useCallback)(() => {
+   f?.goToPrev()
+  }, [f]);
+  return (0, r.useEffect)(() => {
+   f && (x(f.selectedSnap()), f.on("select", () => {
+    x(f.selectedSnap())
+   }))
+  }, [f]), (0, t.jsxs)("section", {
+   className: "bg-white-2 flex-row-reverse md:flex",
+   children: [(0, t.jsx)(G, {
+    title: l,
+    callToAction: o,
+    className: "px-contain pt-12 pb-4 md:hidden"
+   }), p && (0, t.jsxs)("div", {
+    className: "border-white-3 bg-white-1 relative isolate mx-auto flex aspect-10/9 max-h-dvw w-[calc(100%-var(--s-contain)*2)] flex-1 items-center overflow-hidden rounded-lg border md:max-h-[90vh] md:border-0",
+    children: [(0, t.jsx)(n.default, {
+     className: "text-white-3",
+     dotSize: 3,
+     gap: 120
+    }), (0, t.jsx)($.AnimatePresence, {
+     mode: "wait",
+     children: (0, t.jsx)(F.m.div, {
+      className: (0, i.cn)("p-center h-full w-full [&_svg]:size-full", p?.infographic === "comparativeGrowthPlot" && "max-lg:left-[55%] max-lg:h-[160%] max-lg:w-[160%]", p?.infographic === "acceleratedProcessDiagram" && "max-lg:left-[55%] max-lg:h-[150%] max-lg:w-[150%] max-md:left-[52%]"),
+      variants: a.fadeAnim,
+      initial: "hide",
+      animate: "show",
+      exit: "hide",
+      children: (0, t.jsx)(B, {
+       data: p
+      })
+     }, m)
+    }), (0, t.jsx)("button", {
+     "data-slot": "carousel-previous",
+     className: "z-10 h-full w-1/2 cursor-pointer touch-manipulation outline-offset-[-3px]",
+     onClick: y,
+     children: (0, t.jsx)("span", {
+      className: "sr-only",
+      children: "Previous feature"
+     })
+    }), (0, t.jsx)("button", {
+     "data-slot": "carousel-next",
+     className: "z-10 h-full w-1/2 cursor-pointer touch-manipulation outline-offset-[-3px]",
+     onClick: v,
+     children: (0, t.jsx)("span", {
+      className: "sr-only",
+      children: "Next feature"
+     })
+    })]
+   }), (0, t.jsxs)("div", {
+    className: "border-white-3 flex w-full flex-col justify-between gap-10 py-4 md:max-w-92 md:border-r xl:pt-30",
+    children: [(0, t.jsx)(G, {
+     title: l,
+     callToAction: o,
+     className: "px-contain max-md:hidden"
+    }), (0, i.hasArrayValue)(c) && (0, t.jsx)(F.m.div, {
+     className: "relative w-full",
+     ...g,
+     children: (0, t.jsxs)(D.Carousel, {
+      opts: {
+       loop: !0,
+       align: "center"
+      },
+      gap: "var(--s-contain)",
+      setApi: h,
+      isAutoplay: d,
+      autoplayDuration: 1e3 * u,
+      children: [(0, t.jsx)(D.CarouselPagination, {}), (0, t.jsx)(F.m.div, {
+       variants: a.fadeMoveAnim,
+       children: (0, t.jsx)(D.CarouselContent, {
+        children: c.map(e => {
+         let {
+          title: r,
+          description: a,
+          infographic: i
+         } = e;
+         return (0, t.jsx)(D.CarouselItem, {
+          className: "basis-[calc(100%-var(--s-contain)*2)]",
+          children: (0, t.jsxs)("div", {
+           className: "border-white-3 rounded-lg border bg-white p-4",
+           children: [i && (0, t.jsx)(H, {
+            type: i,
+            className: "mb-8 size-27"
+           }), r && (0, t.jsx)("p", {
+            className: "t-h-2 md:t-h-3 text-balance not-last:mb-4",
+            children: r
+           }), a && (0, t.jsx)("p", {
+            className: "t-l-1",
+            children: a
+           })]
+          })
+         }, e._key)
+        })
+       })
+      })]
+     })
+    })]
+   })]
+  })
+ }
+ e.s(["default", () => X], 380076)
+}]);

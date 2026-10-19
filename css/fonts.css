@@ -1,0 +1,60 @@
+/*
+  Fonts
+  - Inter: same open-source variable file the original site ships.
+  - "Antique Legacy" (licensed) is replaced by static Inter Tight instances
+    matched by ink density + advance width (tools/fontweight.mjs):
+      Antique Legacy 100  ->  Inter Tight wght 255, size-adjust 99.5%
+      Antique Legacy 300  ->  Inter Tight wght 380
+    ascent/descent overrides reproduce Antique Legacy's vertical metrics
+    (ascender 1051 / descender 351 per 1000 upm) so line boxes and baselines match.
+*/
+@font-face {
+  font-family: fontInter;
+  src: url('../assets/fonts/inter-var.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 100 900;
+}
+@font-face {
+  font-family: 'fontInter Fallback';
+  src: local(Arial);
+  ascent-override: 89.79%;
+  descent-override: 22.36%;
+  line-gap-override: 0%;
+  size-adjust: 107.89%;
+}
+
+@font-face {
+  font-family: fontAntiqueLegacy;
+  src: url('../assets/fonts/heading-thin.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 100;
+  font-style: normal;
+  size-adjust: 99.5%;
+  ascent-override: 105.63%;
+  descent-override: 35.28%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: fontAntiqueLegacy;
+  src: url('../assets/fonts/heading-light.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 300;
+  font-style: normal;
+  size-adjust: 102%;
+  ascent-override: 103.04%;
+  descent-override: 34.41%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'fontAntiqueLegacy Fallback';
+  src: local(Arial);
+  ascent-override: 103.06%;
+  descent-override: 34.42%;
+  line-gap-override: 0%;
+  size-adjust: 101.98%;
+}
+
+.font-vars {
+  --font-inter: 'fontInter', 'fontInter Fallback';
+  --font-antique-legacy: 'fontAntiqueLegacy', 'fontAntiqueLegacy Fallback';
+}

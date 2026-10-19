@@ -1,0 +1,40 @@
+{
+ "solutions": [
+  {
+   "title": "Commercial Charging",
+   "subtitle": "Fast charging for malls, hotels, offices and retail destinations.",
+   "icon": "commercial",
+   "color": "#16B14C",
+   "type": "SITE_ASSESSMENT"
+  },
+  {
+   "title": "Residential Communities",
+   "subtitle": "Shared charging planned around your society's power and parking.",
+   "icon": "residential",
+   "color": "#71BF45",
+   "type": "SITE_ASSESSMENT"
+  },
+  {
+   "title": "Fleet Charging",
+   "subtitle": "Depot charging sized for high-utilisation vehicles.",
+   "icon": "fleet",
+   "color": "#59A986",
+   "type": "FLEET"
+  },
+  {
+   "title": "Charging Infrastructure",
+   "subtitle": "Site feasibility, electrical planning, installation and commissioning.",
+   "icon": "infrastructure",
+   "color": "#D6F1DB",
+   "type": "SITE_ASSESSMENT"
+  }
+ ],
+ "processSteps": [
+  "consult",
+  "feasibility",
+  "selection",
+  "installation",
+  "monitoring"
+ ],
+ "contactSuccess": "Thank you. Your enquiry has been received and our team will contact you shortly."
+}

@@ -1,0 +1,21 @@
+/* Small additions for behaviour the React runtime provided */
+
+/* popper/dialog roots toggled with the hidden attribute */
+#mobile-menu-wrapper[hidden],
+#contact-root[hidden] {
+  display: none !important;
+}
+
+/* lottie svg fills its box */
+#preloader-lottie,
+#preloader-lottie svg,
+[data-footer-lottie] svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* keep the hero video covering while the poster shows */
+[data-hero-video] {
+  display: block;
+}
