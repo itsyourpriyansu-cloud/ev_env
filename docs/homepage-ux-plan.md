@@ -66,7 +66,7 @@ Keep the current pairing: Inter for body, and the tuned thin heading face for he
 | 0 | Preloader | Preloader curtain | — | Ready after logo SVG |
 | 1 | Header + mobile menu | Header pills + dropdown + accordion menu | Navigation §4.2 | Ready |
 | 2 | Hero `#top` | Video hero, split H1/H2, 3 descriptors, CTA | 2 · Hero | Needs approved hero footage/photo |
-| 3 | Where we charge `#applications` | Logo marquee, as text + icon chips | 3 · Proof strip *(replaced, no logos)* + 9 · Applications | Ready |
+| 3 | EV brands `#brands` | Logo marquee (reference motion, 50 px/s, edge fade) with EV-maker marks | 3 · Proof strip *(compatibility, not clients)* | Needs legal sign-off on trademark use |
 | 4 | Solutions `#solutions` | Dark hover-card stack (3 → **4** cards) | 4 · Solutions selector | Ready (copy approval) |
 | 5 | Charger range `#chargers` | Sticky case-study stack | 5 · Charger range | **Blocked** on signed datasheets and images |
 | 6 | How it works `#process` | Results carousel + animated diagrams | 6 · How a project works (+ 8 · Monitoring as the last step) | Ready (service scope approval) |

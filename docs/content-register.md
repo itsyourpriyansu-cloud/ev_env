@@ -18,14 +18,14 @@
 | Meta (title, description, OG) | PROPOSED | Brand line and description |
 | Navigation | PROPOSED | Labels; whether a Chargers dropdown is wanted before product pages exist |
 | Hero | PROPOSED | Headline/subline; **hero video is the original template footage** (kept by request): confirm usage rights or replace before public launch |
-| Applications strip | PROPOSED | The six application types (not claims of existing deployments) |
+| EV-brand logo strip (#brands, section 3) | PROPOSED | Logo marquee of EV makers (Tata, MG, Mahindra, Hyundai, Kia, Citroën, BMW, Mercedes-Benz, Volvo, Audi) under "Built for the CCS2 electric cars on Indian roads." Marks from the `simple-icons` package (CC0 path data), built by `node tools/build-logos.mjs`; **they remain trademarks of their owners**. An on-page disclaimer states compatibility only, not endorsement. Before launch: legal sign-off on nominative trademark use, and verify CCS2 DC charging per model (some city EVs are AC-only) |
 | Solutions (4 cards) | PROPOSED | Which of the four services Envizon actually offers |
 | Charger range 60 / 120 / 240 kW | PROPOSED | Power classes from the Envizon deck; **images are 3D renders** in a dusk-garage setting art-directed from `assets/demo/ev_charger_demo.png` (labelled "3D render" in alt text), not photos of the actual hardware |
 | Process (5 steps) | PROPOSED | Step 05 "Monitoring & Support" needs the CMS/support scope confirmed (`PROPOSED_NEEDS_SCOPE`) |
 | Why Envizon (4 cards) | PROPOSED | Card 3 needs OCPP verified (`VERIFY_OCPP`); card 4 needs coverage/SLA wording (`VERIFY_COVERAGE`) |
 | Partner CTA | PROPOSED | Programme type (site host / business partner / franchise) |
 | FAQ (6) | PROPOSED | Answers 3 (`VERIFY_SCOPE`), 4 (`VERIFY_DATASHEET`) and 5 (`VERIFY_OPS`) need sign-off |
-| Station locator (#stations) | DEMO | **Mock Hyderabad stations** (`js/data/stations.js`) and simulated availability; map rendered from OpenStreetMap (attribution shown). Replace with a licensed, verified station feed before public launch (blueprint §2 Pillar B) |
+| Station locator (#stations) | DEMO · **HIDDEN** | Commented out of the page by request (2026-10-22); restore with `"enabled": true` under `locator` in `content/homepage.json`. | **Mock Hyderabad stations** (`js/data/stations.js`) and simulated availability; map rendered from OpenStreetMap (attribution shown). Replace with a licensed, verified station feed before public launch (blueprint §2 Pillar B) |
 | Footer | PROPOSED | Legal name for the © line; Privacy/Terms pages (`PAGE_PENDING`) |
 | Quote dialog | PROPOSED | Field set, consent wording; **submission is mocked** |
 
@@ -49,5 +49,6 @@ Specs, look and shot list for every replacement asset: `docs/image-art-direction
 | Placeholder | File | Replace with |
 |---|---|---|
 | Hero video (template footage) | `assets/video/hero-1920.mp4`, `hero-960.mp4`, `assets/img/hero-poster.webp` | Envizon footage if usage rights for the current video aren't confirmed (keep file names to swap in place) |
+| Partner CTA background video (#partners) | `assets/video/partners-1920.mp4` (3.6 MB), `partners-960.mp4` (0.9 MB), `assets/img/partners-poster.webp`: 16 s seamless loop edited from Pexels stock under the free Pexels licence (commercial use, no attribution required): 8964771 Mikael Blomkvist, 13919860 Daniel Andraski, 8487074 Kindel Media, 6685058 Gustavo Fring. Originals and master in `reference/stock/` | Envizon site or team footage when available (same file names to swap in place) |
 | Charger images + station-card banners | `assets/img/charger-{60,120,240}.webp` (2400×1350), `charger-{kw}-banner.webp` (2400×900), rendered by `npm run brand:art` (needs `npm run dev` running) | Real product photography of the actual units when available (same names/sizes; see `docs/image-art-direction.md` §3.2–3.3) |
 | Logo set | `assets/brand/*.svg` (traced from the JPG) | Official vector logo when supplied (re-run `npm run brand:logo`) |

@@ -47,6 +47,9 @@ function initDesktopNav(header) {
       if (!drop) link.classList.toggle('hover:text-green-5', !others);
       if (drop) {
         link.setAttribute('aria-expanded', String(isOpen));
+        // swap (not stack) the utilities: .pointer-events-none comes later in the compiled CSS and
+        // would otherwise win, letting the pointer fall through the open panel and close the menu
+        drop.classList.toggle('pointer-events-none', !isOpen);
         drop.classList.toggle('pointer-events-auto', isOpen);
         drop.classList.toggle('opacity-100', isOpen);
         drop.classList.toggle('text-foreground-muted', !!others);
@@ -55,9 +58,15 @@ function initDesktopNav(header) {
     });
   };
 
+  // short grace period before closing, so a quick diagonal move toward a sub-item doesn't drop the menu;
+  // entering any top-level item cancels it and switches immediately
+  let closeTimer;
   items.forEach((li) => {
-    li.addEventListener('mouseenter', () => { open = li; render(); });
-    li.addEventListener('mouseleave', () => { open = null; render(); subReset(li); });
+    li.addEventListener('mouseenter', () => { clearTimeout(closeTimer); open = li; render(); });
+    li.addEventListener('mouseleave', () => {
+      clearTimeout(closeTimer);
+      closeTimer = setTimeout(() => { if (open === li) { open = null; render(); } subReset(li); }, 150);
+    });
     const link = li.querySelector(':scope > a');
     const drop = li.querySelector(':scope > div');
     if (drop) {

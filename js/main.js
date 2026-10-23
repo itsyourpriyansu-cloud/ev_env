@@ -27,21 +27,27 @@ const showIntro = shouldShowIntro();
 // <main> pageTransitionFade: opacity 0 -> 1, 0.3s easeInOut on mount
 gsap.to('#main', { opacity: 1, duration: 0.3, ease: 'power1.inOut' });
 
-initHeader({ lenis });
-initHero({ introRunning: showIntro });
-initMarquee();
-initScrollText();
-initSolutions();
-initFeature();
-initCases();
-initClosing();
-initFooter();
-initContact({ lenis });
-initAnchors({ lenis });
-initFaq();
-initLocator();
+// Each section boots in isolation: one failing module logs an error but can never stop the
+// preloader from finishing (which would leave the page frozen behind it, scroll-locked).
+const safe = (name, fn) => {
+  try { fn(); } catch (err) { console.error(`[envizon] ${name} failed to initialise`, err); }
+};
+
+safe('header', () => initHeader({ lenis }));
+safe('hero', () => initHero({ introRunning: showIntro }));
+safe('marquee', initMarquee);
+safe('scroll-text', initScrollText);
+safe('solutions', initSolutions);
+safe('feature', initFeature);
+safe('cases', initCases);
+safe('closing', initClosing);
+safe('footer', initFooter);
+safe('contact', () => initContact({ lenis }));
+safe('anchors', () => initAnchors({ lenis }));
+safe('faq', initFaq);
+safe('locator', initLocator);
 if (new URLSearchParams(location.search).has('review')) document.documentElement.dataset.review = '';
-initReveal();
+safe('reveal', initReveal);
 runPreloader({ lenis, show: showIntro });
 
 // layout can shift once webfonts / images arrive

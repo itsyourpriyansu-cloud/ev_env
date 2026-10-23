@@ -52,8 +52,9 @@ export function initReveal() {
   single($('main > section:nth-of-type(2) .py-section-half'));
 
   // solution cards: STAGGER_CONTAINER (delayChildren .2, stagger .1)
-  const cardsWrap = $('[data-solutions] .flex.w-full.flex-col');
-  group(cardsWrap, $$('[data-solution-card]', cardsWrap));
+  // (located via the cards themselves so layout/class changes to the wrapper can't break it)
+  const cardsWrap = $('[data-solutions] [data-solution-card]')?.parentElement;
+  if (cardsWrap) group(cardsWrap, $$(':scope > [data-solution-card]', cardsWrap));
 
   // results: CTA (individual) + carousel container (stagger)
   $$('[data-feature] .space-y-4 > div[style]').forEach((el) => single(el));

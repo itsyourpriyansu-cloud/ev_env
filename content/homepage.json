@@ -87,33 +87,51 @@
       "note": "Original template background video kept at client request (assets/video/hero-*.mp4). Third-party footage: confirm usage rights or swap for Envizon footage before public launch."
     }
   },
-  "applications": {
+  "brands": {
     "status": "PROPOSED",
-    "title": "EV charging, planned for the places people park.",
+    "note": "Section 3 by request (2026-10-22): logo marquee of EV makers whose Indian-market fast-charging EVs use the CCS2 connector. Marks from the simple-icons package (CC0 path data); they remain trademarks of their owners. Before launch: confirm nominative trademark use with legal and verify CCS2 DC charging per model (some models, e.g. small city EVs, are AC-only).",
+    "title": "Built for the CCS2 electric cars on Indian roads.",
+    "disclaimer": "Brand names and logos are trademarks of their respective owners and indicate CCS2 connector compatibility only, not endorsement or partnership.",
     "items": [
       {
-        "label": "Apartments & Societies",
-        "icon": "apartment"
+        "name": "Tata Motors",
+        "slug": "tata"
       },
       {
-        "label": "Hotels & Resorts",
-        "icon": "hotel"
+        "name": "MG Motor",
+        "slug": "mg"
       },
       {
-        "label": "Malls & Retail",
-        "icon": "mall"
+        "name": "Mahindra",
+        "slug": "mahindra"
       },
       {
-        "label": "Offices & Campuses",
-        "icon": "office"
+        "name": "Hyundai",
+        "slug": "hyundai"
       },
       {
-        "label": "Highway Stops",
-        "icon": "highway"
+        "name": "Kia",
+        "slug": "kia"
       },
       {
-        "label": "Fleet Depots",
-        "icon": "depot"
+        "name": "Citroën",
+        "slug": "citroen"
+      },
+      {
+        "name": "BMW",
+        "slug": "bmw"
+      },
+      {
+        "name": "Mercedes-Benz",
+        "slug": "mercedes"
+      },
+      {
+        "name": "Volvo",
+        "slug": "volvo"
+      },
+      {
+        "name": "Audi",
+        "slug": "audi"
       }
     ]
   },
@@ -280,6 +298,12 @@
     "status": "PROPOSED",
     "title": "Host, operate or partner in EV charging with Envizon.",
     "subtitle": "Explore site-host and business partnership options with our team.",
+    "video": {
+      "desktop": "assets/video/partners-1920.mp4",
+      "mobile": "assets/video/partners-960.mp4",
+      "poster": "assets/img/partners-poster.webp",
+      "note": "16 s loop edited from Pexels stock (free Pexels licence): 8964771 Mikael Blomkvist, 13919860 Daniel Andraski, 8487074 Kindel Media, 6685058 Gustavo Fring. Sources and master in reference/stock/. Replace with Envizon site footage when available."
+    },
     "ctaPrimary": {
       "label": "Become a Partner",
       "type": "PARTNERSHIP"
@@ -452,6 +476,8 @@
   },
   "locator": {
     "status": "DEMO",
+    "enabled": false,
+    "hiddenNote": "Section 2 (station locator) commented out by request on 2026-10-22. Set enabled to true and run npm run content to restore it.",
     "note": "Station locator preview with MOCK Hyderabad data (js/data/stations.js) and a self-hosted OSM map. Blueprint §2 Pillar B: replace with a licensed, verified station feed before public launch.",
     "title": "EV Charging Stations",
     "listTitle": "EV Charging Stations in Hyderabad",

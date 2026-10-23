@@ -18,7 +18,7 @@ import re
 import sys
 from pathlib import Path
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 
 ROOT = Path(__file__).resolve().parent.parent
 BASE = ROOT / 'tools/base/index.base.html'
@@ -337,23 +337,24 @@ def p3_hero():
     cta.append(second)
 
 
-def p3_applications():
-    a = C['applications']
+def p3_brands():
+    """Section 3: the template's logo marquee, filled with EV-maker marks (assets/logos, see build-logos.mjs).
+    Logos are sized optically: emblems sit taller, wide wordmarks shorter, so every mark carries similar weight."""
+    a = C['brands']
     mq = body.find(attrs={'data-marquee': True})
     section = mq.find_parent('section')
-    section['id'] = 'applications'
+    section['id'] = 'brands'
     section['data-status'] = a['status'].lower()
     section.find('h2').string = a['title']
     inner = mq.select_one('.rfm-marquee .rfm-initial-child-container')
     inner.clear()
     for it in a['items']:
-        item = frag(
-            '<div class="rfm-child" style="--transform: none;"><div class="px-6 md:px-15">'
-            '<span class="inline-flex items-center gap-3 whitespace-nowrap text-foreground">'
-            '<span class="inline-flex size-10 shrink-0 items-center justify-center rounded-md bg-green-1 p-2 text-green-5">'
-            + icon_svg('ui', it['icon'], 'size-full') +
-            f'</span><span class="t-h-3">{it["label"]}</span></span></div></div>')[0]
-        inner.append(item)
+        svg = (ROOT / 'assets' / 'logos' / f"{it['slug']}.svg").read_text(encoding='utf8').strip()
+        _, _, w, h = map(float, re.search(r'viewBox="([^"]+)"', svg).group(1).split())
+        height = round(min(46, max(18, 46 / (w / h) ** 0.5)))
+        svg = svg.replace('<svg ', f'<svg class="ev-brand__logo" style="--h: {height}px;" ', 1)
+        inner.append(frag(f'<div class="rfm-child" style="--transform: none;"><div class="ev-brand px-6 md:px-15">{svg}</div></div>')[0])
+    mq.insert_after(frag(f'<p class="ev-brand__note mx-auto mt-6 px-4 text-center md:mt-8">{a["disclaimer"]}</p>')[0])
 
 
 # ------------------------------------------------------------------ P4 · solutions
@@ -393,6 +394,12 @@ def p4_solutions():
                 node.replace_with(sol['cardCta'])
                 break
         wrap.append(card)
+    # two-column layout (css/brand.css): cards left, sticky panel right where solutions.js draws the
+    # hovered card's hairline icon (desktop ≥1024px; below that the icon draws behind the section)
+    wrap['class'] = wrap.get('class', []) + ['ev-solutions-cards']
+    wrap.wrap(soup.new_tag('div', attrs={'class': 'ev-solutions-grid'}))
+    wrap.insert_after(frag('<div class="ev-solutions-icon" aria-hidden="true" data-solutions-icon>'
+                           '<div class="ev-solutions-icon__inner"></div></div>')[0])
 
 
 # ------------------------------------------------------------------ P5 · charger range
@@ -561,9 +568,17 @@ def p7_partners():
     block['data-status'] = pt['status'].lower()
     heading = block.find(attrs={'data-scroll-text': True})
     set_heading(heading, pt['title'])
-    heading.insert_after(frag('<p class="t-b-1 max-w-sm text-balance" '
-                              'style="color:rgb(from var(--color-foreground) r g b / 0.72)">'
+    heading.insert_after(frag('<p class="ev-partners__sub t-b-1 max-w-sm text-balance">'
                               f'{pt["subtitle"]}</p>')[0])
+    # background loop: teams at work on EV sites (Pexels stock, see content register); a scrim keeps text legible
+    v = pt['video']
+    block['class'] = block.get('class', []) + ['ev-partners']
+    block.insert(0, frag(
+        '<div class="ev-partners__media" aria-hidden="true">'
+        f'<video muted loop playsinline preload="none" poster="{v["poster"]}" data-partners-video>'
+        f'<source media="(max-width: 767px)" src="{v["mobile"]}" type="video/mp4">'
+        f'<source src="{v["desktop"]}" type="video/mp4"></video>'
+        '<div class="ev-partners__scrim"></div></div>')[0])
     a = block.find('div', class_='gap-4', recursive=False).find('a')
     a.string = pt['ctaPrimary']['label']
     contact_link(a, pt['ctaPrimary']['type'])
@@ -734,7 +749,14 @@ def p10_locator():
         '<div class="ev-detail__scroll" data-lenis-prevent><div data-detail-body></div></div>'
         '<div class="ev-detail__footer" data-detail-footer></div></aside>'
         '</div></section>')[0]
-    body.find(attrs={'data-hero': True}).insert_after(sec)          # directly below the hero
+    hero = body.find(attrs={'data-hero': True})
+    if lc.get('enabled', True):
+        hero.insert_after(sec)                                        # directly below the hero
+        return
+    # hidden by request: keep the markup in the page as an HTML comment (no CSS, initLocator() no-ops)
+    head.find('link', href='css/locator.css').decompose()
+    markup = str(sec).replace('--', '- -')
+    hero.insert_after(Comment(f' SECTION 2 · #stations: {lc["hiddenNote"]}\n{markup}\n'))
 
 
 # ------------------------------------------------------------------ run
@@ -743,7 +765,7 @@ p2_header()
 p2_mobile_menu()
 p2_footer()
 p3_hero()
-p3_applications()
+p3_brands()
 p4_solutions()
 p5_chargers()
 p6_process()

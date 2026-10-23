@@ -10,7 +10,22 @@ const KEYS = [
 ];
 const h = cubicBezier(0.87, 0, 0.13, 1);
 
+// Partner CTA background loop: load + play only while on screen; reduced motion keeps the poster.
+function initPartnersVideo() {
+  const video = $('[data-partners-video]');
+  if (!video || reducedMotion) return;
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) {
+      if (video.preload === 'none') { video.preload = 'auto'; video.load(); }
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }, { rootMargin: '200px 0px' }).observe(video);
+}
+
 export function initClosing() {
+  initPartnersVideo();
   const wrap = $('[data-octagons]');
   if (!wrap || reducedMotion) return;
   const layers = $$(':scope > div', wrap);

@@ -104,3 +104,83 @@ html[data-review] [data-status='proposed'] {
 .ev-logo-mark { display: none; height: 20px; }
 @media (max-width: 400px) { .ev-logo-full, .ev-logo-full img { height: 15px !important; } }
 @media (max-width: 359px) { .ev-logo-full { display: none; } .ev-logo-mark { display: block; } }
+
+/* Section 3 · EV-brand logo marquee (same rfm motion as the reference strip; logos sized optically via --h) */
+.ev-brand { display: flex; align-items: center; height: 56px; color: var(--color-foreground, #183028); }
+.ev-brand__logo { display: block; height: calc(var(--h) * 0.82); width: auto; max-width: 250px; flex: none; }
+.ev-brand__note { max-width: 46rem; font-size: 12px; line-height: 1.5; opacity: 0.55; }
+@media (min-width: 768px) {
+  .ev-brand { height: 64px; }
+  .ev-brand__logo { height: var(--h); }
+}
+
+/* Partner CTA (#partners) · background loop of teams at work; deep-forest scrim keeps the copy at AA contrast */
+.ev-partners { isolation: isolate; border-top-color: transparent; }
+.ev-partners__media { position: absolute; inset: 0; z-index: -20; background: #0b1a14 url("../assets/img/partners-poster.webp") center / cover no-repeat; }
+.ev-partners__media video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ev-partners__scrim {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 50%, rgba(4, 22, 15, 0.62) 0%, rgba(4, 22, 15, 0) 100%),
+    linear-gradient(180deg, rgba(6, 61, 37, 0.5) 0%, rgba(4, 22, 15, 0.62) 100%);
+}
+.ev-partners h2 { color: #fff; }
+.ev-partners .ev-partners__sub { color: rgba(255, 255, 255, 0.84); }
+.ev-partners [data-octagons] { color: rgba(214, 241, 219, 0.28); }
+
+/* ---------- Solutions · two-column (cards left, animated icon right) ---------- */
+.ev-solutions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  width: 100%;
+}
+@media (min-width: 64rem) {
+  .ev-solutions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 48px;
+    align-items: start;
+  }
+}
+.ev-solutions-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+@media (min-width: 48rem) {
+  .ev-solutions-cards { gap: 24px; }
+}
+.ev-solutions-icon {
+  display: none;
+  position: relative;
+  min-height: 400px;
+  overflow: hidden;
+  border-radius: 20px;
+}
+@media (min-width: 64rem) {
+  .ev-solutions-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    top: calc(var(--h-header, 80px) + 24px);
+    min-height: 460px;
+  }
+}
+.ev-solutions-icon__inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.ev-solutions-icon { border: 1px solid rgba(214, 241, 219, 0.12); background: rgba(255, 255, 255, 0.02); }
+/* the section's fluid side padding leaves only ~600px at 1440, too narrow for two columns:
+   on desktop use a fixed gutter and centre the grid at up to 1080px */
+@media (min-width: 64rem) {
+  #solutions > .p-x-sm { padding-inline: 48px; }
+  .ev-solutions-grid { max-width: 1080px; margin-inline: auto; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+}
