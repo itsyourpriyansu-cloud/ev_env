@@ -1,13 +1,12 @@
 // Footer behaviours:
 //  - "Our Solutions" rotator: 5s linear progress in the active dot, auto-advance while in view,
 //    hover a title/dot to switch (pauses autoplay on non-touch), icon + subtitle cross-fade
-//  - brand banner: tagline rotator (3s, fadeSlideReveal) + Envizon pill outline drawing around it
+//  - brand banner: tagline rotator (3s, fadeSlideReveal) over a background EV-charging loop (plays in view only)
 //  - --l-dynamic-hr-width for the reversed hr
-import { gsap, $, $$, inView, isTouch, isMobile } from './core.js';
+import { gsap, $, $$, inView, isTouch, autoplayInView } from './core.js';
 import { EASE, spring } from './lib/ease.js';
 import site from './data/site.json';
 import icons from '../content/icons.json';
-import { markSVG } from './brand-mark.js';
 
 const SOLUTIONS = site.solutions.map((s) => ({ ...s, href: '#solutions' }));
 const solutionIcon = (name) =>
@@ -46,6 +45,8 @@ function initSolutionsRotator(footer) {
   // normalise the captured state
   let subtitle = subBox.lastElementChild;
   gsap.set(subtitle, { opacity: 1, filter: 'blur(0px)' });
+  iconBox.style.position = 'relative';
+  let currentIcon = iconBox.firstElementChild;
 
   const renderBar = () => bar && (bar.style.transform = `translateX(${(prog.x - 1) * 100}%)`);
 
@@ -74,29 +75,33 @@ function initSolutionsRotator(footer) {
 
     // icon: background colour morph + popLayout icon swap
     iconLink.href = s.href;
-    iconLink.setAttribute('aria-label', 'Link to: ' + s.title);
-    gsap.to(iconBox, { backgroundColor: s.color, duration: animate ? sp0.duration : 0, ease: sp0.ease });
-    const oldIcon = iconBox.firstElementChild;
+    iconLink.setAttribute('aria-label', 'Show solution: ' + s.title);
+    gsap.to(iconBox, { backgroundColor: s.color, duration: animate ? sp0.duration : 0, ease: sp0.ease, overwrite: true });
+    const oldIcon = currentIcon;
     const nextIcon = document.createElement('div');
     nextIcon.className = 'flex size-full items-center justify-center';
     nextIcon.innerHTML = iconsHtml[index] || '';
     const svg = nextIcon.firstElementChild;
     if (svg) svg.setAttribute('class', (svg.getAttribute('class') || '').replace(/\bsize-\S+/g, '') + ' h-full w-full');
+    // icons still fading out from earlier (fast hovering) are dropped, so only one ever sits in the layout flow
+    [...iconBox.children].forEach((c) => { if (c !== oldIcon) { gsap.killTweensOf(c); c.remove(); } });
     if (animate && oldIcon) {
-      oldIcon.style.position = 'absolute';
-      oldIcon.style.inset = '0';
-      oldIcon.style.padding = 'inherit';
+      gsap.killTweensOf(oldIcon);
+      Object.assign(oldIcon.style, { position: 'absolute', inset: '0', padding: 'inherit' });
       gsap.to(oldIcon, { opacity: 0, filter: 'blur(2px)', scale: 0.8, duration: sp0.duration, ease: sp0.ease, onComplete: () => oldIcon.remove() });
-      iconBox.style.position = 'relative';
       iconBox.appendChild(nextIcon);
       gsap.fromTo(nextIcon, { opacity: 0, filter: 'blur(2px)', scale: 0.8 }, { opacity: 1, filter: 'blur(0px)', scale: 1, duration: sp0.duration, ease: sp0.ease });
     } else {
       iconBox.replaceChildren(nextIcon);
     }
+    currentIcon = nextIcon;
 
     // subtitle: fadeBlur popLayout
     if (animate) {
       const old = subtitle;
+      // drop subtitles still fading from earlier switches (the invisible ones only reserve height)
+      $$(':scope > p:not(.invisible)', subBox).forEach((p) => { if (p !== old) { gsap.killTweensOf(p); p.remove(); } });
+      gsap.killTweensOf(old);
       const next = old.cloneNode(false);
       next.textContent = s.subtitle;
       subBox.appendChild(next);
@@ -170,20 +175,7 @@ function initBanner(footer) {
     if (v) timer = setInterval(swap, 3000);
   }, { margin: '0px 0px -50px 0px', once: false });
 
-  // Envizon pill outline: when in view, after 1.2s (desktop), fade in, draw around the tagline, settle to .8
-  const holder = $('[data-footer-lottie]', banner);
-  if (!holder) return;
-  inView(holder, () => {
-    setTimeout(() => {
-      const el = document.createElement('div');
-      el.className = 'flex size-full items-center justify-center';
-      el.innerHTML = markSVG({ mode: 'outline', letters: false, stroke: 'currentColor', strokeWidth: 2, style: 'width:80%;height:auto;opacity:.6' });
-      holder.appendChild(el);
-      gsap.fromTo(el, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: EASE.easeOut });
-      gsap.fromTo(el.querySelectorAll('[data-draw]'), { drawSVG: '0%' }, { drawSVG: '100%', duration: 2.2, ease: EASE.preloaderLogo });
-      gsap.fromTo(el, { scale: 1 }, { scale: 0.8, delay: 0.5, duration: 3.5, ease: EASE.preloaderLogo });
-    }, (isMobile() ? 0 : 1.2) * 1000);
-  }, { margin: '0px', once: true });
+  autoplayInView($('[data-footer-video]', banner), '100px 0px');
 }
 
 function initDynamicHr(footer) {

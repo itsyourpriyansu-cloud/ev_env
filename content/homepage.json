@@ -185,7 +185,8 @@
         ],
         "description": "A compact DC fast charger for destinations and fleet bays where vehicles dwell for an hour or more.",
         "specLine": "Specifications on request",
-        "image": "assets/img/charger-60.webp"
+        "image": "assets/img/charger-60.webp",
+        "imageAlt": "Envizon 60 kW dual-gun DC fast charger in a basement car park, beside an EV charging bay (illustrative render)"
       },
       {
         "id": "charger-120",
@@ -198,7 +199,8 @@
         ],
         "description": "Higher-power DC charging for busy commercial sites and highway stops with shorter dwell times.",
         "specLine": "Specifications on request",
-        "image": "assets/img/charger-120.webp"
+        "image": "assets/img/charger-120.webp",
+        "imageAlt": "Envizon 120 kW dual-gun DC fast charger at a highway charging plaza, charging an electric SUV (illustrative render)"
       },
       {
         "id": "charger-240",
@@ -210,7 +212,8 @@
         ],
         "description": "High-capacity DC charging for high-throughput corridors and fleet depots.",
         "specLine": "Specifications on request",
-        "image": "assets/img/charger-240.webp"
+        "image": "assets/img/charger-240.webp",
+        "imageAlt": "Envizon 240 kW DC fast charger at an electric bus depot at dusk (illustrative render)"
       }
     ],
     "cta": {
@@ -236,30 +239,32 @@
       {
         "key": "consult",
         "title": "Consult",
-        "description": "Tell us about your site, your vehicles and what you want charging to achieve."
+        "description": "Tell us about your site, your vehicles and your goals. We turn it into a clear project brief."
       },
       {
         "key": "feasibility",
         "title": "Site Feasibility",
-        "description": "We assess power availability, parking layout and expected charging load."
+        "description": "We check supply and sanctioned load, the cable route and bay layout, then share a feasibility report."
       },
       {
         "key": "selection",
         "title": "Charger Selection",
-        "description": "We match charger power and connectors to how your site will actually be used."
+        "description": "We match charger power and connectors to how long vehicles stay and how many charge at once."
       },
       {
         "key": "installation",
         "title": "Installation & Commissioning",
-        "description": "Professional installation, testing and a documented handover."
+        "description": "Civil works, installation, safety tests and commissioning, closed with a documented handover."
       },
       {
         "key": "monitoring",
         "title": "Monitoring & Support",
-        "description": "Ongoing monitoring and service support once your chargers are live.",
+        "description": "Remote monitoring, planned maintenance and a tracked service loop once your chargers are live.",
         "status": "PROPOSED_NEEDS_SCOPE"
       }
-    ]
+    ],
+    "eyebrow": "How it works",
+    "intro": "Five steps, one team, from the first call to a working charger."
   },
   "why": {
     "status": "PROPOSED",
@@ -268,25 +273,78 @@
     "items": [
       {
         "title": "End-to-end delivery",
-        "body": "One team from feasibility and design to installation and commissioning.",
-        "icon": "flow"
+        "body": "We take your site from the first survey through electrical design, approvals support, installation and commissioning, so you have one point of contact and one plan from start to finish.",
+        "icon": "flow",
+        "anchor": "why-delivery",
+        "headline": "One team. Survey to switch-on.",
+        "bullets": [
+          "Site survey and load assessment before any quote",
+          "Electrical design and single-line diagram (SLD)",
+          "Support with DISCOM load-enhancement paperwork",
+          "Civil works, cabling, installation and commissioning",
+          "Documented handover with test reports"
+        ],
+        "cta": {
+          "label": "Book a Site Assessment",
+          "type": "SITE_ASSESSMENT"
+        },
+        "status": "VERIFY_SCOPE"
       },
       {
         "title": "DC fast-charging focus",
-        "body": "Hardware chosen for commercial and fleet duty cycles.",
-        "icon": "bolt"
+        "body": "We recommend 60, 120 or 240 kW DC charging from how long vehicles stay, how many charge at once and the supply your site has, not from the biggest number on a brochure.",
+        "icon": "bolt",
+        "anchor": "why-dc-fast",
+        "headline": "Power sized to how your site is used.",
+        "bullets": [
+          "60 kW for destinations and fleet bays with longer stops",
+          "120 kW for busy commercial sites and highway stops",
+          "240 kW for high-throughput corridors and depots",
+          "CCS2 connectors, used by most new electric cars in India",
+          "Configuration confirmed after a site assessment"
+        ],
+        "cta": {
+          "label": "Explore Chargers",
+          "href": "#chargers"
+        }
       },
       {
         "title": "Standards-based hardware",
-        "body": "Open charging protocols so your site isn't locked in.",
+        "body": "Our chargers are specified to connect over OCPP, the open protocol most charge-point management platforms use, so you can choose or change your software later without replacing hardware.",
         "icon": "protocol",
-        "status": "VERIFY_OCPP"
+        "status": "VERIFY_OCPP",
+        "anchor": "why-standards",
+        "headline": "Open protocols. No lock-in.",
+        "bullets": [
+          "OCPP 1.6J backend connectivity, confirmed per model",
+          "Works with Envizon or third-party management software",
+          "CCS2 connector to IEC 62196-3",
+          "Session and status data available to your operator",
+          "Hardware documentation shared at handover"
+        ],
+        "cta": {
+          "label": "Talk to an Expert",
+          "type": "GENERAL"
+        }
       },
       {
         "title": "Local installation & support",
-        "body": "On-ground teams for setup, maintenance and service.",
+        "body": "Installation and service are handled by on-ground teams who know your site, with planned maintenance and a clear way to raise and track faults once you are live.",
         "icon": "support",
-        "status": "VERIFY_COVERAGE"
+        "status": "VERIFY_COVERAGE",
+        "anchor": "why-support",
+        "headline": "Teams on the ground when it matters.",
+        "bullets": [
+          "A dedicated installation crew and site supervisor",
+          "On-site commissioning, testing and user training",
+          "Planned preventive maintenance visits",
+          "Fault reporting with tracked service tickets",
+          "One contact for hardware and service questions"
+        ],
+        "cta": {
+          "label": "Request a Quote",
+          "type": "PRODUCT_QUOTE"
+        }
       }
     ],
     "cta": {
@@ -350,7 +408,21 @@
         "q": "Do you offer partnership programmes?",
         "a": "Yes. We work with site hosts and business partners. Share your details and our team will walk you through the available options."
       }
-    ]
+    ],
+    "eyebrow": "FAQ",
+    "intro": "The questions site owners, societies and fleet managers ask us most before a project starts.",
+    "ctaPanel": {
+      "title": "Still have questions?",
+      "body": "Tell us about your site and our team will get back to you with clear next steps.",
+      "primary": {
+        "label": "Talk to an Expert",
+        "type": "GENERAL"
+      },
+      "secondary": {
+        "label": "Request a Quote",
+        "type": "PRODUCT_QUOTE"
+      }
+    }
   },
   "footer": {
     "status": "PROPOSED",

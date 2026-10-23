@@ -156,8 +156,9 @@ function initForm(root) {
       organization: v.Company || null, city: v.City, chargerInterest: v.ChargerInterest || null, requirementText: v.Requirement || null,
       consentToContact: true, marketingConsent: !!v.ConsentMarketing, sourcePage: location.pathname,
     };
-    // MOCK — replace with POST /api/v1/leads once the lead endpoint exists (blueprint §9.4)
-    console.info('[quote mock] lead payload', payload);
+    // MOCK — replace with POST /api/v1/leads once the lead endpoint exists (blueprint §9.4).
+    // Never log the payload itself: it carries personal data (blueprint §0 rule 9).
+    if (import.meta.env.DEV) console.info('[quote mock] lead captured', { type: payload.type, fields: Object.keys(payload).length });
     setTimeout(() => {
       submit.disabled = false;
       submit.innerHTML = label;

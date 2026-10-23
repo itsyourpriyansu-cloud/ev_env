@@ -7,7 +7,7 @@ The Envizon EV homepage is built on a motion-rich template, using plain HTML, CS
 ```bash
 npm install
 python -m venv .venv && .venv/Scripts/pip install beautifulsoup4 html5lib   # once, for the content step
-npm run dev            # http://localhost:5173   (?review outlines PROPOSED copy, ?intro replays the preloader)
+npm run dev            # http://localhost:5173   (?review outlines PROPOSED copy; the preloader plays on every load)
 npm run content        # after editing content/: regenerate index.html, then commit it
 npm run build          # vite build -> dist/ (no Python needed; strips the ?review markers)
 npm run preview        # serve dist/
@@ -44,7 +44,7 @@ Import the repo into Vercel and keep the defaults. `vercel.json` sets the framew
 | Command | What it does |
 |---|---|
 | `npm run brand:logo` | Re-traces the logo JPG into SVGs and re-renders the favicons and OG image (use the official vector when supplied) |
-| `npm run brand:art` | Regenerates the charger placeholder illustrations |
+| `npm run brand:art` | Regenerates the old generated charger illustrations. **Don't run it now**: it would overwrite the client-supplied renders in `assets/img/charger-*.webp` |
 
 ## QA
 
@@ -53,7 +53,20 @@ Import the repo into Vercel and keep the defaults. `vercel.json` sets the framew
 | `npm run qa` | Runs the key journeys: nav anchors, FAQ, solution hover, the charger quote opening a pre-filled dialog, validation and the mock success state |
 | `npm run qa:shots` | Takes screenshots at 1440/1024/768/390/320 (with the dev server running), reporting console errors, external requests and horizontal overflow |
 
+## Security
+
+| Area | What's in place |
+|---|---|
+| Headers (`vercel.json`) | `Content-Security-Policy` (self-only scripts, media and fonts; inline `style` attributes allowed because the template and GSAP use them; `object-src 'none'`, `frame-ancestors 'self'`), `Strict-Transport-Security`, `nosniff`, `SAMEORIGIN`, strict referrer policy, minimal permissions policy. `npm run preview` serves the same CSP (minus the HTTPS-only parts) so it can be tested locally |
+| Third parties | None at runtime: fonts, video and images are self-hosted, and there are no analytics or CDN scripts |
+| DOM injection | Every `innerHTML` renders static, build-time data. The station locator escapes its data with `esc()` and never injects the search text |
+| Personal data | The quote mock never logs the form payload (dev builds log only the enquiry type) |
+| Links | No `target="_blank"` links in the page; the locator's external directions links use `rel="noopener noreferrer"` |
+| Dependencies | `npm audit --omit=dev`: 0 issues. The moderate advisories are in the dev-only logo tracer (`potrace` → `jimp`), which is never shipped |
+
 ## Not live yet
+
+- The page is `noindex, nofollow` until launch (blueprint §0 rule 12). Remove the robots meta from `tools/base/index.base.html` when it goes public.
 
 - The quote form is **mocked**: it validates and logs the payload, but sends nothing. Connect `POST /api/v1/leads` before launch.
 - The hero media and charger images are placeholders.

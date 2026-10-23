@@ -1,6 +1,6 @@
 // Hero ("heroOne") intro — port of the three Motion sequences on the live site.
 // delay = useIntroDelay(): 2.5s + 0.3s page-fade if the preloader is running, else 0.3s.
-// Like the original it only plays once per session (sessionStorage hasPlayedHeroOneIntro).
+// Plays on every page load, together with the preloader (reduced motion shows the final state).
 import { gsap, $, $$, reducedMotion } from './core.js';
 import { EASE } from './lib/ease.js';
 import { markSVG } from './brand-mark.js';
@@ -34,17 +34,14 @@ export function initHero({ introRunning }) {
     artPaths.push(...art.querySelectorAll('[data-draw]'));
   }
 
-  let played = false;
-  try { played = sessionStorage.getItem('hasPlayedHeroOneIntro') === 'true'; } catch {}
-  if (played || reducedMotion) {
+  if (reducedMotion) {
     gsap.set(media, { scale: 1 });
     gsap.set([logo, cta], { scale: 1 });
     gsap.set($$('[data-hero-part]', hero), { y: '0%', opacity: 1 });
-    gsap.set(line, { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' });
+    if (line) gsap.set(line, { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' });
     if (artPaths.length) gsap.set(artPaths, { drawSVG: '100%' });
     return;
   }
-  try { sessionStorage.setItem('hasPlayedHeroOneIntro', 'true'); } catch {}
 
   const delay = (introRunning ? 2.5 : 0) + 0.3;
 
@@ -57,8 +54,8 @@ export function initHero({ introRunning }) {
     .fromTo(part('titleRight'), { y: '100%' }, { y: '0%', ...b }, 0.6)
     .fromTo(part('titleRight'), { opacity: 0 }, { opacity: 1, ...w }, 0.6);
 
-  // sequence 2 — horizontal line draw
-  gsap.fromTo(line,
+  // sequence 2 — horizontal line draw (the divider is optional; Envizon's hero has none)
+  if (line) gsap.fromTo(line,
     { clipPath: 'polygon(0 0, 0 0, 0 100%, 0 100%)' },
     { clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)', duration: 2.1, ease: EASE.circInOut, delay });
 

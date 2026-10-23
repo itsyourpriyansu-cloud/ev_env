@@ -109,7 +109,8 @@ def p1_head():
 def p2_header():
     header = body.find('header')
     logo_a = header.find('a')
-    # keep the template's dark logo pill (bg-green-7 / text-green-1 / border-green-5): mint wordmark + gradient "ev" mark
+    # smoked-glass logo pill (client feedback 2026-10-23): mint wordmark + gradient "ev" mark on a translucent tint
+    logo_a['class'] = [c for c in logo_a['class'] if c not in ('bg-green-7', 'border-green-5', 'hover:after:border-green-3', 'border')] + ['ev-glass']
     logo_a['href'] = '#top'
     logo_a['aria-label'] = 'Envizon EV Solutions, back to top'
     set_html(logo_a, '<span class="ev-logo-full">' + logo_img('compact-mint', 18) + '</span>'
@@ -191,11 +192,13 @@ def p2_footer():
     blocks = [d for d in footer.find_all('div', recursive=False) if 'pointer-events-none' not in d.get('class', [])]
     menus, solutions, banner, cta_block, footnote = blocks
 
-    # menus
+    # menus (larger, brighter links in a tighter box: client feedback 2026-10-23)
+    menus['class'] = menus['class'] + ['ev-footer-menus']
     cols = menus.find_all('div', recursive=False)
     for col, title, items in ((cols[0], f['menuTitle'], f['menu']), (cols[1], f['connectTitle'], f['connect'])):
         col.find('span').string = title
         ul = col.find('ul')
+        ul['class'] = [c for c in ul['class'] if c != 't-h-4'] + ['ev-footer-links']
         li_t = copy.copy(ul.find('li'))
         if li_t.get('class') and 'is-active' in li_t['class']:
             li_t['class'] = [c for c in li_t['class'] if c != 'is-active']
@@ -219,7 +222,8 @@ def p2_footer():
     solutions.find('h3').string = f['solutionsLabel']
     grid = solutions.find('div', class_='grid')
     icon_link = grid.find('a', recursive=False)
-    icon_link['href'] = '#solutions'
+    anchor_link(icon_link, '#solutions')
+    icon_link['aria-label'] = 'Show solution: ' + sol[0]['title']
     icon_box = icon_link.find('div')
     icon_box['style'] = f"background-color: {sol[0]['color']};"
     set_html(icon_box, f'<div class="flex size-full items-center justify-center">'
@@ -252,8 +256,19 @@ def p2_footer():
     active.string = sol[0]['subtitle']
     subs.append(active)
 
+    # brand banner: a smaller square on desktop so the link column above isn't padded out to its height
+    banner['class'] = [c for c in banner['class'] if c != 'lg:max-w-90'] + ['ev-footer-banner']
+
+    # brand banner video (placeholder stock loop, see docs/content-register.md), shown unfiltered
+    banner.find(attrs={'data-footer-lottie': True}).decompose()
+    banner.insert(0, frag(
+        '<div class="ev-footer-banner__media" aria-hidden="true">'
+        '<video data-footer-video muted loop playsinline preload="none" poster="assets/img/footer-ev-poster.webp">'
+        '<source src="assets/video/footer-ev.mp4" type="video/mp4"></video></div>')[0])
+
     # brand banner taglines
     rot = banner.find('div', class_='select-none')
+    rot['class'] = rot['class'] + ['ev-footer-tagline']  # small glass pill keeps the tagline legible over the video
     ghost_t = copy.copy(rot.find('p', class_='invisible'))
     cur = copy.copy(rot.find_all('p')[-1])
     rot.clear()
@@ -283,18 +298,13 @@ def p2_footer():
         a.string = it['label']
         legal.append(li)
 
-    # footnote: wordmark + copyright
-    big = footnote.find('a', class_='inline-block')
-    big['href'] = '#top'
-    set_html(big, '<span class="block h-auto w-[220px]">' + logo_img('full-white', 41) +
-             '</span><span class="sr-only">Envizon EV Solutions</span>')
-    small_wrap = footnote.find_all('div', recursive=False)[1]
-    small_a = small_wrap.find('a')
-    small_a['href'] = '#top'
-    set_html(small_a, '<span class="block" style="height:28px">' + logo_img('mark', 28) + '</span><span class="sr-only">Envizon EV</span>')
-    for node in list(small_wrap.contents):
-        if isinstance(node, str) and node.strip():
-            node.replace_with(f['copyright'])
+    # footnote: copyright on the left (one line, no mark), wordmark on the right
+    footnote['class'] = [c for c in footnote['class'] if c not in ('flex', 'flex-col-reverse', 'lg:grid', 'lg:grid-cols-subgrid', 'lg:items-end')] + ['ev-footnote']
+    set_html(footnote,
+             f'<p class="ev-footnote__copy" style="{FADE_MOVE}">{f["copyright"]}</p>'
+             f'<div class="ev-footnote__mark" style="{FADE_MOVE}"><a class="inline-block" href="#top">'
+             '<span class="block h-auto w-[220px]">' + logo_img('full-white', 41) + '</span>'
+             '<span class="sr-only">Envizon EV Solutions, back to top</span></a></div>')
 
 
 # ------------------------------------------------------------------ P3 · hero + applications
@@ -325,6 +335,12 @@ def p3_hero():
     parts['descriptionCenter'][0].string = h['descriptionCenter']
     for el in parts['descriptionRight']:
         el.string = h['descriptionRight']
+
+    # no divider between the title and description rows (client feedback 2026-10-23)
+    line = hero.find(attrs={'data-hero-line': True})
+    line.find_parent('div').decompose()
+    desc_row = hero.find(attrs={'data-hero-part': 'descriptionLeft'}).find_parent('div', class_='p-x-max')
+    desc_row['class'] = [c for c in desc_row['class'] if c != 'pt-2'] + ['pt-4', 'md:pt-6']
 
     cta = hero.find(attrs={'data-hero-cta': True})
     cta['class'] = ['w-fit', 'flex', 'flex-wrap', 'items-center', 'gap-6']
@@ -440,9 +456,11 @@ def p5_chargers():
         media['aria-label'] = f"Request a quote for the {it['power']} {it['name']}"
         img = media.find('img')
         img['src'] = it['image']
-        img['alt'] = f"Envizon {it['power']} {it['name']}, 3D render in a garage setting"
-        img['width'], img['height'] = '2400', '1350'
+        img['alt'] = it['imageAlt']
+        img['width'], img['height'] = '1672', '941'
         img['data-media'] = 'charger-render'
+        # fade in once decoded (js/lazy-fade.js adds .lazyloaded) instead of popping in
+        img['class'] = [c for c in img.get('class', []) if c != 'lazyloaded']
         info = card.find('div', class_='px-contain', recursive=False)
         info.find('span', class_='t-l-2').string = f'{i + 1:02d}'
         info.find('h3').string = it['power']
@@ -513,6 +531,26 @@ def p6_process():
         ps[1].string = step['description']
         track.append(slide)
 
+    # left column: more breathing room, eyebrow + intro, and a clickable step list (md+) in the old gap
+    col = sec.find('div', class_='md:max-w-92')
+    col['class'] = col['class'] + ['ev-process-col']
+    for wrap in sec.find_all(attrs={'data-scroll-text': True}):
+        wrap.insert_before(frag(f'<span class="t-l-1 text-green-2 block" style="{FADE_MOVE}">{pr["eyebrow"]}</span>')[0])
+        wrap.insert_after(frag(f'<p class="ev-process-intro t-b-1 text-pretty" style="{FADE_MOVE}">{pr["intro"]}</p>')[0])
+    carousel = sec.find(attrs={'data-slot': 'carousel'})
+    carousel['id'] = 'process-carousel'
+    steps = ''.join(
+        f'<li><button type="button" class="ev-step" data-step="{i}" aria-controls="process-carousel" '
+        f'aria-label="Show step {i + 1}: {st["title"]}"><span class="ev-step__num t-l-1">{i + 1:02d}</span>'
+        f'<span class="ev-step__title">{st["title"]}</span>'
+        f'<span class="ev-step__more"><span><span class="ev-step__desc t-l-1">{st["description"]}</span>'
+        '<span class="ev-step__bar" aria-hidden="true"><span data-step-progress></span></span></span></span></button></li>'
+        for i, st in enumerate(pr['steps']))
+    carousel.find_parent('div', class_='relative').insert_before(
+        frag(f'<ol class="ev-steps" data-steps aria-label="Project steps" style="{FADE_MOVE}">{steps}</ol>')[0])
+    dots_row = sec.select_one('[data-dot]').find_parent('div', class_='justify-between')
+    dots_row['class'] = dots_row['class'] + ['ev-dots-row']
+
     dots = sec.select('[data-dot]')
     dot_wrap, d_t = dots[0].parent, copy.copy(dots[0])
     for d in dots:
@@ -526,38 +564,69 @@ def p6_process():
 
 
 # ------------------------------------------------------------------ P7 · why / partners / faq
-def white_button(label, enquiry):
-    """Clone the template's white rounded button (the process-section CTA style)."""
-    tmpl = body.find(attrs={'data-feature': True}).find('a', attrs={'data-slot': 'button'})
-    a = copy.copy(tmpl)
-    contact_link(a, enquiry)
-    a.string = label
-    return a
+WHY_ARROW = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" '
+             'stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+             '<path d="M3 8h10M9 4l4 4-4 4"/></svg>')
+
+
+def why_art():
+    """Concentric Envizon pill outlines (static; the top-left corners show in the card)."""
+    rings = []
+    for i in range(5):
+        o = i * 64
+        x, y, w, h, rx = 40 + o, 40 + o, 1400 - o * 2, 1400 - o * 2, 260 - i * 36
+        fill = ' class="ev-why-art__fill"' if i >= 3 else ''
+        rings.append(f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{rx}"{fill}/>')
+    return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" fill="none" aria-hidden="true">'
+            f'<g class="ev-why-art__rings" stroke="currentColor" stroke-width="1">{"".join(rings)}</g></svg>')
+
+
+def why_button(cta, extra=''):
+    attrs = f'href="#contact" data-enquiry="{cta["type"]}"' if 'type' in cta else f'href="{cta["href"]}"'
+    return f'<a {attrs} class="ev-why-btn t-l-1{extra}"><span>{cta["label"]}</span>{WHY_ARROW}</a>'
 
 
 def p7_why():
+    """Why Envizon as sticky stacked cards (the template family's /solutions pattern), dark surface."""
     w = C['why']
     process = body.find(attrs={'data-feature': True})
-    dot_layer = process.find(attrs={'data-feature-stage': True}).find('div')  # dotted-grid layer
-    sec = frag(f'<section id="why" class="py-section relative bg-background overflow-hidden" data-why '
-               f'data-status="{w["status"].lower()}"></section>')[0]
-    sec.append(copy.copy(dot_layer))
-    inner = frag('<div class="p-x-max relative"><div class="ev-why-head"><div class="space-y-4">'
-                 f'<span class="t-l-1 text-green-2 block" style="{FADE_MOVE}">{w["eyebrow"]}</span>'
-                 f'<div class="relative" data-scroll-text><h2 class="t-h-2 md:t-h-3 max-w-sm text-balance">{w["title"]}</h2></div>'
-                 f'</div><div class="ev-why-cta" style="{FADE_MOVE}"></div></div>'
-                 '<div class="ev-why-grid" data-why-grid></div></div>')[0]
-    inner.find(class_='ev-why-cta').append(white_button(w['cta']['label'], w['cta']['type']))
-    grid = inner.find(attrs={'data-why-grid': True})
-    for it in w['items']:
+    # static noise texture (no animation, so each layer paints once instead of every step)
+    noise = copy.copy(body.find('footer').find('div', attrs={'aria-hidden': 'true'}))
+    noise['class'] = [c for c in noise['class'] if not c.startswith('animate-')]
+    noise['class'] = [c if c != 'bg-green-5' else 'bg-green-7' for c in noise['class']]
+    sec = frag(f'<section id="why" class="ev-why relative" data-why data-status="{w["status"].lower()}">'
+               '<div class="ev-why-intro p-x-max"><div class="space-y-4">'
+               f'<span class="t-l-1 text-green-2 block" style="{FADE_MOVE}">{w["eyebrow"]}</span>'
+               f'<div class="relative" data-scroll-text><h2 class="t-h-2 md:t-h-3 max-w-sm text-balance">{w["title"]}</h2></div>'
+               f'</div><div class="ev-why-intro__cta" style="{FADE_MOVE}">{why_button(w["cta"])}</div></div>'
+               '<div class="ev-why-stack" data-why-stack></div></section>')[0]
+    sec.insert(0, copy.copy(noise))
+    stack = sec.find(attrs={'data-why-stack': True})
+    items = w['items']
+    rule = '<span class="ev-why-rule" data-why-rule aria-hidden="true"></span>'
+    for i, it in enumerate(items):
         status = f' data-status="{it["status"].lower()}"' if it.get('status') else ''
-        card = frag(f'<div class="ev-why-card border-white-3 rounded-lg border bg-white p-4" style="{FADE_MOVE}"{status}>'
-                    '<span class="inline-flex size-10 items-center justify-center rounded-md bg-green-1 p-2 text-green-5">'
-                    + icon_svg('ui', it['icon'], 'size-full') + '</span>'
-                    f'<div><h3 class="t-h-3 text-balance mb-2">{it["title"]}</h3>'
-                    f'<p class="t-l-1 text-balance">{it["body"]}</p></div></div>')[0]
-        grid.append(card)
-    sec.append(inner)
+        tiles = ''.join(
+            f'<a href="#{o["anchor"]}" class="ev-why-tile{" is-active" if j == i else ""}" '
+            f'aria-label="Jump to {o["title"]}"{" aria-current=\"true\"" if j == i else ""}>'
+            + icon_svg('ui', o['icon'], 'size-full', '1.25') + '</a>' for j, o in enumerate(items))
+        bullets = ''.join(f'<li><span class="ev-why-sq" aria-hidden="true"></span><span>{b}</span></li>' for b in it['bullets'])
+        card = frag(
+            f'<span id="{it["anchor"]}" class="ev-why-anchor" aria-hidden="true"></span>'
+            f'<article class="ev-why-card p-x-max" data-why-card="{i}" aria-labelledby="why-t-{i}"{status}>'
+            f'<div class="ev-why-tiles" style="{FADE_MOVE}">{tiles}</div>'
+            f'<div class="ev-why-art" aria-hidden="true">{why_art()}</div>'
+            f'<div class="ev-why-cell ev-why-num">{rule}<span class="t-l-1" style="{FADE_MOVE}">{i + 1:02d}</span></div>'
+            f'<div class="ev-why-cell ev-why-title">{rule}<h3 id="why-t-{i}" class="t-h-2 md:t-h-3 text-balance" style="{FADE_MOVE}">{it["title"]}</h3></div>'
+            f'<div class="ev-why-cell ev-why-body">{rule}'
+            f'<p class="ev-why-headline t-h-3 text-balance" style="{FADE_MOVE}">{it["headline"]}</p>'
+            f'<p class="t-b-1 text-pretty" style="{FADE_MOVE}">{it["body"]}</p>'
+            f'<div class="ev-why-body__cta" style="{FADE_MOVE}">{why_button(it["cta"])}</div></div>'
+            f'<div class="ev-why-cell ev-why-list">{rule}<ul class="t-l-1" style="{FADE_MOVE}">{bullets}</ul></div>'
+            '<div class="ev-why-dim" data-why-dim aria-hidden="true"></div>'
+            '</article>')
+        stack.extend(card)
+        stack.find_all('article')[-1].insert(0, copy.copy(noise))
     process.insert_after(sec)
 
 
@@ -593,34 +662,44 @@ def p7_partners():
     # brochure button intentionally not rendered (BLOCKED until rights-checked)
 
 
-CHEVRON = ('<svg xmlns="http://www.w3.org/2000/svg" fill="none" class="svg-arrow-down" viewBox="0 0 11 11">'
-           '<path fill="currentColor" d="m10.084 5.042-.895-.889L6.533 6.81a.504.504 0 0 1-.861-.356V0h-1.26v6.454a.504.504 0 0 1-.86.357L.888 4.153 0 5.042l5.042 5.042z"></path></svg>')
-ACC_BTN = ('[&[data-state=open]_.accordion-item-svg]:rotate-180 ev-faq-q flex w-full cursor-pointer items-center '
-           'justify-between gap-6 text-left t-h-3')
-
-
 def p7_faq():
+    """FAQ as a centred stack: intro, numbered accordion cards, then a dark CTA panel."""
     fq = C['faq']
     footer = body.find('footer')
-    sec = frag(f'<section id="faq" class="py-section relative bg-white-2 border-t border-white-3" data-faq '
-               f'data-status="{fq["status"].lower()}"><div class="p-x-max ev-faq-grid"><div class="ev-faq-intro space-y-4">'
-               f'<div class="relative" data-scroll-text><h2 class="t-h-2 md:t-h-3 max-w-sm text-balance">{fq["title"]}</h2></div>'
-               f'<p class="t-b-1" style="{FADE_MOVE}">{fq["subtitle"]}</p>'
-               f'<div class="ev-faq-cta" style="{FADE_MOVE}"></div></div>'
-               '<div class="ev-faq-list" data-faq-list></div></div></section>')[0]
-    sec.find(class_='ev-faq-cta').append(white_button(fq['cta']['label'], fq['cta']['type']))
+    noise = copy.copy(footer.find('div', attrs={'aria-hidden': 'true'}))
+    noise['class'] = [c for c in noise['class'] if not c.startswith('animate-')]  # static texture over the photo
+    panel_cta = fq['ctaPanel']
+    sec = frag(f'<section id="faq" class="ev-faq py-section relative bg-white-2 border-t border-white-3" data-faq '
+               f'data-status="{fq["status"].lower()}"><div class="p-x-max"><div class="ev-faq-wrap">'
+               '<div class="ev-faq-intro">'
+               f'<span class="t-l-1 text-green-2 block" style="{FADE_MOVE}">{fq["eyebrow"]}</span>'
+               f'<div class="relative" data-scroll-text><h2 class="t-h-2 md:t-h-3 text-balance">{fq["title"]}</h2></div>'
+               f'<p class="t-b-1 text-balance" style="{FADE_MOVE}">{fq["intro"]}</p></div>'
+               '<div class="ev-faq-list" data-faq-list></div>'
+               f'<div class="ev-faq-panel" style="{FADE_MOVE}">'
+               '<span class="ev-faq-panel__mark" aria-hidden="true">' + logo_img('mark', 28) + '</span>'
+               f'<div class="ev-faq-panel__copy"><p class="ev-faq-panel__title">{panel_cta["title"]}</p>'
+               f'<p class="t-b-1 text-balance">{panel_cta["body"]}</p></div>'
+               '<div class="ev-faq-panel__actions">'
+               f'<a href="#contact" data-enquiry="{panel_cta["primary"]["type"]}" class="ev-btn-primary t-l-1">{panel_cta["primary"]["label"]}</a>'
+               + why_button(panel_cta['secondary']) +
+               '</div></div></div></div></section>')[0]
+    panel = sec.find(class_='ev-faq-panel')
+    panel.insert(0, noise)
+    panel.insert(0, frag('<div class="ev-faq-panel__media" aria-hidden="true">'
+                         '<img class="lazyloaded" src="assets/img/faq-cta.webp" alt="" width="1600" height="750" loading="lazy" decoding="async">'
+                         '<div class="ev-faq-panel__scrim"></div></div>')[0])
     lst = sec.find(attrs={'data-faq-list': True})
     for i, it in enumerate(fq['items']):
         status = f' data-status="{it["status"].lower()}"' if it.get('status') else ''
-        item = frag(f'<div class="border-b border-white-3" data-faq-item data-state="closed" style="{FADE_MOVE}"{status}>'
+        item = frag(f'<div class="ev-faq-item" data-faq-item data-state="closed" style="{FADE_MOVE}"{status}>'
                     f'<h3><button type="button" id="faq-q-{i}" aria-expanded="false" aria-controls="faq-a-{i}" '
-                    f'data-state="closed" class="{ACC_BTN}"><span>{it["q"]}</span>'
-                    '<span class="flex shrink-0 items-center justify-center" style="width:1.5em;height:1.5em">'
-                    '<span class="accordion-item-svg inline-block transition-transform duration-300" style="width:.5em;height:.5em">'
-                    f'{CHEVRON}</span></span></button></h3>'
+                    f'data-state="closed" class="ev-faq-q"><span class="ev-faq-idx t-l-1">{i + 1:02d}</span>'
+                    f'<span class="ev-faq-text">{it["q"]}</span>'
+                    '<span class="ev-faq-icon" aria-hidden="true"><i></i><i></i></span></button></h3>'
                     f'<div id="faq-a-{i}" role="region" aria-labelledby="faq-q-{i}" hidden data-state="closed" '
                     'class="data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden">'
-                    f'<p class="t-b-1 max-w-xl pb-6 text-pretty">{it["a"]}</p></div></div>')[0]
+                    f'<div class="ev-faq-a"><p class="t-b-1 text-pretty">{it["a"]}</p></div></div></div>')[0]
         lst.append(item)
     footer.insert_before(sec)
 

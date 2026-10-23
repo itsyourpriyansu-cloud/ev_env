@@ -57,7 +57,8 @@ export function initReveal() {
   if (cardsWrap) group(cardsWrap, $$(':scope > [data-solution-card]', cardsWrap));
 
   // results: CTA (individual) + carousel container (stagger)
-  $$('[data-feature] .space-y-4 > div[style]').forEach((el) => single(el));
+  $$('[data-feature] .space-y-4 > [style]').forEach((el) => single(el));
+  single($('[data-steps]'));
   const carousel = $('[data-feature] .relative.w-full');
   if (carousel) group(carousel, $$(':scope > div > div[style]', carousel));
 
@@ -67,12 +68,11 @@ export function initReveal() {
     if (card) group(card, descendantsHidden(card).filter((el) => !el.hasAttribute('data-case-overlay')));
   });
 
-  // Why Envizon: eyebrow + CTA individually, cards as a stagger group
+  // Why Envizon: intro lines individually, each stacked card as its own stagger container
   const why = $('[data-why]');
   if (why) {
-    $$('.ev-why-head [style*="translateY(25px)"]', why).forEach((el) => single(el));
-    const grid = $('[data-why-grid]', why);
-    group(grid, $$(':scope > [style]', grid));
+    $$('.ev-why-intro [style*="translateY(25px)"]', why).forEach((el) => single(el));
+    $$('[data-why-card]', why).forEach((card) => group(card, descendantsHidden(card), { delayChildren: 0.1, stagger: 0.08, start: 'top 70%' }));
   }
 
   // FAQ: intro lines individually, questions as a stagger group
@@ -81,6 +81,7 @@ export function initReveal() {
     $$('.ev-faq-intro > [style*="translateY(25px)"]', faq).forEach((el) => single(el));
     const list = $('[data-faq-list]', faq);
     group(list, $$(':scope > [data-faq-item]', list), { stagger: 0.08 });
+    single($('.ev-faq-panel', faq));
   }
 
   // closing CTA: octagons fade (delay .5) + buttons fadeMove

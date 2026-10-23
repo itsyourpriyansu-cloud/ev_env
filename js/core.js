@@ -10,6 +10,8 @@ export { gsap, ScrollTrigger };
 export const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 export const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 export const isMobile = () => window.innerWidth < 768;
+/** Low-end hint: few cores, little memory or Data Saver. Heavy, purely decorative motion is skipped. */
+export const lowPower = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4 || !!navigator.connection?.saveData;
 
 export const $ = (sel, root = document) => root.querySelector(sel);
 export const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
@@ -44,4 +46,18 @@ export function completeIntro() {
   if (introDone) return;
   introDone = true;
   introListeners.splice(0).forEach((fn) => fn());
+}
+
+/** Background video loop: load + play only while near the viewport, pause otherwise; reduced motion keeps the poster. */
+export function autoplayInView(video, rootMargin = '200px 0px') {
+  if (!video || reducedMotion) return;
+  video.muted = true;
+  new IntersectionObserver(([e]) => {
+    if (e.isIntersecting) {
+      if (video.preload === 'none') { video.preload = 'auto'; video.load(); }
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }, { rootMargin }).observe(video);
 }

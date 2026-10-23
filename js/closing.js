@@ -1,6 +1,6 @@
 // Closing CTA background: three stacked octagon outlines that shift horizontally in an
 // endless loop once in view — x keyframes over 4s, each segment eased [.87,0,.13,1].
-import { gsap, $, $$, inView, reducedMotion } from './core.js';
+import { gsap, $, $$, autoplayInView, reducedMotion } from './core.js';
 import { cubicBezier } from './lib/ease.js';
 
 const KEYS = [
@@ -10,32 +10,21 @@ const KEYS = [
 ];
 const h = cubicBezier(0.87, 0, 0.13, 1);
 
-// Partner CTA background loop: load + play only while on screen; reduced motion keeps the poster.
-function initPartnersVideo() {
-  const video = $('[data-partners-video]');
-  if (!video || reducedMotion) return;
-  new IntersectionObserver(([e]) => {
-    if (e.isIntersecting) {
-      if (video.preload === 'none') { video.preload = 'auto'; video.load(); }
-      video.play().catch(() => {});
-    } else {
-      video.pause();
-    }
-  }, { rootMargin: '200px 0px' }).observe(video);
-}
-
 export function initClosing() {
-  initPartnersVideo();
+  // Partner CTA background loop: loads + plays only while on screen
+  autoplayInView($('[data-partners-video]'));
   const wrap = $('[data-octagons]');
   if (!wrap || reducedMotion) return;
   const layers = $$(':scope > div', wrap);
-  inView(wrap, () => {
-    layers.forEach((layer, i) => {
-      const k = KEYS[i];
-      const tl = gsap.timeline({ repeat: -1 });
-      for (let s = 1; s < k.length; s++) {
-        tl.to(layer, { xPercent: parseFloat(k[s]), duration: 4 / 3, ease: h });
-      }
-    });
-  }, { margin: '0px', once: true });
+  // one paused master timeline, playing only while the section is on screen
+  const master = gsap.timeline({ paused: true });
+  layers.forEach((layer, i) => {
+    const k = KEYS[i];
+    const tl = gsap.timeline({ repeat: -1 });
+    for (let s = 1; s < k.length; s++) {
+      tl.to(layer, { xPercent: parseFloat(k[s]), duration: 4 / 3, ease: h });
+    }
+    master.add(tl, 0);
+  });
+  new IntersectionObserver(([e]) => (e.isIntersecting ? master.play() : master.pause())).observe(wrap);
 }

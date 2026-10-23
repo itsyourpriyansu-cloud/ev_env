@@ -1,34 +1,51 @@
-// Header: slide-in after the intro, desktop hover dropdown nav, mobile Radix-style menu.
-import { gsap, $, $$, onIntroComplete } from './core.js';
+// Header: slide-in after the intro, hide on scroll down / show on scroll up,
+// desktop hover dropdown nav, mobile Radix-style menu.
+import { gsap, $, $$, onIntroComplete, reducedMotion } from './core.js';
 import { EASE } from './lib/ease.js';
+
+const TOP_ZONE = 120; // always shown this close to the top of the page
+const THRESHOLD = 8;  // px of travel in one direction before the header reacts
 
 export function initHeader({ lenis }) {
   const header = document.getElementById('site-header');
   if (!header) return;
 
-  // slideRevealAnim { y: -100% -> 0, 1.2s circOut }, delay = page fade (0.3s)
+  // slideRevealAnim { y: -100% -> 0, 1.2s circOut }, delay = page fade (0.3s); scroll hiding waits for it
+  let ready = false;
   onIntroComplete(() => {
-    gsap.fromTo(header, { y: 0, yPercent: -100 }, { yPercent: 0, duration: 1.2, ease: EASE.circOut, delay: 0.3 });
+    gsap.fromTo(header, { y: 0, yPercent: -100 }, {
+      yPercent: 0, duration: reducedMotion ? 0 : 1.2, ease: EASE.circOut, delay: reducedMotion ? 0 : 0.3,
+      onComplete: () => { ready = true; },
+    });
   });
 
   initDesktopNav(header);
   initMobileMenu(header, lenis);
+  if (lenis) initAutoHide(header, lenis, () => ready);
+}
 
-  // Hide/show header on scroll direction
-  let lastScroll = 0;
-  if (lenis) {
-    lenis.on('scroll', ({ scroll }) => {
-      if (!header) return;
-      if (scroll > lastScroll) {
-        // scrolling down – hide header
-        gsap.to(header, { yPercent: -100, duration: 0.6, ease: "power2.out" });
-      } else {
-        // scrolling up – show header
-        gsap.to(header, { yPercent: 0, duration: 0.6, ease: "power2.out" });
-      }
-      lastScroll = scroll;
-    });
-  }
+// One tween per state change (not per scroll event), with a direction threshold. Never hides while
+// a menu/dialog has scrolling locked, while a dropdown is open, or while keyboard focus is in the header.
+function initAutoHide(header, lenis, isReady) {
+  let hidden = false;
+  let anchor = 0; // scroll position of the last show/hide decision
+  const set = (hide) => {
+    if (hide === hidden) return;
+    hidden = hide;
+    gsap.to(header, { yPercent: hide ? -100 : 0, duration: 0.45, ease: 'power2.out', overwrite: true });
+  };
+  const pinned = () =>
+    lenis.isStopped ||
+    !!header.querySelector(':focus-visible') ||
+    !!header.querySelector('[aria-expanded="true"]');
+
+  lenis.on('scroll', ({ scroll }) => {
+    if (!isReady()) return;
+    if (scroll < TOP_ZONE || pinned()) { anchor = scroll; set(false); return; }
+    if (Math.abs(scroll - anchor) < THRESHOLD) return;
+    set(scroll > anchor);
+    anchor = scroll;
+  });
 }
 
 function initDesktopNav(header) {

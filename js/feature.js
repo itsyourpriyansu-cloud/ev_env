@@ -4,7 +4,7 @@
 import EmblaCarousel from 'embla-carousel';
 import { gsap, $, $$ } from './core.js';
 import { spring, cubicBezier } from './lib/ease.js';
-import { PROCESS_DIAGRAMS } from './data/process.js';
+import { PROCESS_DIAGRAMS, MOBILE_VIEWBOX } from './data/process.js';
 import site from './data/site.json';
 import { applyInitial, playSequence } from './sequence.js';
 
@@ -13,6 +13,7 @@ const ORDER = site.processSteps;
 const PANEL_BASE = 'p-center h-full w-full [&_svg]:size-full';
 const PANEL_EXTRA = {};
 const FADE = { duration: 0.3, ease: cubicBezier(0.25, 0.1, 0.35, 1) }; // Motion default opacity tween
+const COMPACT = window.matchMedia('(max-width: 1023.98px)'); // below lg: zoom to the diagram's main panel
 
 export function initFeature() {
   const section = $('[data-feature]');
@@ -52,6 +53,7 @@ function initPanel(section, embla) {
     el.innerHTML = PROCESS_DIAGRAMS[key].svg;
     stage.insertBefore(el, anchor);
     const svg = el.querySelector('svg');
+    if (COMPACT.matches && MOBILE_VIEWBOX[key]) svg.setAttribute('viewBox', MOBILE_VIEWBOX[key]);
     applyInitial(svg);
     gsap.to(el, { opacity: 1, ...FADE });
     currentTl = playSequence(svg, PROCESS_DIAGRAMS[key].sequence);
@@ -79,9 +81,12 @@ function initPanel(section, embla) {
   embla.on('select', () => show(embla.selectedScrollSnap()));
 }
 
-// ---------------------------------------------------------------- dots + autoplay
+// ---------------------------------------------------------------- indicators + autoplay
+// One 5s progress state drives both indicator sets: the dots (phones) and the step list (md+).
 function initDots(section, embla) {
   const dots = $$('[data-dot]', section);
+  const steps = $$('[data-step]', section);
+  let stepBar = null;
   const sp = spring(1.2, 0.2);
   const state = { p: 0 };
   let tween = null;
@@ -97,7 +102,10 @@ function initDots(section, embla) {
     dot.appendChild(wrap);
     return span;
   };
-  const renderBar = () => bar && (bar.style.transform = `translateX(${(state.p - 1) * 100}%)`);
+  const renderBar = () => {
+    if (bar) bar.style.transform = `translateX(${(state.p - 1) * 100}%)`;
+    if (stepBar) stepBar.style.transform = `scaleX(${state.p})`;
+  };
 
   const run = () => {
     tween?.kill();
@@ -117,12 +125,22 @@ function initDots(section, embla) {
     });
     dots[idx].replaceChildren();
     bar = makeBar(dots[idx]);
+    steps.forEach((step, i) => {
+      const active = i === idx;
+      step.classList.toggle('is-active', active);
+      if (active) step.setAttribute('aria-current', 'step');
+      else step.removeAttribute('aria-current');
+      const fill = $('[data-step-progress]', step);
+      if (!active && fill) fill.style.transform = 'scaleX(0)';
+    });
+    stepBar = steps[idx] ? $('[data-step-progress]', steps[idx]) : null;
     state.p = 0;
     renderBar();
     run();
   };
 
   dots.forEach((dot, i) => dot.addEventListener('click', () => embla.scrollTo(i)));
+  steps.forEach((step, i) => step.addEventListener('click', () => embla.scrollTo(i)));
   embla.on('pointerDown', () => { paused = true; tween?.kill(); });
   embla.on('pointerUp', () => { paused = false; run(); });
   embla.on('select', select);

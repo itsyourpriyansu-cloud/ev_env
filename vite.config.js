@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { defineConfig } from 'vite';
 
 // Public origin for absolute social/canonical URLs: SITE_URL if set, else the Vercel production domain.
@@ -31,9 +32,20 @@ function productionHtml() {
   };
 }
 
+// Same security headers as vercel.json, so `npm run preview` exercises the production CSP locally
+// (minus the HTTPS-only parts: preview is plain http://localhost).
+const vercel = JSON.parse(readFileSync(new URL('./vercel.json', import.meta.url), 'utf8'));
+const securityHeaders = Object.fromEntries(
+  vercel.headers
+    .find((h) => h.source === '/(.*)')
+    .headers.filter(({ key }) => key !== 'Strict-Transport-Security')
+    .map(({ key, value }) => [key, value.replace(/;\s*upgrade-insecure-requests/, '')]),
+);
+
 export default defineConfig({
   plugins: [productionHtml()],
   server: { port: 5173, open: false },
+  preview: { headers: securityHeaders },
   build: {
     // keep the compiled Tailwind v4 CSS byte-for-byte (modern syntax like rgb(from …))
     cssMinify: false,
