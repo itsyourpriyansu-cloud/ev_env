@@ -3,11 +3,13 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "vite",
     "content": "node tools/run-content.mjs",
-    "content:prod": "node tools/run-content.mjs --production",
-    "build": "npm run content:prod && vite build && npm run content",
+    "build": "vite build",
     "preview": "vite preview",
     "qa": "node tools/qa-envizon.mjs",
     "qa:shots": "node tools/shoot.mjs http://localhost:5173/ 1440,1024,768,390,320",

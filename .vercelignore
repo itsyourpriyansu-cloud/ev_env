@@ -1,0 +1,7 @@
+# not needed to build the site (research captures, authoring tools, local envs)
+reference/
+docs/
+.venv/
+ENVIZON_EV_CLAUDE_MASTER_BLUEPRINT.md
+Envizon_EV_Logo_Final.jpg
+scratch_extract.ps1

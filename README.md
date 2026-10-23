@@ -8,7 +8,8 @@ The Envizon EV homepage is built on a motion-rich template, using plain HTML, CS
 npm install
 python -m venv .venv && .venv/Scripts/pip install beautifulsoup4 html5lib   # once, for the content step
 npm run dev            # http://localhost:5173   (?review outlines PROPOSED copy, ?intro replays the preloader)
-npm run build          # content (production) -> vite build -> dist/
+npm run content        # after editing content/: regenerate index.html, then commit it
+npm run build          # vite build -> dist/ (no Python needed; strips the ?review markers)
 npm run preview        # serve dist/
 ```
 
@@ -26,6 +27,17 @@ npm run preview        # serve dist/
 | `js/data/process.js` | The 5 "How it works" step diagrams (sequence-engine format) |
 | `assets/brand/` | Logo set traced from `Envizon_EV_Logo_Final.jpg`, favicons, OG image |
 | `docs/content-register.md` | What's proposed, blocked and placeholder, and what the client must supply |
+
+## Deploy (Vercel)
+
+Import the repo into Vercel and keep the defaults. `vercel.json` sets the framework (Vite), the install command (`npm ci`), the build command (`npm run build`) and the output directory (`dist/`). The build runs Vite only, so `index.html` has to be regenerated with `npm run content` and committed whenever `content/` changes.
+
+| Concern | How it's handled |
+|---|---|
+| Domain | The canonical URL, `og:url` and the absolute `og:image` come from `SITE_URL` (e.g. `https://example.com`, set under Project → Settings → Environment Variables). If it isn't set, Vercel's production domain is used. |
+| Caching | The hashed files under `/assets/*` are cached for a year as immutable. `index.html` revalidates on every request. |
+| Headers | Every response gets `nosniff`, `SAMEORIGIN` framing and a strict referrer policy. The permissions policy allows geolocation, for the station locator, and nothing else. |
+| Upload | `.vercelignore` leaves `reference/`, `docs/` and other authoring-only files out of the deployment. |
 
 ## Brand tooling
 
