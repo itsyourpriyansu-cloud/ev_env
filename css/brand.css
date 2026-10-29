@@ -357,6 +357,18 @@ html[data-review] [data-status='proposed'] {
 /* footer banner square: 288px on desktop (was 360px) */
 @media (min-width: 64rem) { .ev-footer-banner { max-width: 18rem; } }
 
+/* footer breathing space: roomier links, columns and edges */
+.ev-footer-links { gap: 12px; line-height: 1.35; }
+.ev-footer-menus > div > .t-l-1 { margin-bottom: 24px; }
+@media (min-width: 48rem) {
+  [data-footer] { --l-footer-pad: 32px; row-gap: 48px; }
+  .ev-footer-menus { column-gap: 72px !important; padding-top: 24px !important; padding-bottom: 40px !important; }
+}
+@media (min-width: 80rem) {
+  [data-footer] { --l-footer-pad: 48px; row-gap: 64px; }
+  .ev-footer-menus { column-gap: 112px !important; }
+}
+
 /* quote dialog consent (P8) */
 .ev-consent { display: flex; flex-direction: column; gap: 10px; font-size: 11px; line-height: 1.4; }
 .ev-check { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
@@ -417,6 +429,15 @@ html[data-review] [data-status='proposed'] {
 @media (min-width: 48rem) {
   .ev-solutions-cards { gap: 24px; }
 }
+/* "Enquire" CTA lives inside its card (bottom-right), not in a gap below it */
+.ev-solutions-cards [data-solution-card] > .pointer-events-none {
+  height: auto;
+  width: auto;
+  padding: 0;
+  right: 24px;
+  bottom: 14px;
+  justify-content: flex-end;
+}
 .ev-solutions-icon {
   display: none;
   position: relative;
@@ -450,3 +471,14 @@ html[data-review] [data-status='proposed'] {
   #solutions > .p-x-sm { padding-inline: 48px; }
   .ev-solutions-grid { max-width: 1080px; margin-inline: auto; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 }
+
+/* FAQ: concentric rounded-corner line pattern in two opposite corners */
+.ev-faq { overflow: hidden; isolation: isolate; }
+.ev-faq::before, .ev-faq::after {
+  content: ''; position: absolute; z-index: -1; pointer-events: none;
+  width: min(680px, 60vw); aspect-ratio: 680 / 600;
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 680 600' fill='none' stroke='rgb(6 61 37 / .16)' stroke-width='1'><path d='M680 118H440A314 314 0 0 0 126 432V600'/><path d='M680 198H475A269 269 0 0 0 206 467V600'/><path d='M680 278H510A224 224 0 0 0 286 502V600'/><path d='M680 358H545A179 179 0 0 0 366 537V600'/><path d='M680 438H580A134 134 0 0 0 446 572V600'/></svg>") center / 100% 100% no-repeat;
+}
+.ev-faq::before { top: 0; right: 0; transform: scaleY(-1); }
+.ev-faq::after { bottom: 0; left: 0; transform: scaleX(-1); }
+@media (max-width: 63.99rem) { .ev-faq::before, .ev-faq::after { opacity: .6; } }

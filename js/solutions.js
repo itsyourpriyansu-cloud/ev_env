@@ -1,12 +1,10 @@
 // Solution cards ("One partner from site survey to switch-on.").
-// Hover card r: every card with index <= r lifts by (btn height + gap), the hovered card
-// reveals its "Enquire" label, and a large hairline version of its Envizon icon fades in and
+// Hover card r: the hovered card reveals its "Enquire" label inside the card (cards don't move), and a large hairline version of its Envizon icon fades in and
 // draws itself behind the section (popLayout cross-fade on the spring .5s bounce 0).
 import { gsap, $, $$, isTouch, inView } from './core.js';
 import { spring, EASE } from './lib/ease.js';
 import icons from '../content/icons.json';
 
-const LIFT = '-translate-y-[calc(var(--l-card-btn-h)+var(--l-card-btn-gap))]';
 const ICON_HEIGHT = ['h-[150%]', 'h-[140%]', 'h-[150%]', 'h-[140%]'];
 
 export function initSolutions() {
@@ -57,9 +55,7 @@ export function initSolutions() {
     if (idx === current) return;
     current = idx;
     cards.forEach((card, r) => {
-      const inner = card.children[0];
       const btn = card.children[1];
-      inner.classList.toggle(LIFT, idx !== null && idx >= r);
       if (btn && btn.classList.contains('pointer-events-none')) {
         const on = idx === r;
         btn.classList.toggle('opacity-100', on);
